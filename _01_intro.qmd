@@ -1,3 +1,5 @@
-# Introduction
+## Introduction
+
+Market manipulation represents one of the most persistent threats to financial market integrity, costing retail investors billions of dollars annually while undermining the foundational principle of fair price discovery. As algorithmic trading has evolved to dominate modern equity markets—accounting for over 80% of daily trading volume—sophisticated manipulation schemes have emerged that exploit the speed and complexity of electronic order books to deceive other market participants.
 
 Something something, and then I state some citable facts [@Zelner2022].
