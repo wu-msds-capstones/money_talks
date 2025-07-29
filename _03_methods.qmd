@@ -1,1 +1,62 @@
-# Methods
+## Methods
+
+### Overview
+
+Our goal was to detect market manipulation behavior in high-frequency equity trading using publicly available data. We developed a machine learning model (XGBoost) to classify order book events as normal or anomalous, based on real market microstructure.
+
+### 1. Data Engineering
+
+We combined three key data sources:
+
+- **Level 2 Market Data** (from Alpaca API): includes real-time bid/ask quotes, size, and book depth.
+- **SEC EDGAR Filings**: matched stock filings (Forms 8-K, 10-K, 4) to time periods in market data to label known manipulative periods using enforcement actions.
+- **Labeled Anomalies**: constructed labels for suspicious behavior using timing overlaps between L2 quote surges and known manipulation disclosures.
+
+All data was stored and queried using PostgreSQL (via Beekeeper Studio), and preprocessing was handled in Python with pandas.
+
+---
+
+### 2. Feature Engineering
+
+We extracted the following features from quote data:
+
+- `price`: best bid or ask price at time \( t \)
+- `size`: number of shares available at best price
+- `total_levels`: depth of the order book (total number of visible price levels)
+
+These were chosen for their interpretability and relevance to typical manipulation tactics like spoofing and layering.
+
+We plan to expand the feature set in future iterations to include:
+
+- Order book imbalance
+- Quote update frequency
+- Derived volatility indicators
+
+---
+
+### 3. Modeling Approach
+
+We trained an **XGBoost classifier**, which is well-suited for imbalanced binary classification tasks and handles tabular data efficiently.
+
+- **Target**: Binary label (`1 = anomaly`, `0 = normal`)
+- **Training/test split**: 80/20 stratified
+- **Metric**: Log loss (`eval_metric='logloss'`)
+
+To address extreme class imbalance, we adjusted:
+
+- `scale_pos_weight = (neg / pos)` to give more weight to anomalies
+- Explored probability thresholds to tune precision/recall tradeoff
+
+---
+
+### 4. Evaluation
+
+We evaluated model performance using:
+
+- **Classification report** (precision, recall, F1-score)
+- **Confusion matrix**
+- **Feature importance** plot (via `xgboost.plot_importance`)
+
+Threshold adjustments were explored using `predict_proba` to increase anomaly recall.
+
+We implemented an XGBoost classifier [@Chen2016] to detect anomalies based on engineered features extracted from Level 2 quote data.
