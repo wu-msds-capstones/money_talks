@@ -1,1 +1,32 @@
 # Results
+
+### Model Performance
+
+We trained an XGBoost classifier on Apple L2 quote data to detect anomalies based on features including `price`, `size`, and `total_levels`. After tuning `scale_pos_weight`, the model improved its ability to detect rare anomalies.
+
+**Classification Report:**
+
+```text
+              precision    recall  f1-score   support
+
+           0       1.00      0.99      0.99    146857
+           1       0.41      0.89      0.56      1483
+
+    accuracy                           0.99    148340
+   macro avg       0.70      0.94      0.78    148340
+weighted avg       0.99      0.99      0.99    148340
+
+
+## Confusion Matrix
+
+The confusion matrix below shows the model's ability to detect anomalies in L2 quote data.
+
+![Confusion Matrix](images/model predictions.png)
+
+## Feature Importance
+
+Feature importance ranked by XGBoost's internal gain metric:
+
+![Feature Importance](images/feature_importance.png)
+
+[@Chen2016]
