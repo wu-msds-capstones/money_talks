@@ -1,1 +1,46 @@
 # Data
+
+## The Data We Needed
+
+### L2 Marketbook Data
+
+- L1 Marketbook data, plus 5 layers above and below the L1 with regards to current bids and current asks
+- Asks above yield upward price movement if filled, bids below yield downward prices if filled
+[source](https://www.interactivebrokers.com/en/pricing/market-data-pricing.php)
+
+### L1 Marketbook Data
+
+- The equilibrium so to speak; the price at which the most recent order was placed and filled
+- Timestamp down to microsecond, looks like: 2025-07-01 19:59:59.464006+00
+- id, symbol, timestamp, bid_price, bid_size, ask_price, ask_size
+[source](https://alpaca.markets/sdks/python/market_data.html#market-data)
+
+### OHLCV one-minute tick data
+
+- Open, High, Low, Close, Volume
+- Collected with both minute and date timestamp
+- Available up to 30 days in arears, including weekends even though there is no data fro weekends
+[source](https://alpaca.markets/sdks/python/market_data.html#market-data)
+
+## The Data Acquisition Process
+
+![Data Pipeline](\images\Capstone_Data_Collection__Process.png)
+As can be seen in the data flow above, the information needed to begin our project is generated in real-time as trades are placed on the New York Stock Exchange (NYSE) during trading hours (9:30 AM EDT until 3:30 PM EDT, though extended hours run from 9:00 AM EDT until 4:00 PM EDT) for Apple, Microsoft and Tesla stocks (tickers: AAPL; MSFT; TSLA). As a result, the origin of our data is the NYSE. 
+
+To get this capstone started on the right foot, our first piece of the data acquisition pipeline was made by establishing a postgres database and attaching it to a python script that utilized Alpaca-API to pick up historical OHLCV and L1 marketbook data needed for feature engineering. The OHLCV data spanned the one minute tick, giving us the symbol, date, timestamp, the stock's opening and closing price, and the highs, lows and volume for the stock traded over that minute duration. Since the market is incredibly reactionary, this data is helpful in feature engineering and manipulation detection itself. The L1 marketbook data was acquired in a similar process to the OHLCV data, though it was streamed in real time and not the night after the market closes. With the free tier of an Alpaca account, the minute tick data was only available the following day, while the L1 data was able to be scraped on a 15-minute delay, so the API-calling process was the same for both data, but one was a stream and the other was pulled in a batch the night after market close.
+
+The next piece of our byzantine data pipeline, and the most complex, was the L2 marketbook data. Given that we decided to focus on high-volume stocks, the millions of records that came with the live L2 marketbook data had to be streamed in real time. To do this, a gateway instance was established through Interactive Brokers (IBKR) on an AWS EC2 instance that streamed real-time data for each of the tickers. This gateway served as a medium between the exchange itself where the real-time data was posted, and our Postgres database where the data is stored. Once streamed through the gateway, the data was then parsed by the scraping script and sent two places: the first of which being the Postgres database established on Railway, and the second being the AWS S3 bucket in the form of a parquet file for that day's worth of data; these parquet files serve as backups should anything happen to our Postgres database. Once this data stream was set up and established, perhaps the next most difficult part was checking for duplicates and filtering the data. This was extremely difficult do to the volume of the data and inconsistencies in the streaming updates. The gateway instance was designed to update only upon new updates, which were timestamped to the microsecond, but unfortunately sometimes it would add previously collected data with its new updates since the difference in timestamps was often so finite. To combat this, we had to check our dataset for duplicates, which we removed prior to the training of our models to the tune of roughly 128,000 duplicates over the three tickers. This may seem like a lot, but when facing just over 4 million rows, this came out to only 3% of our actual data.  
+[EC2](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/concepts.html)
+[S3](https://docs.aws.amazon.com/AmazonS3/latest/userguide/Welcome.html)
+
+## The Data Workflow
+With all of the data collection process enumerated above, the complete flow of the data--which can be found in the image above--looks like this:
+- L1 marketbook data Streamed directly into Postgres database from Alpaca-API; snapshot sent nightly as parquet file to S3 bucket
+- Snapshot created using cron jobs on Railway, data streamed through scraper code from github repo hosted on Railway
+- OHLCV data scraped nightly from Alpaca-API, deposited into Postgres database on Railway
+- Scraping done on cron job through Railway, given the data is available up to 30 days in arears through the API, snapshots were neither created nore stored
+- L2 marketbook data streamed in real-time from IBKR Gateway directly into Postgres database; snapshots captured nightly and stored in S3 bucket as parquet files
+- Gateway API accessed through scraping script on Railway from github repo, and the snapshots were done through a script that also executed the other snapshots
+
+
+Cite something like this: [@Smith2020].
