@@ -21,12 +21,12 @@ weighted avg       0.99      0.99      0.99    148340
 
 The confusion matrix below shows the model's ability to detect anomalies in L2 quote data.
 
-![Confusion Matrix](images/model predictions.png)
+![Confusion Matrix](model_predictions.png)
 
 ## Feature Importance
 
 Feature importance ranked by XGBoost's internal gain metric:
 
-![Feature Importance](images/feature_importance.png)
+![Feature Importance](feature_importance.png)
 
 [@Chen2016]
