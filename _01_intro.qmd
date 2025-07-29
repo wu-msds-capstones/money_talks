@@ -1,5 +1,13 @@
 ## Introduction
 
-Market manipulation represents one of the most persistent threats to financial market integrity, costing retail investors billions of dollars annually while undermining the foundational principle of fair price discovery. As algorithmic trading has evolved to dominate modern equity markets—accounting for over 80% of daily trading volume—sophisticated manipulation schemes have emerged that exploit the speed and complexity of electronic order books to deceive other market participants.
+Market manipulation represents one of the most persistent threats to financial market integrity, costing retail investors billions of dollars annually while undermining the foundational principle of fair price discovery. As algorithmic trading has evolved to dominate modern equity markets—accounting for over 80% of daily trading, volume—sophisticated manipulation schemes have emerged that exploit the speed and complexity of electronic order books to deceive other market participants.
+
+[HFT History](https://jfin-swufe.springeropen.com/articles/10.1186/s40854-015-0003-8)
+[HFT and Networked Markets](https://www.pnas.org/doi/10.1073/pnas.2015573118)
+[HFT and Systematic Risk](https://www.degruyterbrill.com/document/doi/10.1515/roe-2020-0028/html)
+[Domain of HFT](https://www.mdpi.com/1911-8074/15/2/54)
+[What is Quote Stuffing](https://corporatefinanceinstitute.com/resources/career-map/sell-side/capital-markets/quote-stuffing/)
+[NYSE Trading Rules](https://nyseguide.srorules.com/rules)
+
 
 Something something, and then I state some citable facts [@Zelner2022].
