@@ -1,9 +1,10 @@
 ---
-title: "Capstone Project"
-subtitle: Subtitle
+title: "Identifying Quote Stuffing in Real-time Orderbooks"
+subtitle: Observance of AAPL, MSFT, & TSLA Data From NYSE
 authors:
-  - Bob
-  - Jane
+  - Cameron Hayman
+  - Ghson Alotibi
+  - Paxton Jones
 bibliography: references.bib
 title-block-banner: true
 format: 
