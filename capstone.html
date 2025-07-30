@@ -1,0 +1,986 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.7.31">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Identifying Quote Stuffing in Real-time Orderbooks – Money Talks: The Unspoken World of Market Manipulation</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-e1a5c8363afafaef2c763b6775fbf3ca.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-dark-8ef56b68f8fa1e9d2ba328e99e439f80.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-e1a5c8363afafaef2c763b6775fbf3ca.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-991b1886d3c685c7aa2b62b80640c7af.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-dark-08799928d293638fe9563d5c5a2794e5.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="site_libs/bootstrap/bootstrap-991b1886d3c685c7aa2b62b80640c7af.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+</head>
+
+<body class="nav-fixed quarto-light"><script id="quarto-html-before-body" type="application/javascript">
+    const toggleBodyColorMode = (bsSheetEl) => {
+      const mode = bsSheetEl.getAttribute("data-mode");
+      const bodyEl = window.document.querySelector("body");
+      if (mode === "dark") {
+        bodyEl.classList.add("quarto-dark");
+        bodyEl.classList.remove("quarto-light");
+      } else {
+        bodyEl.classList.add("quarto-light");
+        bodyEl.classList.remove("quarto-dark");
+      }
+    }
+    const toggleBodyColorPrimary = () => {
+      const bsSheetEl = window.document.querySelector("link#quarto-bootstrap:not([rel=disabled-stylesheet])");
+      if (bsSheetEl) {
+        toggleBodyColorMode(bsSheetEl);
+      }
+    }
+    const setColorSchemeToggle = (alternate) => {
+      const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+      for (let i=0; i < toggles.length; i++) {
+        const toggle = toggles[i];
+        if (toggle) {
+          if (alternate) {
+            toggle.classList.add("alternate");
+          } else {
+            toggle.classList.remove("alternate");
+          }
+        }
+      }
+    };
+    const toggleColorMode = (alternate) => {
+      // Switch the stylesheets
+      const primaryStylesheets = window.document.querySelectorAll('link.quarto-color-scheme:not(.quarto-color-alternate)');
+      const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+      manageTransitions('#quarto-margin-sidebar .nav-link', false);
+      if (alternate) {
+        // note: dark is layered on light, we don't disable primary!
+        enableStylesheet(alternateStylesheets);
+        for (const sheetNode of alternateStylesheets) {
+          if (sheetNode.id === "quarto-bootstrap") {
+            toggleBodyColorMode(sheetNode);
+          }
+        }
+      } else {
+        disableStylesheet(alternateStylesheets);
+        enableStylesheet(primaryStylesheets)
+        toggleBodyColorPrimary();
+      }
+      manageTransitions('#quarto-margin-sidebar .nav-link', true);
+      // Switch the toggles
+      setColorSchemeToggle(alternate)
+      // Hack to workaround the fact that safari doesn't
+      // properly recolor the scrollbar when toggling (#1455)
+      if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+        manageTransitions("body", false);
+        window.scrollTo(0, 1);
+        setTimeout(() => {
+          window.scrollTo(0, 0);
+          manageTransitions("body", true);
+        }, 40);
+      }
+    }
+    const disableStylesheet = (stylesheets) => {
+      for (let i=0; i < stylesheets.length; i++) {
+        const stylesheet = stylesheets[i];
+        stylesheet.rel = 'disabled-stylesheet';
+      }
+    }
+    const enableStylesheet = (stylesheets) => {
+      for (let i=0; i < stylesheets.length; i++) {
+        const stylesheet = stylesheets[i];
+        if(stylesheet.rel !== 'stylesheet') { // for Chrome, which will still FOUC without this check
+          stylesheet.rel = 'stylesheet';
+        }
+      }
+    }
+    const manageTransitions = (selector, allowTransitions) => {
+      const els = window.document.querySelectorAll(selector);
+      for (let i=0; i < els.length; i++) {
+        const el = els[i];
+        if (allowTransitions) {
+          el.classList.remove('notransition');
+        } else {
+          el.classList.add('notransition');
+        }
+      }
+    }
+    const isFileUrl = () => {
+      return window.location.protocol === 'file:';
+    }
+    const hasAlternateSentinel = () => {
+      let styleSentinel = getColorSchemeSentinel();
+      if (styleSentinel !== null) {
+        return styleSentinel === "alternate";
+      } else {
+        return false;
+      }
+    }
+    const setStyleSentinel = (alternate) => {
+      const value = alternate ? "alternate" : "default";
+      if (!isFileUrl()) {
+        window.localStorage.setItem("quarto-color-scheme", value);
+      } else {
+        localAlternateSentinel = value;
+      }
+    }
+    const getColorSchemeSentinel = () => {
+      if (!isFileUrl()) {
+        const storageValue = window.localStorage.getItem("quarto-color-scheme");
+        return storageValue != null ? storageValue : localAlternateSentinel;
+      } else {
+        return localAlternateSentinel;
+      }
+    }
+    const toggleGiscusIfUsed = (isAlternate, darkModeDefault) => {
+      const baseTheme = document.querySelector('#giscus-base-theme')?.value ?? 'light';
+      const alternateTheme = document.querySelector('#giscus-alt-theme')?.value ?? 'dark';
+      let newTheme = '';
+      if(authorPrefersDark) {
+        newTheme = isAlternate ? baseTheme : alternateTheme;
+      } else {
+        newTheme = isAlternate ? alternateTheme : baseTheme;
+      }
+      const changeGiscusTheme = () => {
+        // From: https://github.com/giscus/giscus/issues/336
+        const sendMessage = (message) => {
+          const iframe = document.querySelector('iframe.giscus-frame');
+          if (!iframe) return;
+          iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+        }
+        sendMessage({
+          setConfig: {
+            theme: newTheme
+          }
+        });
+      }
+      const isGiscussLoaded = window.document.querySelector('iframe.giscus-frame') !== null;
+      if (isGiscussLoaded) {
+        changeGiscusTheme();
+      }
+    };
+    const authorPrefersDark = false;
+    const darkModeDefault = authorPrefersDark;
+      document.querySelector('link#quarto-text-highlighting-styles.quarto-color-scheme-extra').rel = 'disabled-stylesheet';
+      document.querySelector('link#quarto-bootstrap.quarto-color-scheme-extra').rel = 'disabled-stylesheet';
+    let localAlternateSentinel = darkModeDefault ? 'alternate' : 'default';
+    // Dark / light mode switch
+    window.quartoToggleColorScheme = () => {
+      // Read the current dark / light value
+      let toAlternate = !hasAlternateSentinel();
+      toggleColorMode(toAlternate);
+      setStyleSentinel(toAlternate);
+      toggleGiscusIfUsed(toAlternate, darkModeDefault);
+      window.dispatchEvent(new Event('resize'));
+    };
+    // Switch to dark mode if need be
+    if (hasAlternateSentinel()) {
+      toggleColorMode(true);
+    } else {
+      toggleColorMode(false);
+    }
+  </script>
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top quarto-banner">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">Money Talks: The Unspoken World of Market Manipulation</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="./about_us.qmd"> 
+<span class="menu-text">About Us</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+  <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">Identifying Quote Stuffing in Real-time Orderbooks</h1>
+            <p class="subtitle lead">Observance of AAPL, MSFT, &amp; TSLA Data From NYSE</p>
+                      </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      <div>
+      <div class="quarto-title-meta-heading">Authors</div>
+      <div class="quarto-title-meta-contents">
+               <p>Cameron Hayman </p>
+               <p>Ghson Alotibi </p>
+               <p>Paxton Jones </p>
+            </div>
+    </div>
+      
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction"><span class="header-section-number">0.1</span> Introduction</a></li>
+  <li><a href="#background" id="toc-background" class="nav-link" data-scroll-target="#background"><span class="header-section-number">0.2</span> Background</a>
+  <ul class="collapse">
+  <li><a href="#the-evolution-of-market-manipulation" id="toc-the-evolution-of-market-manipulation" class="nav-link" data-scroll-target="#the-evolution-of-market-manipulation"><span class="header-section-number">0.2.1</span> The Evolution of Market Manipulation</a></li>
+  <li><a href="#regulatory-landscape-and-enforcement-challenges" id="toc-regulatory-landscape-and-enforcement-challenges" class="nav-link" data-scroll-target="#regulatory-landscape-and-enforcement-challenges"><span class="header-section-number">0.2.2</span> Regulatory Landscape and Enforcement Challenges</a></li>
+  <li><a href="#technical-architecture-requirements" id="toc-technical-architecture-requirements" class="nav-link" data-scroll-target="#technical-architecture-requirements"><span class="header-section-number">0.2.3</span> Technical Architecture Requirements</a></li>
+  <li><a href="#research-gap-and-contribution" id="toc-research-gap-and-contribution" class="nav-link" data-scroll-target="#research-gap-and-contribution"><span class="header-section-number">0.2.4</span> Research Gap and Contribution</a></li>
+  </ul></li>
+  <li><a href="#methods" id="toc-methods" class="nav-link" data-scroll-target="#methods"><span class="header-section-number">0.3</span> Methods</a>
+  <ul class="collapse">
+  <li><a href="#overview" id="toc-overview" class="nav-link" data-scroll-target="#overview"><span class="header-section-number">0.3.1</span> Overview</a></li>
+  <li><a href="#data-engineering" id="toc-data-engineering" class="nav-link" data-scroll-target="#data-engineering"><span class="header-section-number">0.3.2</span> 1. Data Engineering</a></li>
+  <li><a href="#feature-engineering" id="toc-feature-engineering" class="nav-link" data-scroll-target="#feature-engineering"><span class="header-section-number">0.3.3</span> 2. Feature Engineering</a></li>
+  <li><a href="#modeling-approach" id="toc-modeling-approach" class="nav-link" data-scroll-target="#modeling-approach"><span class="header-section-number">0.3.4</span> 3. Modeling Approach</a></li>
+  <li><a href="#evaluation" id="toc-evaluation" class="nav-link" data-scroll-target="#evaluation"><span class="header-section-number">0.3.5</span> 4. Evaluation</a></li>
+  </ul></li>
+  <li><a href="#data" id="toc-data" class="nav-link" data-scroll-target="#data"><span class="header-section-number">1</span> Data</a>
+  <ul class="collapse">
+  <li><a href="#the-data-we-needed" id="toc-the-data-we-needed" class="nav-link" data-scroll-target="#the-data-we-needed"><span class="header-section-number">1.1</span> The Data We Needed</a>
+  <ul class="collapse">
+  <li><a href="#l2-marketbook-data" id="toc-l2-marketbook-data" class="nav-link" data-scroll-target="#l2-marketbook-data"><span class="header-section-number">1.1.1</span> L2 Marketbook Data</a></li>
+  <li><a href="#l1-marketbook-data" id="toc-l1-marketbook-data" class="nav-link" data-scroll-target="#l1-marketbook-data"><span class="header-section-number">1.1.2</span> L1 Marketbook Data</a></li>
+  <li><a href="#ohlcv-one-minute-tick-data" id="toc-ohlcv-one-minute-tick-data" class="nav-link" data-scroll-target="#ohlcv-one-minute-tick-data"><span class="header-section-number">1.1.3</span> OHLCV one-minute tick data</a></li>
+  </ul></li>
+  <li><a href="#the-data-acquisition-process" id="toc-the-data-acquisition-process" class="nav-link" data-scroll-target="#the-data-acquisition-process"><span class="header-section-number">1.2</span> The Data Acquisition Process</a></li>
+  <li><a href="#the-data-workflow" id="toc-the-data-workflow" class="nav-link" data-scroll-target="#the-data-workflow"><span class="header-section-number">1.3</span> The Data Workflow</a></li>
+  </ul></li>
+  <li><a href="#results" id="toc-results" class="nav-link" data-scroll-target="#results"><span class="header-section-number">2</span> Results</a>
+  <ul class="collapse">
+  <li><a href="#model-performance" id="toc-model-performance" class="nav-link" data-scroll-target="#model-performance"><span class="header-section-number">2.0.1</span> Model Performance</a></li>
+  <li><a href="#confusion-matrix" id="toc-confusion-matrix" class="nav-link" data-scroll-target="#confusion-matrix"><span class="header-section-number">2.1</span> Confusion Matrix</a></li>
+  <li><a href="#feature-importance" id="toc-feature-importance" class="nav-link" data-scroll-target="#feature-importance"><span class="header-section-number">2.2</span> Feature Importance</a></li>
+  </ul></li>
+  <li><a href="#conclusions" id="toc-conclusions" class="nav-link" data-scroll-target="#conclusions"><span class="header-section-number">3</span> Conclusions</a>
+  <ul class="collapse">
+  <li><a href="#still-in-the-process-of-improving-models" id="toc-still-in-the-process-of-improving-models" class="nav-link" data-scroll-target="#still-in-the-process-of-improving-models"><span class="header-section-number">3.0.1</span> Still in the process of improving models!!</a></li>
+  </ul></li>
+  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references"><span class="header-section-number">4</span> References</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content quarto-banner-title-block" id="quarto-document-content">
+
+
+
+
+
+
+<section id="introduction" class="level2" data-number="0.1">
+<h2 data-number="0.1" class="anchored" data-anchor-id="introduction"><span class="header-section-number">0.1</span> Introduction</h2>
+<p>The shift from traditional floor trading to electronic platforms has changed financial markets significantly. High-frequency trading (HFT) began in the early 2000s and now accounts for up to 70% of US equity trading volume. It has brought both efficiency gains and new types of market manipulation (Financial Innovation, 2015; PNAS, 2021). One of the most prevelant and troubling manipulative methods is quote stuffing, which is a strategy that involves traders quickly submitting and canceling large numbers of orders to create confusion in the market, slow down competitors’ systems, and gain trading advantages through fake information gaps.</p>
+<p>Quote stuffing is a complex method of market manipulation that takes advantage of the technology in today’s electronic markets. Unlike traditional manipulation techniques that relied on spreading false information or coordinated trading, quote stuffing works at the microsecond level within the market’s own data streams. Traders who use this tactic overwhelm order books with quotes they do not plan to execute, causing what regulators call “excessive messaging.” This can lower market quality and negatively impact other participants (SEC Division of Risk, Finance and Strategy).</p>
+<p>Detecting quote stuffing is difficult for regulators, exchanges, and market participants. Standard surveillance techniques often miss the subtle patterns of quick order submissions and cancellations that define this practice. Recent research using Thomson Reuters Tick History (TRTH) millisecond data from 2005-2016 highlights that today’s market complexity requires advanced analytical methods to tell the difference between legitimate high-frequency market making and manipulative quote stuffing (MDPI, 2022).</p>
+<p><a href="https://jfin-swufe.springeropen.com/articles/10.1186/s40854-015-0003-8">HFT History</a> <a href="https://www.pnas.org/doi/10.1073/pnas.2015573118">HFT and Networked Markets</a> <a href="https://www.degruyterbrill.com/document/doi/10.1515/roe-2020-0028/html">HFT and Systematic Risk</a> <a href="https://www.mdpi.com/1911-8074/15/2/54">Domain of HFT</a> <a href="https://corporatefinanceinstitute.com/resources/career-map/sell-side/capital-markets/quote-stuffing/">What is Quote Stuffing</a> <a href="https://nyseguide.srorules.com/rules">NYSE Trading Rules</a></p>
+<p>Something something, and then I state some citable facts <span class="citation" data-cites="Zelner2022">(<a href="#ref-Zelner2022" role="doc-biblioref">Zelner et al., 2022</a>)</span>.</p>
+</section>
+<section id="background" class="level2" data-number="0.2">
+<h2 data-number="0.2" class="anchored" data-anchor-id="background"><span class="header-section-number">0.2</span> Background</h2>
+<section id="the-evolution-of-market-manipulation" class="level3" data-number="0.2.1">
+<h3 data-number="0.2.1" class="anchored" data-anchor-id="the-evolution-of-market-manipulation"><span class="header-section-number">0.2.1</span> The Evolution of Market Manipulation</h3>
+<p>Traditional manipulation schemes relied on spreading false information or coordinating large trades to artificially influence prices. However, the digitization of financial markets has spawned a new generation of algorithmic manipulation techniques that operate at microsecond timescales, making them virtually impossible to detect through manual surveillance methods.</p>
+<p><strong>Spoofing</strong> involves placing large orders with the intent to cancel them before execution, creating false impressions of supply or demand. The practice gained notoriety through cases like that of Navinder Singh Sarao, whose spoofing activities were linked to the 2010 Flash Crash. A single trader’s manipulation strategy contributed to a market event that erased nearly $1 trillion in market value within minutes, demonstrating the systemic risks posed by modern manipulation techniques.</p>
+<p><strong>Layering</strong> extends this concept by placing multiple orders at different price levels to create an illusion of market depth. Manipulators build apparent support or resistance levels through phantom liquidity that disappears once other traders attempt to interact with it. This technique is particularly effective in less liquid securities where a few large orders can significantly influence price perception.</p>
+<p><strong>Quote stuffing</strong> overwhelms market data systems with rapid order submissions and cancellations, creating information asymmetries that benefit high-frequency traders while disadvantaging other market participants. During peak manipulation periods, quote stuffing can generate thousands of order messages per second, effectively creating a denial-of-service attack against competing algorithms.</p>
+<p>More sophisticated schemes include <strong>momentum ignition</strong>, where traders use rapid-fire orders to trigger algorithmic responses from other market participants, and <strong>pinging</strong>, which involves sending small orders to detect hidden liquidity in dark pools. These techniques exploit the fundamental asymmetry between human reaction times and algorithmic execution speeds, creating unfair advantages that violate market integrity principles.</p>
+</section>
+<section id="regulatory-landscape-and-enforcement-challenges" class="level3" data-number="0.2.2">
+<h3 data-number="0.2.2" class="anchored" data-anchor-id="regulatory-landscape-and-enforcement-challenges"><span class="header-section-number">0.2.2</span> Regulatory Landscape and Enforcement Challenges</h3>
+<p>The regulatory response to algorithmic manipulation has been substantial but faces inherent technological limitations. The Securities and Exchange Commission (SEC) has pursued high-profile enforcement actions, including $920 million in penalties against major financial institutions since 2015. Notable cases include the $25 million fine against Deutsche Bank for spoofing activities and the $70 million penalty against JPMorgan Chase for manipulative trading in precious metals markets.</p>
+<p>The European Union’s Markets in Financial Instruments Directive II (MiFID II) has implemented comprehensive transaction reporting requirements, mandating detailed records of order modifications, cancellations, and execution circumstances. Similarly, the Commodity Futures Trading Commission (CFTC) has established specific anti-spoofing regulations under the Dodd-Frank Act, creating criminal penalties for manipulation activities.</p>
+<p>Despite these regulatory efforts, traditional surveillance systems struggle with the volume and velocity of modern market data. Current approaches typically rely on post-trade analysis of aggregated data, processing daily volumes exceeding 50 billion order messages across U.S. equity markets. The latency between manipulation events and detection often spans hours or days, rendering enforcement reactive rather than preventive.</p>
+<p>Regulatory technology (RegTech) providers estimate that fewer than 5% of potential manipulation events are currently detected through automated surveillance, with most discoveries occurring through whistleblower reports or market anomaly investigations. This detection gap creates significant compliance risks for market operators and undermines confidence in market fairness.</p>
+</section>
+<section id="technical-architecture-requirements" class="level3" data-number="0.2.3">
+<h3 data-number="0.2.3" class="anchored" data-anchor-id="technical-architecture-requirements"><span class="header-section-number">0.2.3</span> Technical Architecture Requirements</h3>
+<p>Effective real-time manipulation detection requires processing Level 2 (L2) order book data, which provides granular visibility into bid and ask orders across multiple price levels. Unlike Level 1 data that shows only best bid/offer prices, L2 data reveals the full market depth, order queue dynamics, and the rapid changes in market microstructure that characterize manipulation attempts.</p>
+<p>The technical challenges are substantial: processing millions of order book updates per second, maintaining sub-millisecond latency requirements, and distinguishing between legitimate high-frequency trading strategies and manipulative behavior. Modern exchanges generate L2 data feeds exceeding 2 terabytes daily for major securities, requiring specialized infrastructure for real-time analysis.</p>
+<p>Market data complexity varies significantly across trading venues, with fragmented liquidity across over 16 registered exchanges and dozens of alternative trading systems in U.S. equity markets. Each venue maintains distinct order types, priority rules, and data formats, complicating unified surveillance efforts. Cross-market manipulation detection requires consolidating and normalizing data streams from multiple sources while maintaining temporal precision.</p>
+</section>
+<section id="research-gap-and-contribution" class="level3" data-number="0.2.4">
+<h3 data-number="0.2.4" class="anchored" data-anchor-id="research-gap-and-contribution"><span class="header-section-number">0.2.4</span> Research Gap and Contribution</h3>
+<p>While academic literature has explored manipulation detection using machine learning approaches, most studies rely on post-trade data analysis or simulated environments. Research by Cao et al.&nbsp;(2014) demonstrated machine learning applications for spoofing detection using historical futures data, while Goldstein et al.&nbsp;(2021) analyzed layering patterns in equity markets using daily aggregated data. However, real-time detection systems using live Level 2 market data remain largely proprietary to institutional market surveillance providers.</p>
+<p>This proprietary nature creates a significant knowledge gap in the academic literature, limiting research reproducibility and innovation in detection methodologies. Commercial surveillance systems like NASDAQ’s SMARTS or Nice Actimize’s market surveillance solutions represent multi-million dollar investments that are inaccessible to academic researchers or smaller market participants.</p>
+<p>Our research addresses this gap by developing an open-source, real-time detection system that combines multiple data sources—live L2 order book feeds, historical tick data, and engineered microstructure features—to identify manipulation patterns as they occur. The system’s architecture enables both academic research and practical deployment by retail brokers or regulatory authorities.</p>
+<p>By implementing synthetic manipulation injection capabilities, we can validate detection algorithms against known manipulation signatures while maintaining the ability to adapt to emerging schemes. This approach addresses the fundamental challenge of supervised learning in manipulation detection: the rarity of labeled manipulation events in historical data.</p>
+<p>The system’s practical relevance extends beyond academic research. Retail brokers processing over $7 trillion in annual trading volume could implement similar detection capabilities to protect their clients from manipulation-induced losses. Regulatory authorities could enhance market surveillance through real-time monitoring rather than post-trade investigation, potentially preventing market disruptions before they occur.</p>
+<p>Furthermore, the transparency of our methodology enables market participants to understand surveillance capabilities, promoting fair competition through informed consent rather than information asymmetry. This represents a significant departure from the “black box” nature of current commercial surveillance systems.</p>
+</section>
+</section>
+<section id="methods" class="level2" data-number="0.3">
+<h2 data-number="0.3" class="anchored" data-anchor-id="methods"><span class="header-section-number">0.3</span> Methods</h2>
+<section id="overview" class="level3" data-number="0.3.1">
+<h3 data-number="0.3.1" class="anchored" data-anchor-id="overview"><span class="header-section-number">0.3.1</span> Overview</h3>
+<p>Our goal was to detect market manipulation behavior in high-frequency equity trading using publicly available data. We developed a machine learning model (XGBoost) to classify order book events as normal or anomalous, based on real market microstructure.</p>
+</section>
+<section id="data-engineering" class="level3" data-number="0.3.2">
+<h3 data-number="0.3.2" class="anchored" data-anchor-id="data-engineering"><span class="header-section-number">0.3.2</span> 1. Data Engineering</h3>
+<p>We combined three key data sources:</p>
+<ul>
+<li><strong>Level 2 Market Data</strong> (from Alpaca API): includes real-time bid/ask quotes, size, and book depth.</li>
+<li><strong>SEC EDGAR Filings</strong>: matched stock filings (Forms 8-K, 10-K, 4) to time periods in market data to label known manipulative periods using enforcement actions.</li>
+<li><strong>Labeled Anomalies</strong>: constructed labels for suspicious behavior using timing overlaps between L2 quote surges and known manipulation disclosures.</li>
+</ul>
+<p>All data was stored and queried using PostgreSQL (via Beekeeper Studio), and preprocessing was handled in Python with pandas.</p>
+<hr>
+</section>
+<section id="feature-engineering" class="level3" data-number="0.3.3">
+<h3 data-number="0.3.3" class="anchored" data-anchor-id="feature-engineering"><span class="header-section-number">0.3.3</span> 2. Feature Engineering</h3>
+<p>We extracted the following features from quote data:</p>
+<ul>
+<li><code>price</code>: best bid or ask price at time ( t )</li>
+<li><code>size</code>: number of shares available at best price</li>
+<li><code>total_levels</code>: depth of the order book (total number of visible price levels)</li>
+</ul>
+<p>These were chosen for their interpretability and relevance to typical manipulation tactics like spoofing and layering.</p>
+<p>We plan to expand the feature set in future iterations to include:</p>
+<ul>
+<li>Order book imbalance</li>
+<li>Quote update frequency</li>
+<li>Derived volatility indicators</li>
+</ul>
+<hr>
+</section>
+<section id="modeling-approach" class="level3" data-number="0.3.4">
+<h3 data-number="0.3.4" class="anchored" data-anchor-id="modeling-approach"><span class="header-section-number">0.3.4</span> 3. Modeling Approach</h3>
+<p>We trained an <strong>XGBoost classifier</strong>, which is well-suited for imbalanced binary classification tasks and handles tabular data efficiently.</p>
+<ul>
+<li><strong>Target</strong>: Binary label (<code>1 = anomaly</code>, <code>0 = normal</code>)</li>
+<li><strong>Training/test split</strong>: 80/20 stratified</li>
+<li><strong>Metric</strong>: Log loss (<code>eval_metric='logloss'</code>)</li>
+</ul>
+<p>To address extreme class imbalance, we adjusted:</p>
+<ul>
+<li><code>scale_pos_weight = (neg / pos)</code> to give more weight to anomalies</li>
+<li>Explored probability thresholds to tune precision/recall tradeoff</li>
+</ul>
+<hr>
+</section>
+<section id="evaluation" class="level3" data-number="0.3.5">
+<h3 data-number="0.3.5" class="anchored" data-anchor-id="evaluation"><span class="header-section-number">0.3.5</span> 4. Evaluation</h3>
+<p>We evaluated model performance using:</p>
+<ul>
+<li><strong>Classification report</strong> (precision, recall, F1-score)</li>
+<li><strong>Confusion matrix</strong></li>
+<li><strong>Feature importance</strong> plot (via <code>xgboost.plot_importance</code>)</li>
+</ul>
+<p>Threshold adjustments were explored using <code>predict_proba</code> to increase anomaly recall.</p>
+<p>We implemented an XGBoost classifier <span class="citation" data-cites="Chen2016">(<a href="#ref-Chen2016" role="doc-biblioref"><strong>Chen2016?</strong></a>)</span> to detect anomalies based on engineered features extracted from Level 2 quote data.</p>
+</section>
+</section>
+<section id="data" class="level1" data-number="1">
+<h1 data-number="1"><span class="header-section-number">1</span> Data</h1>
+<section id="the-data-we-needed" class="level2" data-number="1.1">
+<h2 data-number="1.1" class="anchored" data-anchor-id="the-data-we-needed"><span class="header-section-number">1.1</span> The Data We Needed</h2>
+<section id="l2-marketbook-data" class="level3" data-number="1.1.1">
+<h3 data-number="1.1.1" class="anchored" data-anchor-id="l2-marketbook-data"><span class="header-section-number">1.1.1</span> L2 Marketbook Data</h3>
+<ul>
+<li>L1 Marketbook data, plus 5 layers above and below the L1 with regards to current bids and current asks</li>
+<li>Asks above yield upward price movement if filled, bids below yield downward prices if filled <a href="https://www.interactivebrokers.com/en/pricing/market-data-pricing.php">source</a></li>
+</ul>
+</section>
+<section id="l1-marketbook-data" class="level3" data-number="1.1.2">
+<h3 data-number="1.1.2" class="anchored" data-anchor-id="l1-marketbook-data"><span class="header-section-number">1.1.2</span> L1 Marketbook Data</h3>
+<ul>
+<li>The equilibrium so to speak; the price at which the most recent order was placed and filled</li>
+<li>Timestamp down to microsecond, looks like: 2025-07-01 19:59:59.464006+00</li>
+<li>id, symbol, timestamp, bid_price, bid_size, ask_price, ask_size <a href="https://alpaca.markets/sdks/python/market_data.html#market-data">source</a></li>
+</ul>
+</section>
+<section id="ohlcv-one-minute-tick-data" class="level3" data-number="1.1.3">
+<h3 data-number="1.1.3" class="anchored" data-anchor-id="ohlcv-one-minute-tick-data"><span class="header-section-number">1.1.3</span> OHLCV one-minute tick data</h3>
+<ul>
+<li>Open, High, Low, Close, Volume</li>
+<li>Collected with both minute and date timestamp</li>
+<li>Available up to 30 days in arears, including weekends even though there is no data fro weekends <a href="https://alpaca.markets/sdks/python/market_data.html#market-data">source</a></li>
+</ul>
+</section>
+</section>
+<section id="the-data-acquisition-process" class="level2" data-number="1.2">
+<h2 data-number="1.2" class="anchored" data-anchor-id="the-data-acquisition-process"><span class="header-section-number">1.2</span> The Data Acquisition Process</h2>
+<p><img src="Capstone_Data_Collection__Process.png" class="img-fluid" alt="Data Pipeline"> As can be seen in the data flow above, the information needed to begin our project is generated in real-time as trades are placed on the New York Stock Exchange (NYSE) during trading hours (9:30 AM EDT until 3:30 PM EDT, though extended hours run from 9:00 AM EDT until 4:00 PM EDT) for Apple, Microsoft and Tesla stocks (tickers: AAPL; MSFT; TSLA). As a result, the origin of our data is the NYSE.</p>
+<p>To get this capstone started on the right foot, our first piece of the data acquisition pipeline was made by establishing a postgres database and attaching it to a python script that utilized Alpaca-API to pick up historical OHLCV and L1 marketbook data needed for feature engineering. The OHLCV data spanned the one minute tick, giving us the symbol, date, timestamp, the stock’s opening and closing price, and the highs, lows and volume for the stock traded over that minute duration. Since the market is incredibly reactionary, this data is helpful in feature engineering and manipulation detection itself. The L1 marketbook data was acquired in a similar process to the OHLCV data, though it was streamed in real time and not the night after the market closes. With the free tier of an Alpaca account, the minute tick data was only available the following day, while the L1 data was able to be scraped on a 15-minute delay, so the API-calling process was the same for both data, but one was a stream and the other was pulled in a batch the night after market close.</p>
+<p>The next piece of our byzantine data pipeline, and the most complex, was the L2 marketbook data. Given that we decided to focus on high-volume stocks, the millions of records that came with the live L2 marketbook data had to be streamed in real time. To do this, a gateway instance was established through Interactive Brokers (IBKR) on an AWS EC2 instance that streamed real-time data for each of the tickers. This gateway served as a medium between the exchange itself where the real-time data was posted, and our Postgres database where the data is stored. Once streamed through the gateway, the data was then parsed by the scraping script and sent two places: the first of which being the Postgres database established on Railway, and the second being the AWS S3 bucket in the form of a parquet file for that day’s worth of data; these parquet files serve as backups should anything happen to our Postgres database. Once this data stream was set up and established, perhaps the next most difficult part was checking for duplicates and filtering the data. This was extremely difficult do to the volume of the data and inconsistencies in the streaming updates. The gateway instance was designed to update only upon new updates, which were timestamped to the microsecond, but unfortunately sometimes it would add previously collected data with its new updates since the difference in timestamps was often so finite. To combat this, we had to check our dataset for duplicates, which we removed prior to the training of our models to the tune of roughly 128,000 duplicates over the three tickers. This may seem like a lot, but when facing just over 4 million rows, this came out to only 3% of our actual data.<br>
+<a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/concepts.html">EC2</a> <a href="https://docs.aws.amazon.com/AmazonS3/latest/userguide/Welcome.html">S3</a></p>
+</section>
+<section id="the-data-workflow" class="level2" data-number="1.3">
+<h2 data-number="1.3" class="anchored" data-anchor-id="the-data-workflow"><span class="header-section-number">1.3</span> The Data Workflow</h2>
+<p>With all of the data collection process enumerated above, the complete flow of the data–which can be found in the image above–looks like this: - L1 marketbook data Streamed directly into Postgres database from Alpaca-API; snapshot sent nightly as parquet file to S3 bucket - Snapshot created using cron jobs on Railway, data streamed through scraper code from github repo hosted on Railway - OHLCV data scraped nightly from Alpaca-API, deposited into Postgres database on Railway - Scraping done on cron job through Railway, given the data is available up to 30 days in arears through the API, snapshots were neither created nore stored - L2 marketbook data streamed in real-time from IBKR Gateway directly into Postgres database; snapshots captured nightly and stored in S3 bucket as parquet files - Gateway API accessed through scraping script on Railway from github repo, and the snapshots were done through a script that also executed the other snapshots</p>
+<p>Cite something like this: <span class="citation" data-cites="Smith2020">(<a href="#ref-Smith2020" role="doc-biblioref"><strong>Smith2020?</strong></a>)</span>.</p>
+</section>
+</section>
+<section id="results" class="level1" data-number="2">
+<h1 data-number="2"><span class="header-section-number">2</span> Results</h1>
+<section id="model-performance" class="level3" data-number="2.0.1">
+<h3 data-number="2.0.1" class="anchored" data-anchor-id="model-performance"><span class="header-section-number">2.0.1</span> Model Performance</h3>
+<p>We trained an XGBoost classifier on Apple L2 quote data to detect anomalies based on features including <code>price</code>, <code>size</code>, and <code>total_levels</code>. After tuning <code>scale_pos_weight</code>, the model improved its ability to detect rare anomalies.</p>
+<p><strong>Classification Report:</strong></p>
+<p>```text precision recall f1-score support</p>
+<pre><code>       0       1.00      0.99      0.99    146857
+       1       0.41      0.89      0.56      1483
+
+accuracy                           0.99    148340</code></pre>
+<p>macro avg 0.70 0.94 0.78 148340 weighted avg 0.99 0.99 0.99 148340</p>
+</section>
+<section id="confusion-matrix" class="level2" data-number="2.1">
+<h2 data-number="2.1" class="anchored" data-anchor-id="confusion-matrix"><span class="header-section-number">2.1</span> Confusion Matrix</h2>
+<p>The confusion matrix below shows the model’s ability to detect anomalies in L2 quote data.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="model_predictions.png" class="img-fluid figure-img"></p>
+<figcaption>Confusion Matrix</figcaption>
+</figure>
+</div>
+</section>
+<section id="feature-importance" class="level2" data-number="2.2">
+<h2 data-number="2.2" class="anchored" data-anchor-id="feature-importance"><span class="header-section-number">2.2</span> Feature Importance</h2>
+<p>Feature importance ranked by XGBoost’s internal gain metric:</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="feature_importance.png" class="img-fluid figure-img"></p>
+<figcaption>Feature Importance</figcaption>
+</figure>
+</div>
+<p><span class="citation" data-cites="Chen2016">(<a href="#ref-Chen2016" role="doc-biblioref"><strong>Chen2016?</strong></a>)</span></p>
+</section>
+</section>
+<section id="conclusions" class="level1" data-number="3">
+<h1 data-number="3"><span class="header-section-number">3</span> Conclusions</h1>
+<section id="still-in-the-process-of-improving-models" class="level3" data-number="3.0.1">
+<h3 data-number="3.0.1" class="anchored" data-anchor-id="still-in-the-process-of-improving-models"><span class="header-section-number">3.0.1</span> Still in the process of improving models!!</h3>
+<p>Cite something like this: <span class="citation" data-cites="Smith2020">(<a href="#ref-Smith2020" role="doc-biblioref"><strong>Smith2020?</strong></a>)</span>.</p>
+</section>
+</section>
+<section id="references" class="level1" data-number="4">
+<h1 data-number="4"><span class="header-section-number">4</span> References</h1>
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" data-line-spacing="2" role="list">
+<div id="ref-Zelner2022" class="csl-entry" role="listitem">
+Zelner, J., Broen, K., &amp; August, E. (2022). A guide to backward paper writing for the data sciences. <em>Patterns</em>, <em>3</em>(3), 100423. <a href="https://doi.org/10.1016/j.patter.2021.100423">https://doi.org/10.1016/j.patter.2021.100423</a>
+</div>
+</div>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    // Ensure there is a toggle, if there isn't float one in the top right
+    if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+      const a = window.document.createElement('a');
+      a.classList.add('top-right');
+      a.classList.add('quarto-color-scheme-toggle');
+      a.href = "";
+      a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+      const i = window.document.createElement("i");
+      i.classList.add('bi');
+      a.appendChild(i);
+      window.document.body.appendChild(a);
+    }
+    setColorSchemeToggle(hasAlternateSentinel())
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
+          }
+        }
+        return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/wu-msds-capstones\.github\.io\/money_talks\/");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

@@ -24,7 +24,7 @@
 
 ## The Data Acquisition Process
 
-![Data Pipeline](\images\Capstone_Data_Collection__Process.png)
+![Data Pipeline](Capstone_Data_Collection__Process.png)
 As can be seen in the data flow above, the information needed to begin our project is generated in real-time as trades are placed on the New York Stock Exchange (NYSE) during trading hours (9:30 AM EDT until 3:30 PM EDT, though extended hours run from 9:00 AM EDT until 4:00 PM EDT) for Apple, Microsoft and Tesla stocks (tickers: AAPL; MSFT; TSLA). As a result, the origin of our data is the NYSE. 
 
 To get this capstone started on the right foot, our first piece of the data acquisition pipeline was made by establishing a postgres database and attaching it to a python script that utilized Alpaca-API to pick up historical OHLCV and L1 marketbook data needed for feature engineering. The OHLCV data spanned the one minute tick, giving us the symbol, date, timestamp, the stock's opening and closing price, and the highs, lows and volume for the stock traded over that minute duration. Since the market is incredibly reactionary, this data is helpful in feature engineering and manipulation detection itself. The L1 marketbook data was acquired in a similar process to the OHLCV data, though it was streamed in real time and not the night after the market closes. With the free tier of an Alpaca account, the minute tick data was only available the following day, while the L1 data was able to be scraped on a 15-minute delay, so the API-calling process was the same for both data, but one was a stream and the other was pulled in a batch the night after market close.

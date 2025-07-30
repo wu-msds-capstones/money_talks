@@ -1,5 +1,16 @@
 ## Introduction
 
-Market manipulation represents one of the most persistent threats to financial market integrity, costing retail investors billions of dollars annually while undermining the foundational principle of fair price discovery. As algorithmic trading has evolved to dominate modern equity markets—accounting for over 80% of daily trading volume—sophisticated manipulation schemes have emerged that exploit the speed and complexity of electronic order books to deceive other market participants.
+The shift from traditional floor trading to electronic platforms has changed financial markets significantly. High-frequency trading (HFT) began in the early 2000s and now accounts for up to 70% of US equity trading volume. It has brought both efficiency gains and new types of market manipulation (Financial Innovation, 2015; PNAS, 2021). One of the most prevelant and troubling manipulative methods is quote stuffing, which is a strategy that involves traders quickly submitting and canceling large numbers of orders to create confusion in the market, slow down competitors' systems, and gain trading advantages through fake information gaps.
+
+Quote stuffing is a complex method of market manipulation that takes advantage of the technology in today’s electronic markets. Unlike traditional manipulation techniques that relied on spreading false information or coordinated trading, quote stuffing works at the microsecond level within the market's own data streams. Traders who use this tactic overwhelm order books with quotes they do not plan to execute, causing what regulators call "excessive messaging." This can lower market quality and negatively impact other participants (SEC Division of Risk, Finance and Strategy).
+
+Detecting quote stuffing is difficult for regulators, exchanges, and market participants. Standard surveillance techniques often miss the subtle patterns of quick order submissions and cancellations that define this practice. Recent research using Thomson Reuters Tick History (TRTH) millisecond data from 2005-2016 highlights that today’s market complexity requires advanced analytical methods to tell the difference between legitimate high-frequency market making and manipulative quote stuffing (MDPI, 2022).
+
+[HFT History](https://jfin-swufe.springeropen.com/articles/10.1186/s40854-015-0003-8)
+[HFT and Networked Markets](https://www.pnas.org/doi/10.1073/pnas.2015573118)
+[HFT and Systematic Risk](https://www.degruyterbrill.com/document/doi/10.1515/roe-2020-0028/html)
+[Domain of HFT](https://www.mdpi.com/1911-8074/15/2/54)
+[What is Quote Stuffing](https://corporatefinanceinstitute.com/resources/career-map/sell-side/capital-markets/quote-stuffing/)
+[NYSE Trading Rules](https://nyseguide.srorules.com/rules)
 
 Something something, and then I state some citable facts [@Zelner2022].
