@@ -4,6 +4,18 @@
 
 We trained an XGBoost classifier on Apple L2 quote data to detect anomalies based on features including `price`, `size`, and `total_levels`. After tuning `scale_pos_weight`, the model improved its ability to detect rare anomalies.
 
+#### Enhanced Evaluation Framework
+
+For comprehensive fraud detection evaluation, particularly for quote stuffing, the assessment should extend beyond standard metrics to emphasize recall-focused measures. The F4-score provides a more appropriate evaluation metric for fraud detection scenarios where missing manipulative behavior carries higher costs than false alarms.
+
+**F4-Score Calculation**:
+
+The F4-score emphasizes recall over precision through a weighted harmonic mean (β=4):
+
+$F_4 = \frac{(1 + 4^2) \times \text{Precision} \times \text{Recall}}{4^2 \times \text{Precision} + \text{Recall}}$
+
+This metric reflects the asymmetric cost structure in fraud detection where false negatives (missed manipulation) are significantly more costly than false positives.
+
 **Classification Report:**
 
 ```text
@@ -28,5 +40,39 @@ The confusion matrix below shows the model's ability to detect anomalies in L2 q
 Feature importance ranked by XGBoost's internal gain metric:
 
 ![Feature Importance](feature_importance.png)
+
+#### Synthetic Fraud Generation and Testing
+
+For comprehensive evaluation, synthetic quote stuffing sequences should be generated following academic specifications based on real manipulation cases:
+
+| Parameter | Range | Purpose | 
+|-----------|-------|---------|
+| **Fraud Side** | {Bid, Ask} | Which side of the book to manipulate |
+| **Number of Events** | [50, 200] | Orders in the stuffing sequence |
+| **Order Rate** | [8, 10]/ms | Submission frequency |
+| **Order Size** | [1st, 10th percentile] | Small size characteristic |
+| **Order Price** | Inside spread | Price aggressiveness |
+
+```python
+# Quote stuffing parameter generation
+params = {
+    'fraud_side': np.random.choice(['bid', 'ask']),
+    'num_events': np.random.randint(50, 201),
+    'order_rate_per_ms': np.random.uniform(8.0, 10.0),
+    'order_size': np.random.uniform(size_p1, size_p10),
+    'duration_ms': num_events / order_rate_per_ms
+}
+```
+
+#### Comparative Performance Analysis
+
+State-of-the-art hybrid detection systems demonstrate superior performance compared to traditional methods:
+
+- **Hybrid Transformer-SVM (Poutre et al., 2024)**: F4 = 0.908, AUROC = 0.960, AUPRC = 0.842
+- **Traditional Clustering (Abbas et al., 2019)**: F4 = 0.775, AUROC = 0.501, AUPRC = 0.117  
+- **SVM-based (Cao et al., 2014)**: F4 = 0.809, AUROC = 0.881, AUPRC = 0.671
+- **LSTM Autoencoder (Leangarun et al., 2021)**: F4 = 0.658, AUROC = 0.668, AUPRC = 0.191
+
+The significant performance improvements demonstrate the value of hybrid architectures that combine deep learning's pattern recognition with traditional machine learning's robust classification capabilities.
 
 [@Chen2016]

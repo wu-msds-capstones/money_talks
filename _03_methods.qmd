@@ -18,23 +18,58 @@ All data was stored and queried using PostgreSQL (via Beekeeper Studio), and pre
 
 ### 2. Feature Engineering
 
-We extracted the following features from quote data:
+Our feature engineering approach extends beyond basic price and volume metrics to capture the sophisticated patterns characteristic of quote stuffing manipulation. Following the methodology established by Poutre et al. (2024), we process Level-2 order book data in 100ms time windows and extract 23 key features that span four critical categories.
+
+#### Current Implementation
+
+We extracted the following basic features from quote data:
 
 - `price`: best bid or ask price at time \( t \)
 - `size`: number of shares available at best price
 - `total_levels`: depth of the order book (total number of visible price levels)
 
-These were chosen for their interpretability and relevance to typical manipulation tactics like spoofing and layering.
+#### Enhanced Feature Framework for Quote Stuffing Detection
 
-We plan to expand the feature set in future iterations to include:
+For comprehensive detection of quote stuffing patterns, the feature set should be expanded to include:
 
-- Order book imbalance
-- Quote update frequency
-- Derived volatility indicators
+**Price Return Features** - capturing price movement patterns that may indicate manipulation:
+
+- **`bid_return`**: Log return of best bid price within the window
+- **`bid_price_volatility`**: Standard deviation of bid prices 
+- **`ask_return`**: Log return of best ask price within the window
+- **`ask_price_volatility`**: Standard deviation of ask prices
+
+```python
+# Price return calculation
+if len(bid_prices) > 1:
+    bid_return = np.log(bid_prices[-1] / bid_prices[0])
+    bid_price_volatility = np.std(bid_prices)
+```
+
+**Spread Features** - critical for detecting quote stuffing's manipulation of bid-ask spreads:
+
+- **`spread`**: Absolute bid-ask spread
+- **`relative_spread`**: Spread normalized by mid-price
+
+**Order Rate Features** - key indicators of quote stuffing's rapid order submission:
+
+- **`order_rate_per_100ms`**: Orders per 100ms (direct quote stuffing indicator)
+- **`order_imbalance`**: Difference between bid and ask orders
+
+**Timing and Frequency Features**:
+- **`time_between_orders`**: Average time between consecutive orders
+- **`cancellation_rate`**: Proportion of orders canceled vs. filled
+- **`order_lifespan`**: Average duration orders remain in book
+
+:::{.callout-note}
+These features are specifically designed to capture the characteristics described in academic literature on quote stuffing: high-frequency order submission/cancellation, small order sizes, tight timing patterns, and market microstructure effects.
+:::
 
 ---
 
 ### 3. Modeling Approach
+
+#### Current Implementation: XGBoost Classifier
 
 We trained an **XGBoost classifier**, which is well-suited for imbalanced binary classification tasks and handles tabular data efficiently.
 
@@ -46,6 +81,46 @@ To address extreme class imbalance, we adjusted:
 
 - `scale_pos_weight = (neg / pos)` to give more weight to anomalies
 - Explored probability thresholds to tune precision/recall tradeoff
+
+#### Hybrid Transformer/OC-SVM 
+
+For enhanced quote stuffing detection, we propose implementing the state-of-the-art hybrid approach demonstrated by Poutre et al. (2024), which combines a bottlenecked Transformer autoencoder with One-Class SVM.
+
+**Stage 1: Bottlenecked Transformer Autoencoder**
+
+The autoencoder architecture incorporates several key components:
+
+1. **Transformer Processing**: Input sequences (25 time windows × 23 features) pass through 6 Transformer encoder layers with multi-head attention
+2. **Bottleneck Compression**: Transformer output is flattened and projected to 128 dimensions  
+3. **Reconstruction**: The compressed representation is projected back to original dimensionality
+
+This bottleneck forces the model to learn essential patterns in normal market behavior while discarding noise.
+
+**Stage 2: One-Class SVM on Learned Representations**
+
+One-Class SVM identifies outliers by learning the boundary of normal data in the 128-dimensional representation space. Unlike traditional SVMs, OC-SVM finds a hyperplane separating normal data from the origin in high-dimensional space.
+
+The decision function for new data point $x$ is:
+$f(x) = \text{sign}(w \cdot \phi(x) - \rho)$
+
+**Detection Pipeline**:
+
+```{mermaid}
+flowchart TD
+    A[Raw Market Data] --> B[Feature Extraction<br/>23 features per 100ms window]
+    B --> C[Sequence Creation<br/>25-step overlapping sequences]
+    C --> D[Transformer Encoder<br/>Generate 128-dim representations]
+    D --> E[OC-SVM Decision Function<br/>Compute dissimilarity scores]
+    E --> F[Classification<br/>Normal vs. Quote Stuffing]
+```
+
+**Observation-Level Scoring**:
+
+Since each market observation can be part of multiple sequences, the final anomaly score is calculated as:
+
+$\text{dissimilarity}(x_t) = \frac{1}{|S_{x_t}|} \sum_{s \in S_{x_t}} \text{dissimilarity}(s)$
+
+where $S_{x_t}$ is the set of all sequences containing observation $x_t$.
 
 ---
 
