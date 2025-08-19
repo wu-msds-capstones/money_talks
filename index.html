@@ -637,9 +637,64 @@ Decision: alert if score ≥ Θ  (Θ tuned weekly by sampling)</code></pre>
 <li><strong>Calendar effects</strong> (e.g., <strong>July 4</strong> shortened week) materially impact counts/rates and are handled explicitly in evaluation and sampling.</li>
 </ul>
 <p><strong>At‑a‑glance metrics table.</strong></p>
-<div class="line-block">Regime | Acc | Macro‑F1 | AUC | Pos P | Pos R | Pos F1 | Neg P | Neg R | Neg F1 | Threshold |<br>
-Balanced (dev) | 0.7975 | 0.795 | ~0.95 | 0.743 | 0.909 | 0.818 | 0.883 | 0.686 | 0.772 | τ≈0.52 |<br>
-Imbalanced (AAPL) | ~0.99 | ~0.78 | — | 0.41 | 0.89 | 0.56 | 1.00 | 0.99 | 0.99 | tuned |</div>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 19%">
+<col style="width: 8%">
+<col style="width: 10%">
+<col style="width: 8%">
+<col style="width: 7%">
+<col style="width: 7%">
+<col style="width: 8%">
+<col style="width: 7%">
+<col style="width: 7%">
+<col style="width: 8%">
+<col style="width: 11%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Regime</th>
+<th>Acc</th>
+<th>Macro‑F1</th>
+<th>AUC</th>
+<th>Pos P</th>
+<th>Pos R</th>
+<th>Pos F1</th>
+<th>Neg P</th>
+<th>Neg R</th>
+<th>Neg F1</th>
+<th>Threshold</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Balanced (dev)</td>
+<td>0.7975</td>
+<td>0.795</td>
+<td>~0.95</td>
+<td>0.743</td>
+<td>0.909</td>
+<td>0.818</td>
+<td>0.883</td>
+<td>0.686</td>
+<td>0.772</td>
+<td>τ≈0.52</td>
+</tr>
+<tr class="even">
+<td>Imbalanced (AAPL)</td>
+<td>~0.99</td>
+<td>~0.78</td>
+<td>—</td>
+<td>0.41</td>
+<td>0.89</td>
+<td>0.56</td>
+<td>1.00</td>
+<td>0.99</td>
+<td>0.99</td>
+<td>tuned</td>
+</tr>
+</tbody>
+</table>
 <blockquote class="blockquote">
 <p><strong>Note on calendar effects:</strong> Independence Day (July 4) closure impacts counts and rates in that week; our evaluation and sampling explicitly account for it.</p>
 </blockquote>
