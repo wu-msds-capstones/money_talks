@@ -1,6 +1,6 @@
-## Background
+## 2.0 Background
 
-### The Evolution of Market Manipulation
+### 2.1 The Evolution of Market Manipulation
 
 Traditional manipulation schemes relied on spreading false information or coordinating large trades to artificially influence prices. However, the digitization of financial markets has spawned a new generation of algorithmic manipulation techniques that operate at microsecond timescales, making them virtually impossible to detect through manual surveillance methods.
 
@@ -12,7 +12,7 @@ Traditional manipulation schemes relied on spreading false information or coordi
 
 More sophisticated schemes include **momentum ignition**, where traders use rapid-fire orders to trigger algorithmic responses from other market participants, and **pinging**, which involves sending small orders to detect hidden liquidity in dark pools. These techniques exploit the fundamental asymmetry between human reaction times and algorithmic execution speeds, creating unfair advantages that violate market integrity principles.
 
-### Regulatory Landscape and Enforcement Challenges
+### 2.2 Regulatory Landscape and Enforcement Challenges
 
 The regulatory response to algorithmic manipulation has been substantial but faces inherent technological limitations. The Securities and Exchange Commission (SEC) has pursued high-profile enforcement actions, including \$920 million in penalties against major financial institutions since 2015. Notable cases include the \$25 million fine against Deutsche Bank for spoofing activities and the \$70 million penalty against JPMorgan Chase for manipulative trading in precious metals markets.
 
@@ -22,7 +22,7 @@ Despite these regulatory efforts, traditional surveillance systems struggle with
 
 Regulatory technology (RegTech) providers estimate that fewer than 5% of potential manipulation events are currently detected through automated surveillance, with most discoveries occurring through whistleblower reports or market anomaly investigations. This detection gap creates significant compliance risks for market operators and undermines confidence in market fairness.
 
-### Technical Architecture Requirements
+### 2.3 Technical Architecture Requirements
 
 Effective real-time manipulation detection requires processing Level 2 (L2) order book data, which provides granular visibility into bid and ask orders across multiple price levels. Unlike Level 1 data that shows only best bid/offer prices, L2 data reveals the full market depth, order queue dynamics, and the rapid changes in market microstructure that characterize manipulation attempts.
 
@@ -30,7 +30,7 @@ The technical challenges are substantial: processing millions of order book upda
 
 Market data complexity varies significantly across trading venues, with fragmented liquidity across over 16 registered exchanges and dozens of alternative trading systems in U.S. equity markets. Each venue maintains distinct order types, priority rules, and data formats, complicating unified surveillance efforts. Cross-market manipulation detection requires consolidating and normalizing data streams from multiple sources while maintaining temporal precision.
 
-### Research Gap and Contribution
+### 2.4 Research Gap and Contribution
 
 While academic literature has explored manipulation detection using machine learning approaches, most studies rely on post-trade data analysis or simulated environments. Research by Cao et al. (2014) demonstrated machine learning applications for spoofing detection using historical futures data, while Goldstein et al. (2021) analyzed layering patterns in equity markets using daily aggregated data. However, real-time detection systems using live Level 2 market data remain largely proprietary to institutional market surveillance providers.
 
@@ -41,5 +41,3 @@ Our research addresses this gap by developing an open-source, real-time detectio
 By implementing synthetic manipulation injection capabilities, we can validate detection algorithms against known manipulation signatures while maintaining the ability to adapt to emerging schemes. This approach addresses the fundamental challenge of supervised learning in manipulation detection: the rarity of labeled manipulation events in historical data.
 
 The system's practical relevance extends beyond academic research. Retail brokers processing over \$7 trillion in annual trading volume could implement similar detection capabilities to protect their clients from manipulation-induced losses. Regulatory authorities could enhance market surveillance through real-time monitoring rather than post-trade investigation, potentially preventing market disruptions before they occur.
-
-Furthermore, the transparency of our methodology enables market participants to understand surveillance capabilities, promoting fair competition through informed consent rather than information asymmetry. This represents a significant departure from the "black box" nature of current commercial surveillance systems.

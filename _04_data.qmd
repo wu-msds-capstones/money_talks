@@ -1,46 +1,57 @@
-# Data
+## 4. Data
 
-## The Data We Needed
+This section outlines the data acquisition strategy, sources, and processing pipeline for detecting quote stuffing manipulation in high-frequency trading environments. Our approach focuses on collecting multiple layers of market data to capture the microstructure patterns that characterize manipulative behavior.
 
-### L2 Marketbook Data
+### 4.1 Data Requirements and Sources
 
-- L1 Marketbook data, plus 5 layers above and below the L1 with regards to current bids and current asks
-- Asks above yield upward price movement if filled, bids below yield downward prices if filled
-[source](https://www.interactivebrokers.com/en/pricing/market-data-pricing.php)
+To effectively detect quote stuffing patterns, we required access to multiple levels of market data that provide comprehensive visibility into order book dynamics and trading activity. The following subsections detail each data type and its role in our analysis.
 
-### L1 Marketbook Data
+#### Level 2 (L2) Market Data
 
-- The equilibrium so to speak; the price at which the most recent order was placed and filled
-- Timestamp down to microsecond, looks like: 2025-07-01 19:59:59.464006+00
-- id, symbol, timestamp, bid_price, bid_size, ask_price, ask_size
-[source](https://alpaca.markets/sdks/python/market_data.html#market-data)
+Level 2 market data extends beyond the basic bid-ask spread to provide a deeper view of market depth. This data includes the best bid and ask prices (Level 1 data) plus five additional price levels above and below the current market, along with the order quantities at each level [@InteractiveBrokers2024]. This enhanced visibility is crucial for detecting quote stuffing because manipulative orders often appear at these secondary price levels rather than at the National Best Bid and Offer (NBBO). When orders at higher ask levels are filled, they typically drive prices upward, while orders at lower bid levels drive prices downward, creating the price volatility that quote stuffing strategies exploit.
 
-### OHLCV one-minute tick data
+#### Level 1 (L1) Market Data
 
-- Open, High, Low, Close, Volume
-- Collected with both minute and date timestamp
-- Available up to 30 days in arears, including weekends even though there is no data fro weekends
-[source](https://alpaca.markets/sdks/python/market_data.html#market-data)
+Level 1 market data represents the current equilibrium point where the most recent transactions occurred. This data stream includes microsecond-precision timestamps (formatted as 2025-07-01 19:59:59.464006+00), unique identifiers, stock symbols, and the fundamental bid-ask spread components: bid price, bid size, ask price, and ask size [@Alpaca2024]. The high temporal resolution is essential for quote stuffing detection because manipulative strategies often involve rapid order placement and cancellation cycles that occur within milliseconds.
 
-## The Data Acquisition Process
+#### OHLCV Minute-Bar Data
 
-![Data Pipeline](Capstone_Data_Collection__Process.png)
-As can be seen in the data flow above, the information needed to begin our project is generated in real-time as trades are placed on the New York Stock Exchange (NYSE) during trading hours (9:30 AM EDT until 3:30 PM EDT, though extended hours run from 9:00 AM EDT until 4:00 PM EDT) for Apple, Microsoft and Tesla stocks (tickers: AAPL; MSFT; TSLA). As a result, the origin of our data is the NYSE. 
+One-minute aggregated data captures the Open, High, Low, Close prices and trading Volume for each minute of market activity. This data includes both minute-level and date-level timestamps and remains available for up to 30 days through the API, including non-trading days where no actual market data exists [@Alpaca2024]. While quote stuffing occurs at much finer time scales, minute-bar data provides essential context for identifying broader market conditions and volatility patterns that may coincide with manipulative activity.
 
-To get this capstone started on the right foot, our first piece of the data acquisition pipeline was made by establishing a postgres database and attaching it to a python script that utilized Alpaca-API to pick up historical OHLCV and L1 marketbook data needed for feature engineering. The OHLCV data spanned the one minute tick, giving us the symbol, date, timestamp, the stock's opening and closing price, and the highs, lows and volume for the stock traded over that minute duration. Since the market is incredibly reactionary, this data is helpful in feature engineering and manipulation detection itself. The L1 marketbook data was acquired in a similar process to the OHLCV data, though it was streamed in real time and not the night after the market closes. With the free tier of an Alpaca account, the minute tick data was only available the following day, while the L1 data was able to be scraped on a 15-minute delay, so the API-calling process was the same for both data, but one was a stream and the other was pulled in a batch the night after market close.
+### 4.2 Data Collection Infrastructure and Process
 
-The next piece of our byzantine data pipeline, and the most complex, was the L2 marketbook data. Given that we decided to focus on high-volume stocks, the millions of records that came with the live L2 marketbook data had to be streamed in real time. To do this, a gateway instance was established through Interactive Brokers (IBKR) on an AWS EC2 instance that streamed real-time data for each of the tickers. This gateway served as a medium between the exchange itself where the real-time data was posted, and our Postgres database where the data is stored. Once streamed through the gateway, the data was then parsed by the scraping script and sent two places: the first of which being the Postgres database established on Railway, and the second being the AWS S3 bucket in the form of a parquet file for that day's worth of data; these parquet files serve as backups should anything happen to our Postgres database. Once this data stream was set up and established, perhaps the next most difficult part was checking for duplicates and filtering the data. This was extremely difficult do to the volume of the data and inconsistencies in the streaming updates. The gateway instance was designed to update only upon new updates, which were timestamped to the microsecond, but unfortunately sometimes it would add previously collected data with its new updates since the difference in timestamps was often so finite. To combat this, we had to check our dataset for duplicates, which we removed prior to the training of our models to the tune of roughly 128,000 duplicates over the three tickers. This may seem like a lot, but when facing just over 4 million rows, this came out to only 3% of our actual data.  
-[EC2](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/concepts.html)
-[S3](https://docs.aws.amazon.com/AmazonS3/latest/userguide/Welcome.html)
+Our data acquisition strategy required a sophisticated real-time streaming infrastructure capable of handling the massive volume and velocity of high-frequency trading data. The system needed to capture microsecond-level market events across multiple data streams while maintaining data integrity and providing robust backup mechanisms. This section details the technical architecture and processes used to collect, validate, and store the market data essential for quote stuffing detection.
 
-## The Data Workflow
-With all of the data collection process enumerated above, the complete flow of the data--which can be found in the image above--looks like this:
-- L1 marketbook data Streamed directly into Postgres database from Alpaca-API; snapshot sent nightly as parquet file to S3 bucket
-- Snapshot created using cron jobs on Railway, data streamed through scraper code from github repo hosted on Railway
-- OHLCV data scraped nightly from Alpaca-API, deposited into Postgres database on Railway
-- Scraping done on cron job through Railway, given the data is available up to 30 days in arears through the API, snapshots were neither created nore stored
-- L2 marketbook data streamed in real-time from IBKR Gateway directly into Postgres database; snapshots captured nightly and stored in S3 bucket as parquet files
-- Gateway API accessed through scraping script on Railway from github repo, and the snapshots were done through a script that also executed the other snapshots
+### 4.3 Target Securities and Trading Sessions
 
+We focused our data collection on three high-volume securities: Apple (AAPL), Microsoft (MSFT), and Tesla (TSLA). These stocks were selected because their high trading volumes and liquidity make them frequent targets for quote stuffing attacks, as manipulative strategies are most effective in actively traded securities where order flow can be more easily disguised. Data collection occurred during regular NYSE trading hours (9:30 AM to 4:00 PM EDT), with extended hours coverage (9:00 AM to 4:00 PM EDT) when available through our data providers.
 
-Cite something like this: [@Smith2020].
+### 4.4 Historical and Streaming Data Collection
+
+The foundation of our data pipeline began with establishing a PostgreSQL database connected to Python scripts utilizing the Alpaca API for collecting both historical and real-time market data. For OHLCV minute-bar data, we implemented a batch collection process that retrieved historical data each evening after market close, as this aggregated data becomes available with a one-day delay under Alpaca's free tier pricing. Each record contains the symbol, date, timestamp, opening and closing prices, intraday high and low prices, and total volume traded during the one-minute interval.
+
+Level 1 market data required a different approach due to its real-time nature and importance for manipulation detection. We implemented a streaming collection system that captured live bid-ask spreads with a 15-minute delay (the minimum latency available through Alpaca's free tier). This stream provided continuous updates of bid price, bid size, ask price, ask size, and microsecond-precision timestamps essential for identifying rapid order placement and cancellation patterns characteristic of quote stuffing.
+
+### 4.5 Level 2 Data Streaming Architecture
+
+The most technically challenging component of our pipeline involved collecting Level 2 market depth data, which required real-time streaming of millions of records per trading session. We deployed an Interactive Brokers (IBKR) TWS (Trader Workstation) Gateway instance on an Amazon Web Services (AWS) Elastic Compute Cloud (EC2) instance [@AWSEc22024]. This gateway served as an intermediary between the exchange data feeds and our storage infrastructure, providing authenticated access to real-time Level 2 market depth information.
+
+The streaming architecture routed incoming data to two destinations simultaneously: Primary storage occurred in our PostgreSQL database hosted on Railway's cloud platform, providing immediate access for real-time analysis and model training; Concurrently, the system generated daily backup files in a Parquet format, which were stored in an AWS Simple Storage Service (S3) bucket [@AWSs32024]. This dual-storage approach ensured data persistence, should the need for back-ups arise, and provided efficient columnar storage for large-scale analytical queries.
+
+![Data Pipeline](de_flowchart.png)
+
+### 4.6 Data Quality and Deduplication Challenges
+
+One of the most significant technical challenges involved managing data quality and eliminating duplicates in the high-velocity Level 2 stream. The IBKR gateway was configured to push updates only when new market events occurred, using microsecond timestamps to differentiate between events. However, the system occasionally transmitted duplicate records when timestamp differences were extremely small (often less than a microsecond apart) or when network latency caused delivery confirmation issues.
+
+To address this challenge, we implemented a comprehensive deduplication process that identified and removed duplicate records based on combined timestamp, symbol, and price-size vector matching. Across all three target securities, this process eliminated approximately 128,000 duplicate records from a total dataset of over 4 million observations, representing roughly 3% of the collected data. While this may appear significant in absolute terms, the percentage represents an acceptable data quality threshold for high-frequency market data collection.
+
+### 4.7 Integrated Data Workflow and Orchestration
+
+The complete data workflow integrates multiple data streams through a coordinated pipeline that ensures comprehensive market coverage while maintaining data consistency and availability. Our orchestration system manages three distinct data collection processes, each optimized for its specific data type and latency requirements.
+
+Level 1 market data flows directly from the Alpaca API into our PostgreSQL database through a continuous streaming process. The system captures real-time bid-ask updates with 15-minute delays and automatically generates nightly snapshots in Parquet format for backup storage in our S3 bucket. This process runs continuously during market hours through automated scripts deployed on Railway's cloud platform, with source code version control maintained through our GitHub repository.
+
+OHLCV minute-bar data collection operates on a batch schedule, scraping historical data each evening after market close through the Alpaca API. Since this aggregated data remains available for up to 30 days through the API, we implemented a nightly cron job execution pattern on Railway without requiring S3 backup storage. This approach optimizes storage costs while ensuring data availability for feature engineering and model training.
+
+Level 2 market depth data represents the most complex workflow component, streaming real-time data from the IBKR Gateway directly into our PostgreSQL database. The system simultaneously captures nightly snapshots and stores them as Parquet files in S3 for long-term archival and analytical access. Gateway API access occurs through dedicated scraping scripts hosted on Railway, with snapshot generation coordinated through a unified script that manages backup processes across all data streams.

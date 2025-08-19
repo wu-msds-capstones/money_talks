@@ -1,16 +1,24 @@
-## Introduction
+# 0. Abstract
+This study addresses the critical challenge of detecting market manipulation in high-frequency trading environments through the development and implementation of a comprehensive machine learning system. We present a novel approach that combines supervised learning, unsupervised learning, and ensemble methods to analyze multi-source market data in real-time. Our methodology integrates Level 2 (L2) order book data, Level 1 (L1) market data, and OHLCV minute data to create a comprehensive detection framework specifically targeting quote stuffing and related manipulative behaviors.
 
-The shift from traditional floor trading to electronic platforms has changed financial markets significantly. High-frequency trading (HFT) began in the early 2000s and now accounts for up to 70% of US equity trading volume. It has brought both efficiency gains and new types of market manipulation (Financial Innovation, 2015; PNAS, 2021). One of the most prevelant and troubling manipulative methods is quote stuffing, which is a strategy that involves traders quickly submitting and canceling large numbers of orders to create confusion in the market, slow down competitors' systems, and gain trading advantages through fake information gaps.
+Using XGBoost as our primary supervised classifier, complemented by DBSCAN for anomaly detection and Random Forest for ensemble predictions, we achieved strong discrimination performance with ROC-AUC ≈ 0.95 on held-out test data. The system demonstrates high recall for manipulation-like quotes (≈ 0.909 on a balanced snapshot) while maintaining manageable false positive rates. Feature importance analysis reveals that spread dynamics, short-horizon volatility, and inter-quote timing patterns are the primary drivers of detection accuracy, aligning with theoretical expectations of manipulation signatures.
 
-Quote stuffing is a complex method of market manipulation that takes advantage of the technology in today’s electronic markets. Unlike traditional manipulation techniques that relied on spreading false information or coordinated trading, quote stuffing works at the microsecond level within the market's own data streams. Traders who use this tactic overwhelm order books with quotes they do not plan to execute, causing what regulators call "excessive messaging." This can lower market quality and negatively impact other participants (SEC Division of Risk, Finance and Strategy).
+Our open-source approach democratizes access to sophisticated market surveillance capabilities and provides a transparent alternative to proprietary "black box" systems. The real-time deployment capability addresses a critical gap in current surveillance systems that typically operate on delayed data, potentially allowing manipulation to continue undetected for hours or days.
 
-Detecting quote stuffing is difficult for regulators, exchanges, and market participants. Standard surveillance techniques often miss the subtle patterns of quick order submissions and cancellations that define this practice. Recent research using Thomson Reuters Tick History (TRTH) millisecond data from 2005-2016 highlights that today’s market complexity requires advanced analytical methods to tell the difference between legitimate high-frequency market making and manipulative quote stuffing (MDPI, 2022).
+# 1. Introduction
 
-[HFT History](https://jfin-swufe.springeropen.com/articles/10.1186/s40854-015-0003-8)
-[HFT and Networked Markets](https://www.pnas.org/doi/10.1073/pnas.2015573118)
-[HFT and Systematic Risk](https://www.degruyterbrill.com/document/doi/10.1515/roe-2020-0028/html)
-[Domain of HFT](https://www.mdpi.com/1911-8074/15/2/54)
-[What is Quote Stuffing](https://corporatefinanceinstitute.com/resources/career-map/sell-side/capital-markets/quote-stuffing/)
-[NYSE Trading Rules](https://nyseguide.srorules.com/rules)
+Modern financial markets operate at speeds that would have been unimaginable just two decades ago. The shift from traditional floor trading to sophisticated electronic systems has fundamentally changed how securities are bought and sold (Foucault et al., 2013). Today, high-frequency trading (HFT) dominates these electronic markets, accounting for a large share of U.S. equity volume (Aldridge & Krawciw, 2017).
 
-Something something, and then I state some citable facts [@Zelner2022].
+Market manipulation is highly profitable, difficult to detect, and detrimental to market quality. Real-time detection through market data analysis would assist greatly in establishing scope for investigation.
+
+## 1.1 What is Quote Stuffing?
+
+Quote stuffing involves rapidly submitting and canceling large numbers of orders to flood venues and algorithms with short-lived messages, degrading competitors’ information processing. It is often accompanied by temporary spread widening and bursts of order rate (Hasbrouck & Saar, 2013; Egginton et al., 2016).
+
+## 1.2 The Detection Challenge
+
+Patterns emerge and dissipate in milliseconds, data volumes are extreme, and distinguishing manipulation from benign HFT requires microstructure-aware features and time-aware validation (Farmer & Skouras, 3; Laughlin et al., 2014).
+
+## 1.3 Our Approach and Contributions
+
+We combine supervised learning (XGBoost), unsupervised learning (DBSCAN), and a hybrid bottlenecked autoencoder + One-Class SVM pipeline, using L2 marketbook features with supporting L1 and OHLCV context. Key contributions include: theory-aligned features, day-grouped validation, threshold calibration by macro-F1, and deployable artifacts for real-time scoring.
