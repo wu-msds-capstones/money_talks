@@ -1,1 +1,144 @@
-# Methods
+## 3. Data & Methods
+
+This section details our comprehensive approach to detecting market manipulation in real-time trading environments. We developed a machine learning-based detection system using XGBoost and Random Forest classification applied to Level 2 market data, with extensive feature engineering and synthetic anomaly generation to address the challenge of rare manipulation events in historical data.
+
+### 3.1 Data Sources
+
+- **Level 2 (L2) order book (primary):** Full depth snapshots and updates (prices, sizes across multiple levels) captured in real time. Current collection via **Alpaca Market Data v2**; an earlier **IBKR EC2 gateway** is retained for redundancy/backfills. L2 granularity is essential for microstructure-level manipulation signals (e.g., bursty quote insert/cancel patterns).
+- **Level 1 (L1) top-of-book:** Best bid/ask and sizes, used for canonical spread/midquote definitions and cross-checks.
+- **Minute OHLCV:** Contextual volatility/liquidity backdrop and rollups.
+- **Scope:** Primary tickers **AAPL, TSLA, MSFT** (method generalizes across NYSE/NASDAQ).
+- **Regulatory corroboration (optional):** **SEC EDGAR** (e.g., 8-K, 10-K, Form 4) windows used to tag/validate periods with disclosed events when applicable. 
+- **Synthetic Anomaly Labels:** To address the fundamental challenge of data imbalance in manipulation detection, where normal trading vastly outnumbers manipulation events, we developed a labeling methodology based on statistical anomaly detection. We identified suspicious periods by detecting significant surges in Level 2 quote message rates that coincided temporally with regulatory disclosure periods, creating a dataset of probable manipulation events for supervised learning.
+
+### 3.2 Collection, Storage, and Quality
+
+- **Ingestion:** Real-time L2 stream (Alpaca) with microsecond timestamps; periodic historical pulls/backfills.
+- **Storage:** Dual-home to **Railway PostgreSQL** (research queries, labels, features) and **S3/Parquet** (columnar analytics, archival).
+- **Data hygiene:** Exact-duplicate removal (\~**3%**), monotonic sequence checks, clock skew normalization, and message-rate sanity rules.
+- **Operational note:** **Independence Day** schedule (shortened trading week around **July 4**) is handled explicitly in sampling/evaluation.
+
+### 3.3 Feature Engineering (Microstructure)
+
+Our feature engineering process transformed raw Level 2 market data into analytically meaningful variables designed to capture manipulation patterns. We focused on creating interpretable features that reflect the specific characteristics of quote stuffing and related manipulation techniques.
+
+
+**L2 metrics**
+
+- **Spread:** $\text{Spread}_t = \text{Ask}_t - \text{Bid}_t$
+- **Midquote:** $\text{Mid}_t = (\text{Ask}_t + \text{Bid}_t)/2$
+- **Relative spread:** $(\text{Ask}_t - \text{Bid}_t)/\text{Mid}_t$
+- **Half-spread:** $(\text{Ask}_t - \text{Bid}_t)/2$
+- **Effective spread:** $\text{EffSpread}_t = 2s\,(P_t - \text{Mid}_t)$, $s\in\{+1,-1\}$
+- **Realized spread (horizon $\tau$):** $\text{RS}_{t,\tau} = 2s\,(P_t - \text{Mid}_{t+\tau})$
+
+**Extensions**
+
+- **Level-$k$ spread:** $\text{Spread}^{(k)}_t = \text{AskPrice}^{(k)}_t - \text{BidPrice}^{(k)}_t$
+- **Depth/imbalance:** Total bid vs. ask size; imbalance $= \frac{\sum \text{BidSz}-\sum \text{AskSz}}{\sum \text{BidSz}+\sum \text{AskSz}}$
+- **Shape/ratios:** Level ratios (e.g., top-of-book vs. aggregate depth), queue length deltas.
+- **Temporal intensity/volatility:** Inter-arrival seconds `dt_sec`, quote message **rate** (per 100 ms / per second), rolling volatility `roll_vol_10`, price differences `price_delta`, standardized `price_z`. 
+
+These features target hallmarks of quote stuffing: transient depth inflation, rapid insert/cancel cycles, spread distortions, and imbalance drift.
+
+### 3.4 Machine Learning Models: Labels & Class Imbalance Strategy
+
+- **Primary labels:** **Injected vs. empirical** quotes (weak supervision; `1/0`).
+- **Supplemental windows:** EDGAR-aligned intervals to corroborate stressed periods (when available).
+- **Imbalance handling:** Class-weighting/`scale_pos_weight`, temporal grouping, and **threshold calibration** on validation to trade off precision vs. recall.
+
+Initially, we selected XGBoost (eXtreme Gradient Boosting) as our primary classification algorithm for several technical and practical reasons. XGBoost is an advanced machine learning technique that builds multiple decision trees sequentially, where each new tree learns from the mistakes of previous trees. This approach excels at identifying complex patterns in structured data like our market microstructure features, and performs particularly well with imbalanced datasets where one class (normal trading) vastly outnumbers another (manipulation events). This then ventured into an Auto Encoder, and eventually an unsupervised ensemble method of a random forest regression and a DBSCAN (Density-Based Spatial Clustering of Applications with Noise; see below).
+
+
+### 3.5 Supervised Learning Approach (XGBoost; RF as baseline)
+
+- **Target:** Binary anomaly/manipulation vs. normal.
+- **Split:** **Day-grouped** train/val/test to reduce leakage; operating threshold tuned on validation (**$\tau \approx 0.52$**).
+- **Snapshot performance (balanced dev):** **Accuracy 79.75%**, **Macro-F1 0.795**, **AUC ≈ 0.95**; Positive: **P=0.743, R=0.909 (F1 0.818)**; Negative: **P=0.883, R=0.686 (F1 0.772)**.
+- **Top importances:** spread (0.211), `roll_vol_10` (0.193), `dt_sec` (0.067), `price_z` (0.042), `price_delta` (0.042); `symbol_MSFT` (0.168) appears but microstructure dominates. Random Forest is used as a stability/robustness baseline. 【16†DS Capstone】
+
+**Model Configuration:**
+- **Target Variable**: Binary classification where `1` indicates detected anomaly/manipulation and `0` indicates normal market behavior
+- **Training/Testing Split**: 80% of data used for model training, 20% reserved for unbiased performance evaluation, with stratified sampling to maintain class balance proportions in both sets
+- **Evaluation Metric**: Log loss (logarithmic loss), which penalizes confident but incorrect predictions more heavily than uncertain predictions, making it ideal for scenarios where false positives and false negatives have different costs
+
+**Addressing Data Imbalance:**
+The fundamental challenge in manipulation detection lies in extreme class imbalance - normal trading events outnumber manipulation events by ratios of 100:1 or higher. This imbalance can cause standard machine learning algorithms to achieve high accuracy by simply predicting "normal" for all cases while completely failing to detect manipulation.
+
+We addressed this through several techniques:
+- **`scale_pos_weight`**: Set to the ratio of negative to positive samples (normal/anomaly), instructing XGBoost to treat each anomaly sample as equivalent to multiple normal samples during training
+- **Threshold optimization**: Rather than using the default 0.5 probability threshold for classification, we systematically explored different thresholds to optimize the precision/recall tradeoff based on business requirements (whether false positives or false negatives are more costly)
+
+### 3.6 Hybrid Sequence Anomaly Model (Bottlenecked Autoencoder → OC-SVM)
+
+- **Design:** Train a Transformer-style **autoencoder** on L2 temporal sequences (e.g., 25 × features), compress via a **128-dim bottleneck**, then fit an **OC-SVM** on embeddings.
+- **Scoring:** Observation-level anomaly score averages dissimilarities across all overlapping sequences containing that observation.
+- **Operating point:** Tuned for **high recall / F4** (missed manipulations are costlier). **Recall ≈ 0.84, F4 ≈ 0.81** on held-out injected tests. 
+- **Threshold optimization**: Rather than using the default 0.5 probability threshold for classification, we systematically explored different thresholds to optimize the precision/recall tradeoff based on business requirements (whether false positives or false negatives are more costly)
+
+**Why a Hybrid Bottlenecked Autoencoder/OC-SVM?**
+
+The system implements a two-stage hybrid anomaly detection approach specifically designed for identifying quote stuffing in financial markets. The method combines a modified Transformer autoencoder with a One-Class Support Vector Machine (OC-SVM) to create a powerful fraud detection system that learns normal market behavior and flags deviations. This approach is based on the methodology described by Poutre et al. (2024), who demonstrated that such hybrid frameworks achieve state-of-the-art performance in detecting trade-based manipulations without requiring prior knowledge of manipulation patterns.
+
+An autoencoder is a neural network designed to learn efficient representations of data by training it to reconstruct its input. The network consists of two main components:
+
+1. **Encoder**: Maps input data $X$ to a lower-dimensional representation $Z$
+2. **Decoder**: Reconstructs the original input from the representation
+Mathematically, this can be expressed as:
+$$
+\begin{align}
+Z &= f_{\text{encoder}}(X) \\
+\hat{X} &= f_{\text{decoder}}(Z) \\
+\mathcal{L} &= ||X - \hat{X}||^2 \quad \text{(reconstruction error)}
+\end{align}
+$$
+
+**The Bottleneck Modification**
+
+The "bottlenecked" aspect refers to a critical architectural choice that forces the model to learn compressed, meaningful representations. As described by Poutre et al. (2024), this modification was inspired by sentence embedding techniques but adapted specifically for financial time series anomaly detection. It functions as follows:
+
+1. **Standard Transformer Processing**: Input sequences (25 time windows × 23 features) pass through 6 Transformer encoder layers with multi-head attention
+2. **Bottleneck Compression**: The Transformer output is flattened and projected through a linear layer to just 128 dimensions  
+3. **Reconstruction**: The 128-dimensional representation is projected back to the original dimensionality
+
+This bottleneck forces the model to learn the most essential patterns in normal market behavior, discarding noise and irrelevant details.
+
+**Stage 2: One-Class SVM on Learned Representations**
+
+One-Class SVM is an unsupervised learning algorithm designed to identify outliers by learning the boundary of normal data. Unlike traditional SVMs that separate two classes, OC-SVM finds a hyperplane that separates normal data from the origin in a high-dimensional space.
+
+#### 3.6.1 Detection Process
+
+When detecting anomalies in new data, the system follows this pipeline:
+
+```{mermaid}
+flowchart TD
+    A[Raw Market Data] --> B[Feature Extraction]
+    B --> C[Sequence Creation]
+    C --> D[Transformer Encoder]
+    D --> E[OC-SVM Decision Function]
+    E --> F[Classification]
+```
+
+The final dissimilarity score combines information from both components:
+
+- **Autoencoder**: How well the data can be reconstructed (implicit in representations)
+- **OC-SVM**: How far the representation is from the learned normal boundary
+
+#### 3.6.2 Observation-Level Scoring
+
+The system implements a sophisticated observation-level scoring mechanism that accounts for the overlapping nature of sequences, following the methodology described by Poutre et al. (2024). Since each market observation can be part of multiple 25-step sequences, the final anomaly score for an observation is calculated as follows:
+
+$\text{dissimilarity}(x_t) = \frac{1}{|S_{x_t}|} \sum_{s \in S_{x_t}} \text{dissimilarity}(s)$
+
+where $S_{x_t}$ is the set of all sequences containing observation $x_t$. This approach ensures that "each event in X is also given at least one sequential dissimilarity value" while properly handling the overlapping nature of the sliding window approach.
+
+
+### 3.7 Unsupervised Learning (DBSCAN)
+
+- **Rationale:** Density clustering is primed to isolate **bursty, irregular, coordinated** quote activity without pre-setting $k$; inherently noise-robust—well matched to sparse backgrounds punctuated by attack bursts.
+
+### 3.8 Ensemble & Calibration
+
+- **Approach:** Combine supervised probabilities (XGBoost) with unsupervised flags (Hybrid, DBSCAN) via **stacked logistic blending** / rule-based voting to widen coverage while controlling false alarms.
+- **Sampling for calibration:** Weekly random samples (**20k points/week**) used for thresholding and human-in-the-loop review.

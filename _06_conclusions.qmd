@@ -1,1 +1,87 @@
-# Conclusions
+## 6. Conclusion
+
+This work demonstrates that **microstructure-aware features from Level 2 (L2) order books**, coupled with a **blended learning stack** (XGBoost, bottlenecked autoencoder → OC‑SVM, and DBSCAN), can detect quote stuffing–like behavior with **high recall** in realistic, imbalanced settings while preserving interpretability needed for surveillance. Ensemble calibration with weekly samples further stabilizes performance across liquidity regimes, and in the case of our model, yielded a 1.28% unsupervised identification of quote-stuffing related activities.
+
+### 6.1 Summary of Findings
+
+- **Detection efficacy:** In balanced development, the supervised model attains **Macro‑F1 ≈ 0.80** and **AUC ≈ 0.95**; in imbalanced AAPL deployment, it reaches **R ≈ 0.89** on anomalies at a tolerable false‑positive rate (≈1.3% on the majority class) with careful thresholding.
+- **Signal provenance:** **Spread, short‑horizon volatility, and message intensity** (e.g., `roll_vol_10`, `dt_sec`, `price_z`, `price_delta`) dominate importances; structure over **L2 depth and imbalance** adds sensitivity to transient phantom liquidity.
+- **Sequence modeling:** A **bottlenecked AE → OC‑SVM** complements the classifier by emphasizing temporal structure of bursty insert/cancel cycles (Recall ≈ 0.84; F4 ≈ 0.81 on injected tests).
+- **Ensembling:** Combining supervised probabilities with hybrid and DBSCAN flags improves coverage and reduces model‑specific blind spots when tuned to operational objectives.
+- **Unsupervised Ensemble Results:** When it came to model evaluation, we found that our most effective methods for unsupervised learning were in the Random Forest/DBSCAN ensemble. As seen below, the DBSCAN model identified roughly 25% of the data as suspicious, whereas the RF model identified only 5%. Yet, interestingly, at the intersection of the identified points between these two models, we see an average overlap of roughly 1.28% of suspicious data across the 20,000 points in our weekly samples. A number that we felt, considering that algorithmic trading makes up nearly 70% of all trading activity, was a relatively appropriate evaluation.
+
+![Ensemble Results!](images/ensemble_results.png)
+
+
+### 6.2 Limitations & Risks
+
+- **Label quality & shift:** Weak supervision (injected vs. empirical) can drift from true manipulation ground truth; regime shifts (macro events, venue microstructure changes) may degrade calibration.
+- **Venue and vendor heterogeneity:** Timestamp semantics, depth reporting, and throttling policies vary; cross‑venue reconciliation is required for robust deployment.
+- **Adversarial adaptation:** Attackers can modify cadence, price‑level distribution, or cancel patterns to evade fixed thresholds.
+- **Latency budgets:** Real‑time scoring must coexist with market data bursts; **backpressure** and **graceful degradation** plans are necessary during micro‑spikes.
+- **Human factors:** Moderate precision implies analyst triage load; clear **case management** and **feedback loops** are essential to maintain trust.
+
+### 6.3 Operationalization & Monitoring
+
+- **Threshold governance:** Maintain **per‑symbol/per‑regime thresholds**; review weekly with 20k‑point samples and drift diagnostics.
+- **Model & data drift:** Track prediction score distributions, feature population stability (PSI), message‑rate histograms, and alert volumes vs. baseline.
+- **Observability:** Emit metrics (throughput, latency, FP/TP counts), logs (top features, SHAP values), and exemplars for audit.
+- **Incident playbooks:** Define actions when alert volume exceeds control bands (e.g., relax threshold, enable burst caps, escalate for review).
+
+```{mermaid}
+flowchart LR
+  Ingest[Market Data → Feature Store] --> Score[Models: XGB | AE→OC‑SVM | DBSCAN]
+  Score --> Blend[Ensemble & Thresholds]
+  Blend --> Alerts[Alerts Queue]
+  Alerts --> Triage[Analyst Triage]
+  Triage --> Feedback[Label/Threshold Updates]
+  Feedback --> Score
+```
+
+#### Suggested monitoring panel (minimal)
+
+| Panel                      | Purpose                                | Example signal               |
+| -------------------------- | -------------------------------------- | ---------------------------- |
+| Alert volume vs. baseline  | Detect threshold drift / regime change | Alerts per 5‑min bucket      |
+| Score distribution         | Catch model/feature shift              | P(p>=Θ) histogram by symbol  |
+| Message‑rate heatmap       | Identify burst epochs                  | Quotes/sec by minute         |
+| Precision/Recall (rolling) | Track effectiveness                    | Weekly PR at operating point |
+
+### 6.4 Future Work
+
+**Data & labeling**
+
+- Cross‑venue L2 harmonization; **EDGAR‑aligned windows** as semi‑supervised anchors; active learning for difficult windows.
+- Synthetic attack generator to adversarially train on **variable burst cadences, level‑mixes, and cancel horizons**.
+
+**Modeling**
+
+- **Online learning** with drift detectors; **conformal prediction** for calibrated alert risk; **sequence contrastive learning** for richer embeddings.
+- SHAP‑based local explanations and **counterfactual analysis** to support analyst workflows.
+
+**Engineering**
+
+- Real‑time feature store, streaming bus (Kafka), and low‑latency serving with A/B threshold testing.
+- **Auto‑calibration** jobs that propose threshold changes based on ROC curves.
+
+**Governance**
+
+- Audit trails linking **alert → features → model version → decision**; periodic fairness/error‑cost reviews across symbols/liquidity regimes.
+
+### 6.5 Closing Remarks
+
+By centering on L2 microstructure, encoding temporal burst patterns, and blending complementary learners, we achieve a **defensible, explainable, and actionable** market‑surveillance detector. The framework is deliberately modular—supporting rapid retraining, venue extension, and human‑in‑the‑loop refinement—positioning it for robust, real‑world deployment and continuous improvement. 【16†DS Capstone】
+
+### 6.6 Dashboard:
+
+To visualize the effectiveness of Ensemble Methods in market manipulation detection, visit our model tuning application:
+
+[QR Code Here!](images/ml_dashboard.png)
+
+Or visit the link here:
+https://msds-capstone-production.up.railway.app/
+
+
+This application can be synced to your own data, or you can use the synthetic data included in the app to get a feel for what we were looking at and how effective our models truly were!
+
+
