@@ -527,7 +527,7 @@ Z &amp;= f_{\text{encoder}}(X) \\
 <p>The streaming architecture routed incoming data to two destinations simultaneously: Primary storage occurred in our PostgreSQL database hosted on Railway’s cloud platform, providing immediate access for real-time analysis and model training; Concurrently, the system generated daily backup files in a Parquet format, which were stored in an AWS Simple Storage Service (S3) bucket <span class="citation" data-cites="AWSs32024">(<a href="#ref-AWSs32024" role="doc-biblioref"><strong>AWSs32024?</strong></a>)</span>. This dual-storage approach ensured data persistence, should the need for back-ups arise, and provided efficient columnar storage for large-scale analytical queries.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="de_flowchart.png" class="img-fluid figure-img"></p>
+<p><img src="de_flow_chart.png" class="img-fluid figure-img"></p>
 <figcaption>Data Pipeline</figcaption>
 </figure>
 </div>
@@ -554,7 +554,7 @@ Z &amp;= f_{\text{encoder}}(X) \\
 <li><strong>Balanced development snapshot</strong> (model selection &amp; tuning): class balance enforced; threshold chosen on validation.</li>
 <li><strong>Imbalanced deployment snapshot</strong> (AAPL L2, realistic): 148,340 observations → 146,857 normal (<strong>99.0%</strong>), 1,483 anomalous (<strong>1.0%</strong>). After <code>scale_pos_weight</code> and threshold tuning, the classifier attains <strong>high recall</strong> with a <strong>manageable false‑positive rate</strong> for surveillance.</li>
 </ul>
-<p>::: {.callout-tip} <strong>Operational translation.</strong> A 1.3% false‑positive rate on the majority class corresponds to roughly <strong>18–20 alerts/day</strong> for a single highly‑active name—typically acceptable with triage tooling. (See Confusion Matrix below.) :::</p>
+<p><strong>Operational translation.</strong> A 1.3% false‑positive rate on the majority class corresponds to roughly <strong>18–20 alerts/day</strong> for a single highly‑active name—typically acceptable with triage tooling. (See Confusion Matrix below.)</p>
 </section>
 <section id="supervised-classifier-xgboost-rf-as-baseline" class="level3">
 <h3 class="anchored" data-anchor-id="supervised-classifier-xgboost-rf-as-baseline">5.2 Supervised Classifier (XGBoost; RF as baseline)</h3>
@@ -566,14 +566,10 @@ Z &amp;= f_{\text{encoder}}(X) \\
 <li><strong>Pos (manip‑like):</strong> P=0.743, R=0.909, F1=0.818</li>
 <li><strong>Neg (regular):</strong> P=0.883, R=0.686, F1=0.772</li>
 </ul>
-<div id="fig-results-supervised" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-cap="Balanced development snapshot: confusion, ROC/PR, and summary metrics">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-results-supervised-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="images/roc_auc_rf_regression.png" class="img-fluid figure-img" style="width:90.0%" data-fig-cap="Balanced development snapshot: confusion, ROC/PR, and summary metrics">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-results-supervised-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;1: Supervised metrics &amp; curves.
-</figcaption>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="roc_auc_rf_regression.png" class="img-fluid figure-img"></p>
+<figcaption>Supervised metrics &amp; curves.</figcaption>
 </figure>
 </div>
 <p><strong>Imbalanced deployment snapshot (AAPL L2):</strong></p>
@@ -584,28 +580,20 @@ Figure&nbsp;1: Supervised metrics &amp; curves.
 <li><strong>Macro‑F1:</strong> ~0.78; <strong>Weighted‑F1:</strong> ~0.99</li>
 </ul>
 <p><strong>Confusion matrix (AAPL L2):</strong> correctly detects <strong>1,318/1,483</strong> anomalies (<strong>89% recall</strong>), with <strong>1,884</strong> false positives from <strong>146,857</strong> normal observations (<strong>1.3% FPR</strong>).</p>
-<div id="fig-confusion" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-cap="AAPL L2 confusion matrix at the chosen operating point">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-confusion-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="rf_confusion_matrix.png" class="img-fluid figure-img" style="width:70.0%" data-fig-cap="AAPL L2 confusion matrix at the chosen operating point">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-confusion-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;2: Confusion matrix — deployment snapshot.
-</figcaption>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="rf_confusion_matrix.png" class="img-fluid figure-img"></p>
+<figcaption>Confusion matrix — deployment snapshot.</figcaption>
 </figure>
 </div>
 </section>
 <section id="feature-importance-interpretability" class="level3">
 <h3 class="anchored" data-anchor-id="feature-importance-interpretability">5.3 Feature Importance &amp; Interpretability</h3>
 <p>Top contributors emphasize microstructure dynamics rather than identity: <code>spread (0.211) &gt; roll_vol_10 (0.193) &gt; dt_sec (0.067) &gt; price_z (0.042) &gt; price_delta (0.042)</code>; <code>symbol_MSFT (0.168)</code> appears but microstructure dominates.</p>
-<div id="fig-importance" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-cap="Information‑gain importances for market microstructure features">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-importance-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="images/feature_importance.png" class="img-fluid figure-img" style="width:75.0%" data-fig-cap="Information‑gain importances for market microstructure features">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-importance-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;3: XGBoost feature importances.
-</figcaption>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="feature_importance.png" class="img-fluid figure-img"></p>
+<figcaption>XGBoost feature importances.</figcaption>
 </figure>
 </div>
 </section>
@@ -615,30 +603,16 @@ Figure&nbsp;3: XGBoost feature importances.
 <ul>
 <li><strong>Recall ≈ 0.84</strong>, <strong>F4 ≈ 0.81</strong> on injected test subsequences.</li>
 </ul>
-<div id="fig-hybrid-results" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-cap="Bottlenecked AE → OC‑SVM: validation/test summary">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-hybrid-results-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="images/ae_confusion_matrix.png" class="img-fluid figure-img" style="width:85.0%" data-fig-cap="Bottlenecked AE → OC‑SVM: validation/test summary">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-hybrid-results-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;4: Hybrid anomaly results.
-</figcaption>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="ae_confusion_matrix.png" class="img-fluid figure-img"></p>
+<figcaption>Hybrid anomaly results.</figcaption>
 </figure>
 </div>
 </section>
 <section id="unsupervised-dbscan" class="level3">
 <h3 class="anchored" data-anchor-id="unsupervised-dbscan">5.5 Unsupervised (DBSCAN)</h3>
 <p>DBSCAN surfaces <strong>bursty, irregular, coordinated</strong> quote activity without pre‑specifying cluster counts, while ignoring scattered background noise—well matched to attack epochs intermixed with calm.</p>
-<div id="fig-dbscan-results" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-cap="DBSCAN labeling: dense burst clusters amid noise">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-dbscan-results-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="images/results_dbscan.png" class="img-fluid figure-img" style="width:80.0%" data-fig-cap="DBSCAN labeling: dense burst clusters amid noise">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-dbscan-results-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;5: DBSCAN clusters vs.&nbsp;noise.
-</figcaption>
-</figure>
-</div>
 </section>
 <section id="ensemble-performance-calibration" class="level3">
 <h3 class="anchored" data-anchor-id="ensemble-performance-calibration">5.6 Ensemble Performance &amp; Calibration</h3>
@@ -646,14 +620,10 @@ Figure&nbsp;5: DBSCAN clusters vs.&nbsp;noise.
 <pre class="text"><code>Inputs: p_xgb (XGBoost), flag_hybrid (AE→OC‑SVM), flag_dbscan
 Blend:  score = w1 * p_xgb + w2 * 1[flag_hybrid] + w3 * 1[flag_dbscan]
 Decision: alert if score ≥ Θ  (Θ tuned weekly by sampling)</code></pre>
-<div id="fig-ensemble-results" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-cap="Ensemble calibration and lift over single‑model baselines">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-ensemble-results-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="images/results_ensemble.png" class="img-fluid figure-img" style="width:90.0%" data-fig-cap="Ensemble calibration and lift over single‑model baselines">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-ensemble-results-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;6: Ensemble overview &amp; lift.
-</figcaption>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="results_ensemble.png" class="img-fluid figure-img"></p>
+<figcaption>Ensemble overview &amp; lift.</figcaption>
 </figure>
 </div>
 </section>
@@ -867,8 +837,13 @@ Figure&nbsp;6: Ensemble overview &amp; lift.
 <section id="dashboard" class="level3">
 <h3 class="anchored" data-anchor-id="dashboard">6.6 Dashboard:</h3>
 <p>To visualize the effectiveness of Ensemble Methods in market manipulation detection, visit our model tuning application:</p>
-<p><a href="images/ml_dashboard.png">QR Code Here!</a></p>
-<p>Or visit the link here: https://msds-capstone-production.up.railway.app/</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="ml_dashboard.png" class="img-fluid figure-img"></p>
+<figcaption>QR Code Here!</figcaption>
+</figure>
+</div>
+<p>Or visit the link here: <a href="https://msds-capstone-production.up.railway.app/">Dashboard Linked Here!</a></p>
 <p>This application can be synced to your own data, or you can use the synthetic data included in the app to get a feel for what we were looking at and how effective our models truly were!</p>
 </section>
 </section>
