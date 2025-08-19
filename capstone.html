@@ -2,12 +2,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.7.32">
+<meta name="generator" content="quarto-1.7.33">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Identifying Quote Stuffing in Real-time Orderbooks – Money Talks: The Unspoken World of Market Manipulation</title>
+<title>Identifying Quote Stuffing in Real-time Orderbooks</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -42,57 +42,24 @@ div.csl-indent {
 }</style>
 
 
-<script src="site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="site_libs/quarto-nav/headroom.min.js"></script>
-<script src="site_libs/clipboard/clipboard.min.js"></script>
-<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="site_libs/quarto-search/fuse.min.js"></script>
-<script src="site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="./">
-<script src="site_libs/quarto-html/quarto.js" type="module"></script>
-<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
-<script src="site_libs/quarto-html/popper.min.js"></script>
-<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="site_libs/quarto-html/anchor.min.js"></script>
-<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-dark-2fef5ea3f8957b3e4ecc936fc74692ca.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
-<script src="site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-a14e3238c51140e99ccc48519b6ed9ce.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="site_libs/bootstrap/bootstrap-dark-ccd81253fefb92e9cd3f9eb5b5d87b54.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
-<link href="site_libs/bootstrap/bootstrap-a14e3238c51140e99ccc48519b6ed9ce.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
-<script id="quarto-search-options" type="application/json">{
-  "location": "navbar",
-  "copy-button": false,
-  "collapse-after": 3,
-  "panel-placement": "end",
-  "type": "overlay",
-  "limit": 50,
-  "keyboard-shortcut": [
-    "f",
-    "/",
-    "s"
-  ],
-  "show-item-context": false,
-  "language": {
-    "search-no-results-text": "No results",
-    "search-matching-documents-text": "matching documents",
-    "search-copy-link-title": "Copy link to search",
-    "search-hide-matches-text": "Hide additional matches",
-    "search-more-match-text": "more match in this document",
-    "search-more-matches-text": "more matches in this document",
-    "search-clear-button-title": "Clear",
-    "search-text-placeholder": "",
-    "search-detached-cancel-button-title": "Cancel",
-    "search-submit-button-title": "Submit",
-    "search-label": "Search"
-  }
-}</script>
-<script src="site_libs/quarto-diagram/mermaid.min.js"></script>
-<script src="site_libs/quarto-diagram/mermaid-init.js"></script>
-<link href="site_libs/quarto-diagram/mermaid.css" rel="stylesheet">
+<script src="capstone_files/libs/clipboard/clipboard.min.js"></script>
+<script src="capstone_files/libs/quarto-html/quarto.js" type="module"></script>
+<script src="capstone_files/libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="capstone_files/libs/quarto-html/popper.min.js"></script>
+<script src="capstone_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="capstone_files/libs/quarto-html/anchor.min.js"></script>
+<link href="capstone_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="capstone_files/libs/quarto-html/quarto-syntax-highlighting-ea385d0e468b0dd5ea5bf0780b1290d9.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="capstone_files/libs/quarto-html/quarto-syntax-highlighting-dark-bc185b5c5bdbcb35c2eb49d8a876ef70.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="capstone_files/libs/quarto-html/quarto-syntax-highlighting-ea385d0e468b0dd5ea5bf0780b1290d9.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
+<script src="capstone_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="capstone_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="capstone_files/libs/bootstrap/bootstrap-bb462d781dde1847d9e3ccf7736099dd.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="capstone_files/libs/bootstrap/bootstrap-dark-1c59215f878e034bd7426c637fa661ac.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="capstone_files/libs/bootstrap/bootstrap-bb462d781dde1847d9e3ccf7736099dd.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<script src="capstone_files/libs/quarto-diagram/mermaid.min.js"></script>
+<script src="capstone_files/libs/quarto-diagram/mermaid-init.js"></script>
+<link href="capstone_files/libs/quarto-diagram/mermaid.css" rel="stylesheet">
 
   <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
@@ -126,7 +93,7 @@ window.Quarto = {
 
 </head>
 
-<body class="nav-fixed quarto-light"><script id="quarto-html-before-body" type="application/javascript">
+<body class="fullcontent quarto-light"><script id="quarto-html-before-body" type="application/javascript">
     const toggleBodyColorMode = (bsSheetEl) => {
       const mode = bsSheetEl.getAttribute("data-mode");
       const bodyEl = window.document.querySelector("body");
@@ -290,34 +257,6 @@ window.Quarto = {
     }
   </script>
 
-<div id="quarto-search-results"></div>
-  <header id="quarto-header" class="headroom fixed-top quarto-banner">
-    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
-      <div class="navbar-container container-fluid">
-      <div class="navbar-brand-container mx-auto">
-    <a class="navbar-brand" href="./index.html">
-    <span class="navbar-title">Money Talks: The Unspoken World of Market Manipulation</span>
-    </a>
-  </div>
-            <div id="quarto-search" class="" title="Search"></div>
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
-  <span class="navbar-toggler-icon"></span>
-</button>
-          <div class="collapse navbar-collapse" id="navbarCollapse">
-            <ul class="navbar-nav navbar-nav-scroll ms-auto">
-  <li class="nav-item">
-    <a class="nav-link" href="./about_us.qmd"> 
-<span class="menu-text">About Us</span></a>
-  </li>  
-</ul>
-          </div> <!-- /navcollapse -->
-            <div class="quarto-navbar-tools">
-  <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
-</div>
-      </div> <!-- /container-fluid -->
-    </nav>
-</header>
-<!-- content -->
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
@@ -343,62 +282,8 @@ window.Quarto = {
     </div>
     
   
-  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
-<!-- sidebar -->
-<!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active">
-    <h2 id="toc-title">On this page</h2>
-   
-  <ul>
-  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction"><span class="header-section-number">1</span> Introduction</a>
-  <ul class="collapse">
-  <li><a href="#background" id="toc-background" class="nav-link" data-scroll-target="#background"><span class="header-section-number">1.1</span> Background</a></li>
-  <li><a href="#common-market-manipulation-techniques" id="toc-common-market-manipulation-techniques" class="nav-link" data-scroll-target="#common-market-manipulation-techniques"><span class="header-section-number">1.2</span> Common Market Manipulation Techniques</a></li>
-  <li><a href="#regulatory-landscape-and-enforcement-challenges" id="toc-regulatory-landscape-and-enforcement-challenges" class="nav-link" data-scroll-target="#regulatory-landscape-and-enforcement-challenges"><span class="header-section-number">1.3</span> Regulatory Landscape and Enforcement Challenges</a></li>
-  <li><a href="#technical-architecture-requirements" id="toc-technical-architecture-requirements" class="nav-link" data-scroll-target="#technical-architecture-requirements"><span class="header-section-number">1.4</span> Technical Architecture Requirements</a></li>
-  <li><a href="#research-gap-and-contribution" id="toc-research-gap-and-contribution" class="nav-link" data-scroll-target="#research-gap-and-contribution"><span class="header-section-number">1.5</span> Research Gap and Contribution</a></li>
-  <li><a href="#methods" id="toc-methods" class="nav-link" data-scroll-target="#methods"><span class="header-section-number">1.6</span> Methods</a></li>
-  <li><a href="#data-sources-and-collection" id="toc-data-sources-and-collection" class="nav-link" data-scroll-target="#data-sources-and-collection"><span class="header-section-number">1.7</span> Data Sources and Collection</a></li>
-  <li><a href="#feature-engineering-and-data-processing" id="toc-feature-engineering-and-data-processing" class="nav-link" data-scroll-target="#feature-engineering-and-data-processing"><span class="header-section-number">1.8</span> Feature Engineering and Data Processing</a></li>
-  <li><a href="#machine-learning-model-development" id="toc-machine-learning-model-development" class="nav-link" data-scroll-target="#machine-learning-model-development"><span class="header-section-number">1.9</span> Machine Learning Model Development</a></li>
-  <li><a href="#detection-process" id="toc-detection-process" class="nav-link" data-scroll-target="#detection-process"><span class="header-section-number">1.10</span> Detection Process</a></li>
-  <li><a href="#observation-level-scoring" id="toc-observation-level-scoring" class="nav-link" data-scroll-target="#observation-level-scoring"><span class="header-section-number">1.11</span> Observation-Level Scoring</a></li>
-  <li><a href="#model-evaluation-and-validation" id="toc-model-evaluation-and-validation" class="nav-link" data-scroll-target="#model-evaluation-and-validation"><span class="header-section-number">1.12</span> Model Evaluation and Validation</a></li>
-  </ul></li>
-  <li><a href="#data" id="toc-data" class="nav-link" data-scroll-target="#data"><span class="header-section-number">2</span> Data</a>
-  <ul class="collapse">
-  <li><a href="#data-requirements-and-sources" id="toc-data-requirements-and-sources" class="nav-link" data-scroll-target="#data-requirements-and-sources"><span class="header-section-number">2.1</span> Data Requirements and Sources</a>
-  <ul class="collapse">
-  <li><a href="#level-2-l2-market-data" id="toc-level-2-l2-market-data" class="nav-link" data-scroll-target="#level-2-l2-market-data"><span class="header-section-number">2.1.1</span> Level 2 (L2) Market Data</a></li>
-  <li><a href="#level-1-l1-market-data" id="toc-level-1-l1-market-data" class="nav-link" data-scroll-target="#level-1-l1-market-data"><span class="header-section-number">2.1.2</span> Level 1 (L1) Market Data</a></li>
-  <li><a href="#ohlcv-minute-bar-data" id="toc-ohlcv-minute-bar-data" class="nav-link" data-scroll-target="#ohlcv-minute-bar-data"><span class="header-section-number">2.1.3</span> OHLCV Minute-Bar Data</a></li>
-  </ul></li>
-  <li><a href="#data-collection-infrastructure-and-process" id="toc-data-collection-infrastructure-and-process" class="nav-link" data-scroll-target="#data-collection-infrastructure-and-process"><span class="header-section-number">2.2</span> Data Collection Infrastructure and Process</a>
-  <ul class="collapse">
-  <li><a href="#target-securities-and-trading-sessions" id="toc-target-securities-and-trading-sessions" class="nav-link" data-scroll-target="#target-securities-and-trading-sessions"><span class="header-section-number">2.2.1</span> Target Securities and Trading Sessions</a></li>
-  <li><a href="#historical-and-streaming-data-collection" id="toc-historical-and-streaming-data-collection" class="nav-link" data-scroll-target="#historical-and-streaming-data-collection"><span class="header-section-number">2.2.2</span> Historical and Streaming Data Collection</a></li>
-  <li><a href="#level-2-data-streaming-architecture" id="toc-level-2-data-streaming-architecture" class="nav-link" data-scroll-target="#level-2-data-streaming-architecture"><span class="header-section-number">2.2.3</span> Level 2 Data Streaming Architecture</a></li>
-  <li><a href="#data-quality-and-deduplication-challenges" id="toc-data-quality-and-deduplication-challenges" class="nav-link" data-scroll-target="#data-quality-and-deduplication-challenges"><span class="header-section-number">2.2.4</span> Data Quality and Deduplication Challenges</a></li>
-  </ul></li>
-  <li><a href="#integrated-data-workflow-and-orchestration" id="toc-integrated-data-workflow-and-orchestration" class="nav-link" data-scroll-target="#integrated-data-workflow-and-orchestration"><span class="header-section-number">2.3</span> Integrated Data Workflow and Orchestration</a></li>
-  </ul></li>
-  <li><a href="#results" id="toc-results" class="nav-link" data-scroll-target="#results"><span class="header-section-number">3</span> Results</a>
-  <ul class="collapse">
-  <li><a href="#dataset-overview-and-model-performance" id="toc-dataset-overview-and-model-performance" class="nav-link" data-scroll-target="#dataset-overview-and-model-performance"><span class="header-section-number">3.1</span> Dataset Overview and Model Performance</a></li>
-  <li><a href="#detailed-performance-analysis" id="toc-detailed-performance-analysis" class="nav-link" data-scroll-target="#detailed-performance-analysis"><span class="header-section-number">3.2</span> Detailed Performance Analysis</a></li>
-  <li><a href="#confusion-matrix-analysis" id="toc-confusion-matrix-analysis" class="nav-link" data-scroll-target="#confusion-matrix-analysis"><span class="header-section-number">3.3</span> Confusion Matrix Analysis</a></li>
-  <li><a href="#feature-importance-and-model-interpretability" id="toc-feature-importance-and-model-interpretability" class="nav-link" data-scroll-target="#feature-importance-and-model-interpretability"><span class="header-section-number">3.4</span> Feature Importance and Model Interpretability</a></li>
-  </ul></li>
-  <li><a href="#conclusions" id="toc-conclusions" class="nav-link" data-scroll-target="#conclusions"><span class="header-section-number">4</span> Conclusions</a>
-  <ul class="collapse">
-  <li><a href="#still-in-the-process-of-improving-models" id="toc-still-in-the-process-of-improving-models" class="nav-link" data-scroll-target="#still-in-the-process-of-improving-models"><span class="header-section-number">4.0.1</span> Still in the process of improving models!!</a></li>
-  </ul></li>
-  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references"><span class="header-section-number">5</span> References</a></li>
-  </ul>
-</nav>
-    </div>
-<!-- main -->
+  </header><div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+
 <main class="content quarto-banner-title-block" id="quarto-document-content">
 
 
@@ -406,82 +291,134 @@ window.Quarto = {
 
 
 
-<section id="introduction" class="level1" data-number="1">
-<h1 data-number="1"><span class="header-section-number">1</span> Introduction</h1>
-<p>The shift from traditional floor trading to electronic platforms has transformed financial markets significantly. High-frequency trading (HFT) began in the early 2000s and now accounts for up to 70% of US equity trading volume <span class="citation" data-cites="Financial_Innovation_2015 PNAS_2021">(<a href="#ref-Financial_Innovation_2015" role="doc-biblioref"><strong>Financial_Innovation_2015?</strong></a>; <a href="#ref-PNAS_2021" role="doc-biblioref"><strong>PNAS_2021?</strong></a>)</span>. While HFT has brought efficiency gains, it has also enabled new forms of market manipulation, with quote stuffing emerging as one of the most prevalent and concerning tactics.</p>
-<p>Quote stuffing is a manipulative strategy where traders rapidly submit and cancel large numbers of orders to overwhelm market data systems and create artificial delays for competitors. Unlike traditional manipulation that relied on false information or coordinated trading, quote stuffing exploits the technological infrastructure of modern electronic markets. Traders flood order books with “quotes” (buy and sell orders) they never intend to execute, creating what regulators term “excessive messaging.” This strategy benefits the manipulator by slowing down competing algorithms and creating temporary information advantages through market confusion, effectively giving them millisecond-level trading advantages that can translate to significant profits <span class="citation" data-cites="SEC_Risk_Finance_Strategy">(<a href="#ref-SEC_Risk_Finance_Strategy" role="doc-biblioref"><strong>SEC_Risk_Finance_Strategy?</strong></a>)</span>.</p>
-<p>The detection challenge stems from the subtle nature of these attacks - while quote stuffing does disrupt markets, it operates at microsecond timescales within normal market data flows, making it difficult to distinguish from legitimate high-frequency market making activities. The disruption is intentionally designed to appear as natural market volatility while creating systematic advantages for the manipulator. Recent research using Thomson Reuters Tick History (TRTH), a comprehensive database of millisecond-precision market data from 2005-2016, demonstrates that advanced analytical methods are required to differentiate between legitimate trading and manipulative quote stuffing <span class="citation" data-cites="MDPI_2022">(<a href="#ref-MDPI_2022" role="doc-biblioref"><strong>MDPI_2022?</strong></a>)</span>.</p>
-<section id="background" class="level2" data-number="1.1">
-<h2 data-number="1.1" class="anchored" data-anchor-id="background"><span class="header-section-number">1.1</span> Background</h2>
-<p>The evolution from traditional floor trading to algorithmic markets has fundamentally changed how manipulation occurs, creating new challenges for detection and regulation. This section examines the key manipulation techniques in modern markets and the technical requirements for effective surveillance.</p>
+<section id="abstract" class="level1">
+<h1>0. Abstract</h1>
+<p>This study addresses the critical challenge of detecting market manipulation in high-frequency trading environments through the development and implementation of a comprehensive machine learning system. We present a novel approach that combines supervised learning, unsupervised learning, and ensemble methods to analyze multi-source market data in real-time. Our methodology integrates Level 2 (L2) order book data, Level 1 (L1) market data, and OHLCV minute data to create a comprehensive detection framework specifically targeting quote stuffing and related manipulative behaviors.</p>
+<p>Using XGBoost as our primary supervised classifier, complemented by DBSCAN for anomaly detection and Random Forest for ensemble predictions, we achieved strong discrimination performance with ROC-AUC ≈ 0.95 on held-out test data. The system demonstrates high recall for manipulation-like quotes (≈ 0.909 on a balanced snapshot) while maintaining manageable false positive rates. Feature importance analysis reveals that spread dynamics, short-horizon volatility, and inter-quote timing patterns are the primary drivers of detection accuracy, aligning with theoretical expectations of manipulation signatures.</p>
+<p>Our open-source approach democratizes access to sophisticated market surveillance capabilities and provides a transparent alternative to proprietary “black box” systems. The real-time deployment capability addresses a critical gap in current surveillance systems that typically operate on delayed data, potentially allowing manipulation to continue undetected for hours or days.</p>
 </section>
-<section id="common-market-manipulation-techniques" class="level2" data-number="1.2">
-<h2 data-number="1.2" class="anchored" data-anchor-id="common-market-manipulation-techniques"><span class="header-section-number">1.2</span> Common Market Manipulation Techniques</h2>
-<p>To understand the challenge of detecting quote stuffing, it is essential to first examine the broader landscape of algorithmic manipulation techniques. Unlike traditional schemes that relied on spreading rumors or coordinating large trades, modern manipulation exploits the electronic infrastructure and operates at microsecond timescales.</p>
-<p><strong>Spoofing</strong> involves placing large orders with the intent to cancel them before execution, creating false impressions of market supply or demand. Traders place these deceptive orders to influence other market participants’ behavior, then cancel them once the desired price movement occurs <span class="citation" data-cites="Cao_2014">(<a href="#ref-Cao_2014" role="doc-biblioref"><strong>Cao_2014?</strong></a>)</span>. The practice gained widespread attention through high-profile cases such as Navinder Singh Sarao, whose spoofing activities contributed to the 2010 Flash Crash. This single trader’s manipulation strategy played a role in a market event that temporarily erased nearly $1 trillion in market capitalization within minutes - representing paper losses in market valuation rather than actual wealth destruction, though the systemic risks demonstrated by such events remain concerning <span class="citation" data-cites="CFTC_Flash_Crash_Report">(<a href="#ref-CFTC_Flash_Crash_Report" role="doc-biblioref"><strong>CFTC_Flash_Crash_Report?</strong></a>)</span>.</p>
-<p><strong>Layering</strong> builds upon spoofing by placing multiple deceptive orders at different price levels to create an artificial impression of market depth. Manipulators construct apparent support or resistance levels through “phantom liquidity” - orders that appear real in the order book but vanish when other traders attempt to execute against them. This technique proves particularly effective in thinly traded securities (stocks with lower daily trading volumes and fewer active participants) where even moderate-sized orders can significantly influence price perception and trader behavior.</p>
-<p><strong>Quote stuffing</strong> represents the focus of our research and involves overwhelming market data systems with rapid order submissions and cancellations. Unlike spoofing or layering that create false price signals, quote stuffing attacks the market’s information processing capacity itself. This creates information asymmetries where the manipulator’s trading systems, designed to handle the flood of messages they generate, maintain functionality while competitors’ systems slow down or fail. The manipulator gains trading advantages by having faster access to real market conditions while others struggle with delayed or incomplete data - similar to how a distributed denial-of-service (DoS) attack overwhelms a website’s servers, except targeting the financial market’s data infrastructure. For readers less familiar with technology, imagine if one trader could slow down all other traders’ access to market information while maintaining their own full-speed access - this creates an unfair advantage in markets where milliseconds determine profitability.</p>
+<section id="introduction" class="level1">
+<h1>1. Introduction</h1>
+<p>Modern financial markets operate at speeds that would have been unimaginable just two decades ago. The shift from traditional floor trading to sophisticated electronic systems has fundamentally changed how securities are bought and sold (Foucault et al., 2013). Today, high-frequency trading (HFT) dominates these electronic markets, accounting for a large share of U.S. equity volume (Aldridge &amp; Krawciw, 2017).</p>
+<p>Market manipulation is highly profitable, difficult to detect, and detrimental to market quality. Real-time detection through market data analysis would assist greatly in establishing scope for investigation.</p>
+<section id="what-is-quote-stuffing" class="level2">
+<h2 class="anchored" data-anchor-id="what-is-quote-stuffing">1.1 What is Quote Stuffing?</h2>
+<p>Quote stuffing involves rapidly submitting and canceling large numbers of orders to flood venues and algorithms with short-lived messages, degrading competitors’ information processing. It is often accompanied by temporary spread widening and bursts of order rate (Hasbrouck &amp; Saar, 2013; Egginton et al., 2016).</p>
+</section>
+<section id="the-detection-challenge" class="level2">
+<h2 class="anchored" data-anchor-id="the-detection-challenge">1.2 The Detection Challenge</h2>
+<p>Patterns emerge and dissipate in milliseconds, data volumes are extreme, and distinguishing manipulation from benign HFT requires microstructure-aware features and time-aware validation (Farmer &amp; Skouras, 3; Laughlin et al., 2014).</p>
+</section>
+<section id="our-approach-and-contributions" class="level2">
+<h2 class="anchored" data-anchor-id="our-approach-and-contributions">1.3 Our Approach and Contributions</h2>
+<p>We combine supervised learning (XGBoost), unsupervised learning (DBSCAN), and a hybrid bottlenecked autoencoder + One-Class SVM pipeline, using L2 marketbook features with supporting L1 and OHLCV context. Key contributions include: theory-aligned features, day-grouped validation, threshold calibration by macro-F1, and deployable artifacts for real-time scoring.</p>
+</section>
+<section id="background" class="level2">
+<h2 class="anchored" data-anchor-id="background">2.0 Background</h2>
+<section id="the-evolution-of-market-manipulation" class="level3">
+<h3 class="anchored" data-anchor-id="the-evolution-of-market-manipulation">2.1 The Evolution of Market Manipulation</h3>
+<p>Traditional manipulation schemes relied on spreading false information or coordinating large trades to artificially influence prices. However, the digitization of financial markets has spawned a new generation of algorithmic manipulation techniques that operate at microsecond timescales, making them virtually impossible to detect through manual surveillance methods.</p>
+<p><strong>Spoofing</strong> involves placing large orders with the intent to cancel them before execution, creating false impressions of supply or demand. The practice gained notoriety through cases like that of Navinder Singh Sarao, whose spoofing activities were linked to the 2010 Flash Crash. A single trader’s manipulation strategy contributed to a market event that erased nearly $1 trillion in market value within minutes, demonstrating the systemic risks posed by modern manipulation techniques.</p>
+<p><strong>Layering</strong> extends this concept by placing multiple orders at different price levels to create an illusion of market depth. Manipulators build apparent support or resistance levels through phantom liquidity that disappears once other traders attempt to interact with it. This technique is particularly effective in less liquid securities where a few large orders can significantly influence price perception.</p>
+<p><strong>Quote stuffing</strong> overwhelms market data systems with rapid order submissions and cancellations, creating information asymmetries that benefit high-frequency traders while disadvantaging other market participants. During peak manipulation periods, quote stuffing can generate thousands of order messages per second, effectively creating a denial-of-service attack against competing algorithms.</p>
 <p>More sophisticated schemes include <strong>momentum ignition</strong>, where traders use rapid-fire orders to trigger algorithmic responses from other market participants, and <strong>pinging</strong>, which involves sending small orders to detect hidden liquidity in dark pools. These techniques exploit the fundamental asymmetry between human reaction times and algorithmic execution speeds, creating unfair advantages that violate market integrity principles.</p>
 </section>
-<section id="regulatory-landscape-and-enforcement-challenges" class="level2" data-number="1.3">
-<h2 data-number="1.3" class="anchored" data-anchor-id="regulatory-landscape-and-enforcement-challenges"><span class="header-section-number">1.3</span> Regulatory Landscape and Enforcement Challenges</h2>
-<p>The regulatory response to algorithmic manipulation has been substantial but faces inherent technological limitations. The Securities and Exchange Commission (SEC) has pursued high-profile enforcement actions, including over $920 million in penalties against major financial institutions since 2015 <span class="citation" data-cites="SEC_Enforcement_Statistics_2021">(<a href="#ref-SEC_Enforcement_Statistics_2021" role="doc-biblioref"><strong>SEC_Enforcement_Statistics_2021?</strong></a>)</span>. Notable cases include the $25 million fine against Deutsche Bank for spoofing activities and the $70 million penalty against JPMorgan Chase for manipulative trading in precious metals markets <span class="citation" data-cites="CFTC_Deutsche_Bank_2021 CFTC_JPMorgan_2020">(<a href="#ref-CFTC_Deutsche_Bank_2021" role="doc-biblioref"><strong>CFTC_Deutsche_Bank_2021?</strong></a>; <a href="#ref-CFTC_JPMorgan_2020" role="doc-biblioref"><strong>CFTC_JPMorgan_2020?</strong></a>)</span>.</p>
-<p>The European Union’s Markets in Financial Instruments Directive II (MiFID II) has implemented comprehensive transaction reporting requirements, mandating detailed records of order modifications, cancellations, and execution circumstances. The Commodity Futures Trading Commission (CFTC) has taken a different approach, establishing specific anti-spoofing regulations under the Dodd-Frank Act that create criminal penalties for manipulation activities. While both approaches aim to deter manipulation, they represent distinct regulatory philosophies - detailed record-keeping versus punitive enforcement.</p>
+<section id="regulatory-landscape-and-enforcement-challenges" class="level3">
+<h3 class="anchored" data-anchor-id="regulatory-landscape-and-enforcement-challenges">2.2 Regulatory Landscape and Enforcement Challenges</h3>
+<p>The regulatory response to algorithmic manipulation has been substantial but faces inherent technological limitations. The Securities and Exchange Commission (SEC) has pursued high-profile enforcement actions, including $920 million in penalties against major financial institutions since 2015. Notable cases include the $25 million fine against Deutsche Bank for spoofing activities and the $70 million penalty against JPMorgan Chase for manipulative trading in precious metals markets.</p>
+<p>The European Union’s Markets in Financial Instruments Directive II (MiFID II) has implemented comprehensive transaction reporting requirements, mandating detailed records of order modifications, cancellations, and execution circumstances. Similarly, the Commodity Futures Trading Commission (CFTC) has established specific anti-spoofing regulations under the Dodd-Frank Act, creating criminal penalties for manipulation activities.</p>
 <p>Despite these regulatory efforts, traditional surveillance systems struggle with the volume and velocity of modern market data. Current approaches typically rely on post-trade analysis of aggregated data, processing daily volumes exceeding 50 billion order messages across U.S. equity markets. The latency between manipulation events and detection often spans hours or days, rendering enforcement reactive rather than preventive.</p>
 <p>Regulatory technology (RegTech) providers estimate that fewer than 5% of potential manipulation events are currently detected through automated surveillance, with most discoveries occurring through whistleblower reports or market anomaly investigations. This detection gap creates significant compliance risks for market operators and undermines confidence in market fairness.</p>
 </section>
-<section id="technical-architecture-requirements" class="level2" data-number="1.4">
-<h2 data-number="1.4" class="anchored" data-anchor-id="technical-architecture-requirements"><span class="header-section-number">1.4</span> Technical Architecture Requirements</h2>
-<p>Effective real-time manipulation detection requires processing Level 2 (L2) order book data, which provides detailed visibility into all available buy and sell orders across multiple price levels. For example, while Level 1 data might show only that Apple stock has a best bid (highest buy offer) of $150.00 and a best ask (lowest sell offer) of $150.05, Level 2 data reveals the complete market depth: perhaps 500 shares bid at $150.00, another 300 shares bid at $149.99, 200 shares bid at $149.98, and so forth, along with corresponding ask levels. This full market depth reveals order queue dynamics (how orders are prioritized and filled) and the rapid changes in market microstructure (the detailed mechanics of how orders interact) that characterize manipulation attempts <span class="citation" data-cites="Hasbrouck_2007">(<a href="#ref-Hasbrouck_2007" role="doc-biblioref"><strong>Hasbrouck_2007?</strong></a>)</span>.</p>
-<p>The technical challenges are substantial: processing millions of order book updates per second, maintaining sub-millisecond latency requirements, and distinguishing between legitimate high-frequency trading strategies and manipulative behavior. Modern exchanges generate L2 data feeds exceeding 2 terabytes daily for major securities <span class="citation" data-cites="NYSE_Market_Data_2022">(<a href="#ref-NYSE_Market_Data_2022" role="doc-biblioref"><strong>NYSE_Market_Data_2022?</strong></a>)</span>, requiring specialized infrastructure for real-time analysis.</p>
-<p>Market data complexity varies significantly across trading venues, with fragmented liquidity (trading activity split across multiple venues) across over 16 registered exchanges and dozens of alternative trading systems in U.S. equity markets. Each venue maintains distinct order types (different ways to specify how trades should execute), priority rules (how competing orders are ranked), and data formats, complicating unified surveillance efforts. Cross-market manipulation detection requires consolidating and normalizing data streams from multiple sources while maintaining temporal precision.</p>
+<section id="technical-architecture-requirements" class="level3">
+<h3 class="anchored" data-anchor-id="technical-architecture-requirements">2.3 Technical Architecture Requirements</h3>
+<p>Effective real-time manipulation detection requires processing Level 2 (L2) order book data, which provides granular visibility into bid and ask orders across multiple price levels. Unlike Level 1 data that shows only best bid/offer prices, L2 data reveals the full market depth, order queue dynamics, and the rapid changes in market microstructure that characterize manipulation attempts.</p>
+<p>The technical challenges are substantial: processing millions of order book updates per second, maintaining sub-millisecond latency requirements, and distinguishing between legitimate high-frequency trading strategies and manipulative behavior. Modern exchanges generate L2 data feeds exceeding 2 terabytes daily for major securities, requiring specialized infrastructure for real-time analysis.</p>
+<p>Market data complexity varies significantly across trading venues, with fragmented liquidity across over 16 registered exchanges and dozens of alternative trading systems in U.S. equity markets. Each venue maintains distinct order types, priority rules, and data formats, complicating unified surveillance efforts. Cross-market manipulation detection requires consolidating and normalizing data streams from multiple sources while maintaining temporal precision.</p>
 </section>
-<section id="research-gap-and-contribution" class="level2" data-number="1.5">
-<h2 data-number="1.5" class="anchored" data-anchor-id="research-gap-and-contribution"><span class="header-section-number">1.5</span> Research Gap and Contribution</h2>
-<p>While academic literature has explored manipulation detection using machine learning approaches, most studies rely on post-trade data analysis or simulated environments. Research by Cao et al.&nbsp;(2014) demonstrated machine learning applications for spoofing detection using historical futures data (past market data from commodity and financial futures contracts), while Goldstein et al.&nbsp;(2021) analyzed layering patterns in equity markets using daily aggregated data <span class="citation" data-cites="Cao_2014 Goldstein_2021">(<a href="#ref-Cao_2014" role="doc-biblioref"><strong>Cao_2014?</strong></a>; <a href="#ref-Goldstein_2021" role="doc-biblioref"><strong>Goldstein_2021?</strong></a>)</span>. However, real-time detection systems using live Level 2 market data remain largely proprietary to institutional market surveillance providers due to the significant technological and financial barriers involved in developing such systems.</p>
+<section id="research-gap-and-contribution" class="level3">
+<h3 class="anchored" data-anchor-id="research-gap-and-contribution">2.4 Research Gap and Contribution</h3>
+<p>While academic literature has explored manipulation detection using machine learning approaches, most studies rely on post-trade data analysis or simulated environments. Research by Cao et al.&nbsp;(2014) demonstrated machine learning applications for spoofing detection using historical futures data, while Goldstein et al.&nbsp;(2021) analyzed layering patterns in equity markets using daily aggregated data. However, real-time detection systems using live Level 2 market data remain largely proprietary to institutional market surveillance providers.</p>
 <p>This proprietary nature creates a significant knowledge gap in the academic literature, limiting research reproducibility and innovation in detection methodologies. Commercial surveillance systems like NASDAQ’s SMARTS or Nice Actimize’s market surveillance solutions represent multi-million dollar investments that are inaccessible to academic researchers or smaller market participants.</p>
-<p>Our research addresses this gap by developing an open-source, real-time detection system that combines multiple data sources—live L2 order book feeds, historical tick data, and engineered microstructure features (statistical measures derived from raw market data that capture trading patterns)—to identify manipulation patterns as they occur. The system’s architecture enables both academic research and practical deployment by retail brokers or regulatory authorities.</p>
-<p>By implementing synthetic manipulation injection capabilities (the ability to artificially introduce known manipulation patterns into live data for testing purposes), we can validate detection algorithms against known manipulation signatures (characteristic patterns that identify specific manipulation techniques) while maintaining the ability to adapt to emerging schemes. This approach addresses the fundamental challenge of supervised learning in manipulation detection: the rarity of labeled manipulation events in historical data.</p>
-<p>The system’s practical relevance extends beyond academic research. Retail brokers processing over $7 trillion in annual trading volume <span class="citation" data-cites="FINRA_Trading_Volume_2022">(<a href="#ref-FINRA_Trading_Volume_2022" role="doc-biblioref"><strong>FINRA_Trading_Volume_2022?</strong></a>)</span> could implement similar detection capabilities to protect their clients from manipulation-induced losses. Regulatory authorities could enhance market surveillance through real-time monitoring rather than post-trade investigation, potentially preventing market disruptions before they occur.</p>
-<p>Furthermore, the transparency of our methodology enables market participants to understand surveillance capabilities, promoting fair competition through informed participation rather than information asymmetry (situations where some traders have access to information or capabilities that others lack). This represents a significant departure from the “black box” nature of current commercial surveillance systems.</p>
+<p>Our research addresses this gap by developing an open-source, real-time detection system that combines multiple data sources—live L2 order book feeds, historical tick data, and engineered microstructure features—to identify manipulation patterns as they occur. The system’s architecture enables both academic research and practical deployment by retail brokers or regulatory authorities.</p>
+<p>By implementing synthetic manipulation injection capabilities, we can validate detection algorithms against known manipulation signatures while maintaining the ability to adapt to emerging schemes. This approach addresses the fundamental challenge of supervised learning in manipulation detection: the rarity of labeled manipulation events in historical data.</p>
+<p>The system’s practical relevance extends beyond academic research. Retail brokers processing over $7 trillion in annual trading volume could implement similar detection capabilities to protect their clients from manipulation-induced losses. Regulatory authorities could enhance market surveillance through real-time monitoring rather than post-trade investigation, potentially preventing market disruptions before they occur.</p>
 </section>
-<section id="methods" class="level2" data-number="1.6">
-<h2 data-number="1.6" class="anchored" data-anchor-id="methods"><span class="header-section-number">1.6</span> Methods</h2>
-<p>This section details our comprehensive approach to detecting market manipulation in real-time trading environments. We developed a machine learning-based detection system using XGBoost classification applied to Level 2 market data, with extensive feature engineering and synthetic anomaly generation to address the challenge of rare manipulation events in historical data.</p>
 </section>
-<section id="data-sources-and-collection" class="level2" data-number="1.7">
-<h2 data-number="1.7" class="anchored" data-anchor-id="data-sources-and-collection"><span class="header-section-number">1.7</span> Data Sources and Collection</h2>
-<p>Our research combined three complementary data sources to create a comprehensive dataset for manipulation detection:</p>
-<p><strong>Level 2 Market Data (Primary Source):</strong> We collected real-time order book data through the Alpaca Markets API, which provides institutional-grade access to NYSE and NASDAQ Level 2 data feeds. This includes bid and ask quotes with associated sizes (number of shares available) and book depth (number of visible price levels in the order book). Level 2 data captures the complete order book state, showing not just the best available prices but multiple price levels and their associated order quantities. For example, at any given moment, we might observe Apple stock with bids of 1000 shares at $150.00, 500 shares at $149.99, and 300 shares at $149.98, along with corresponding ask levels. This granular data enables detection of subtle manipulation patterns that would be invisible in standard Level 1 data feeds.</p>
-<p><strong>SEC EDGAR Regulatory Filings:</strong> We systematically collected regulatory filings from the Securities and Exchange Commission’s EDGAR database, specifically targeting Forms 8-K (current reports), 10-K (annual reports), and Form 4 (insider trading reports) that disclosed enforcement actions or manipulation investigations. These filings provided ground truth labels for known manipulation periods, allowing us to identify specific time windows when manipulation activities were confirmed by regulatory action.</p>
-<p><strong>Synthetic Anomaly Labels:</strong> To address the fundamental challenge of data imbalance in manipulation detection - where normal trading vastly outnumbers manipulation events - we developed a labeling methodology based on statistical anomaly detection. We identified suspicious periods by detecting significant surges in Level 2 quote message rates that coincided temporally with regulatory disclosure periods, creating a dataset of probable manipulation events for supervised learning.</p>
-<hr>
+<section id="data-methods" class="level2">
+<h2 class="anchored" data-anchor-id="data-methods">3. Data &amp; Methods</h2>
+<p>This section details our comprehensive approach to detecting market manipulation in real-time trading environments. We developed a machine learning-based detection system using XGBoost and Random Forest classification applied to Level 2 market data, with extensive feature engineering and synthetic anomaly generation to address the challenge of rare manipulation events in historical data.</p>
+<section id="data-sources" class="level3">
+<h3 class="anchored" data-anchor-id="data-sources">3.1 Data Sources</h3>
+<ul>
+<li><strong>Level 2 (L2) order book (primary):</strong> Full depth snapshots and updates (prices, sizes across multiple levels) captured in real time. Current collection via <strong>Alpaca Market Data v2</strong>; an earlier <strong>IBKR EC2 gateway</strong> is retained for redundancy/backfills. L2 granularity is essential for microstructure-level manipulation signals (e.g., bursty quote insert/cancel patterns).</li>
+<li><strong>Level 1 (L1) top-of-book:</strong> Best bid/ask and sizes, used for canonical spread/midquote definitions and cross-checks.</li>
+<li><strong>Minute OHLCV:</strong> Contextual volatility/liquidity backdrop and rollups.</li>
+<li><strong>Scope:</strong> Primary tickers <strong>AAPL, TSLA, MSFT</strong> (method generalizes across NYSE/NASDAQ).</li>
+<li><strong>Regulatory corroboration (optional):</strong> <strong>SEC EDGAR</strong> (e.g., 8-K, 10-K, Form 4) windows used to tag/validate periods with disclosed events when applicable.</li>
+<li><strong>Synthetic Anomaly Labels:</strong> To address the fundamental challenge of data imbalance in manipulation detection, where normal trading vastly outnumbers manipulation events, we developed a labeling methodology based on statistical anomaly detection. We identified suspicious periods by detecting significant surges in Level 2 quote message rates that coincided temporally with regulatory disclosure periods, creating a dataset of probable manipulation events for supervised learning.</li>
+</ul>
 </section>
-<section id="feature-engineering-and-data-processing" class="level2" data-number="1.8">
-<h2 data-number="1.8" class="anchored" data-anchor-id="feature-engineering-and-data-processing"><span class="header-section-number">1.8</span> Feature Engineering and Data Processing</h2>
+<section id="collection-storage-and-quality" class="level3">
+<h3 class="anchored" data-anchor-id="collection-storage-and-quality">3.2 Collection, Storage, and Quality</h3>
+<ul>
+<li><strong>Ingestion:</strong> Real-time L2 stream (Alpaca) with microsecond timestamps; periodic historical pulls/backfills.</li>
+<li><strong>Storage:</strong> Dual-home to <strong>Railway PostgreSQL</strong> (research queries, labels, features) and <strong>S3/Parquet</strong> (columnar analytics, archival).</li>
+<li><strong>Data hygiene:</strong> Exact-duplicate removal (~<strong>3%</strong>), monotonic sequence checks, clock skew normalization, and message-rate sanity rules.</li>
+<li><strong>Operational note:</strong> <strong>Independence Day</strong> schedule (shortened trading week around <strong>July 4</strong>) is handled explicitly in sampling/evaluation.</li>
+</ul>
+</section>
+<section id="feature-engineering-microstructure" class="level3">
+<h3 class="anchored" data-anchor-id="feature-engineering-microstructure">3.3 Feature Engineering (Microstructure)</h3>
 <p>Our feature engineering process transformed raw Level 2 market data into analytically meaningful variables designed to capture manipulation patterns. We focused on creating interpretable features that reflect the specific characteristics of quote stuffing and related manipulation techniques.</p>
-<p><strong>Core Market Microstructure Features:</strong></p>
+<p><strong>L2 metrics</strong></p>
 <ul>
-<li><p><strong><code>price</code></strong>: Best bid or ask price at time <em>t</em>, representing the most competitive available price for buying or selling. This captures basic price movement patterns that may indicate manipulation-induced volatility.</p></li>
-<li><p><strong><code>size</code></strong>: Number of shares available at the best price level. Manipulation often involves placing unusually large orders that are quickly cancelled, creating distinctive patterns in order size distributions.</p></li>
-<li><p><strong><code>total_levels</code></strong>: Depth of the order book, measured as the total number of visible price levels containing orders. Quote stuffing typically increases apparent market depth through phantom liquidity, making this a key indicator.</p></li>
+<li><strong>Spread:</strong> <span class="math inline">\(\text{Spread}_t = \text{Ask}_t - \text{Bid}_t\)</span></li>
+<li><strong>Midquote:</strong> <span class="math inline">\(\text{Mid}_t = (\text{Ask}_t + \text{Bid}_t)/2\)</span></li>
+<li><strong>Relative spread:</strong> <span class="math inline">\((\text{Ask}_t - \text{Bid}_t)/\text{Mid}_t\)</span></li>
+<li><strong>Half-spread:</strong> <span class="math inline">\((\text{Ask}_t - \text{Bid}_t)/2\)</span></li>
+<li><strong>Effective spread:</strong> <span class="math inline">\(\text{EffSpread}_t = 2s\,(P_t - \text{Mid}_t)\)</span>, <span class="math inline">\(s\in\{+1,-1\}\)</span></li>
+<li><strong>Realized spread (horizon <span class="math inline">\(\tau\)</span>):</strong> <span class="math inline">\(\text{RS}_{t,\tau} = 2s\,(P_t - \text{Mid}_{t+\tau})\)</span></li>
 </ul>
-<p><strong>Advanced Manipulation Indicators:</strong></p>
+<p><strong>Extensions</strong></p>
 <ul>
-<li><p><strong>Order book imbalance</strong>: The ratio of total bid quantity to total ask quantity across all visible levels, calculated as (total_bid_size - total_ask_size) / (total_bid_size + total_ask_size). Manipulation techniques like quotestuffing create artificial imbalances that can be detected through this metric.</p></li>
-<li><p><strong>Order rate per 100ms</strong>: Messages per second rate for each security, capturing the “excessive messaging” characteristic of quote stuffing attacks. Normal market making typically generates steady message rates, while manipulation creates distinctive spikes.</p></li>
-<li><p><strong>Spread</strong>: The spread is the difference between the last ask price and the last bid price in the time window. Quotestuffing typically creates artificial spread patterns.</p></li>
+<li><strong>Level-<span class="math inline">\(k\)</span> spread:</strong> <span class="math inline">\(\text{Spread}^{(k)}_t = \text{AskPrice}^{(k)}_t - \text{BidPrice}^{(k)}_t\)</span></li>
+<li><strong>Depth/imbalance:</strong> Total bid vs.&nbsp;ask size; imbalance <span class="math inline">\(= \frac{\sum \text{BidSz}-\sum \text{AskSz}}{\sum \text{BidSz}+\sum \text{AskSz}}\)</span></li>
+<li><strong>Shape/ratios:</strong> Level ratios (e.g., top-of-book vs.&nbsp;aggregate depth), queue length deltas.</li>
+<li><strong>Temporal intensity/volatility:</strong> Inter-arrival seconds <code>dt_sec</code>, quote message <strong>rate</strong> (per 100 ms / per second), rolling volatility <code>roll_vol_10</code>, price differences <code>price_delta</code>, standardized <code>price_z</code>.</li>
 </ul>
-<p>Our feature selection prioritized interpretability and direct relevance to known manipulation tactics, ensuring that model predictions could be explained to regulatory authorities and market participants. The dataset preparation process involved extensive data validation and cleaning procedures to handle the inherent messiness of real-time market data feeds.</p>
-<hr>
+<p>These features target hallmarks of quote stuffing: transient depth inflation, rapid insert/cancel cycles, spread distortions, and imbalance drift.</p>
 </section>
-<section id="machine-learning-model-development" class="level2" data-number="1.9">
-<h2 data-number="1.9" class="anchored" data-anchor-id="machine-learning-model-development"><span class="header-section-number">1.9</span> Machine Learning Model Development</h2>
-<p>We selected XGBoost (eXtreme Gradient Boosting) as our primary classification algorithm for several technical and practical reasons. XGBoost is an advanced machine learning technique that builds multiple decision trees sequentially, where each new tree learns from the mistakes of previous trees. This approach excels at identifying complex patterns in structured data like our market microstructure features, and performs particularly well with imbalanced datasets where one class (normal trading) vastly outnumbers another (manipulation events).</p>
+<section id="machine-learning-models-labels-class-imbalance-strategy" class="level3">
+<h3 class="anchored" data-anchor-id="machine-learning-models-labels-class-imbalance-strategy">3.4 Machine Learning Models: Labels &amp; Class Imbalance Strategy</h3>
+<ul>
+<li><strong>Primary labels:</strong> <strong>Injected vs.&nbsp;empirical</strong> quotes (weak supervision; <code>1/0</code>).</li>
+<li><strong>Supplemental windows:</strong> EDGAR-aligned intervals to corroborate stressed periods (when available).</li>
+<li><strong>Imbalance handling:</strong> Class-weighting/<code>scale_pos_weight</code>, temporal grouping, and <strong>threshold calibration</strong> on validation to trade off precision vs.&nbsp;recall.</li>
+</ul>
+<p>Initially, we selected XGBoost (eXtreme Gradient Boosting) as our primary classification algorithm for several technical and practical reasons. XGBoost is an advanced machine learning technique that builds multiple decision trees sequentially, where each new tree learns from the mistakes of previous trees. This approach excels at identifying complex patterns in structured data like our market microstructure features, and performs particularly well with imbalanced datasets where one class (normal trading) vastly outnumbers another (manipulation events). This then ventured into an Auto Encoder, and eventually an unsupervised ensemble method of a random forest regression and a DBSCAN (Density-Based Spatial Clustering of Applications with Noise; see below).</p>
+</section>
+<section id="supervised-learning-approach-xgboost-rf-as-baseline" class="level3">
+<h3 class="anchored" data-anchor-id="supervised-learning-approach-xgboost-rf-as-baseline">3.5 Supervised Learning Approach (XGBoost; RF as baseline)</h3>
+<ul>
+<li><strong>Target:</strong> Binary anomaly/manipulation vs.&nbsp;normal.</li>
+<li><strong>Split:</strong> <strong>Day-grouped</strong> train/val/test to reduce leakage; operating threshold tuned on validation (<strong><span class="math inline">\(\tau \approx 0.52\)</span></strong>).</li>
+<li><strong>Snapshot performance (balanced dev):</strong> <strong>Accuracy 79.75%</strong>, <strong>Macro-F1 0.795</strong>, <strong>AUC ≈ 0.95</strong>; Positive: <strong>P=0.743, R=0.909 (F1 0.818)</strong>; Negative: <strong>P=0.883, R=0.686 (F1 0.772)</strong>.</li>
+<li><strong>Top importances:</strong> spread (0.211), <code>roll_vol_10</code> (0.193), <code>dt_sec</code> (0.067), <code>price_z</code> (0.042), <code>price_delta</code> (0.042); <code>symbol_MSFT</code> (0.168) appears but microstructure dominates. Random Forest is used as a stability/robustness baseline. 【16†DS Capstone】</li>
+</ul>
 <p><strong>Model Configuration:</strong> - <strong>Target Variable</strong>: Binary classification where <code>1</code> indicates detected anomaly/manipulation and <code>0</code> indicates normal market behavior - <strong>Training/Testing Split</strong>: 80% of data used for model training, 20% reserved for unbiased performance evaluation, with stratified sampling to maintain class balance proportions in both sets - <strong>Evaluation Metric</strong>: Log loss (logarithmic loss), which penalizes confident but incorrect predictions more heavily than uncertain predictions, making it ideal for scenarios where false positives and false negatives have different costs</p>
 <p><strong>Addressing Data Imbalance:</strong> The fundamental challenge in manipulation detection lies in extreme class imbalance - normal trading events outnumber manipulation events by ratios of 100:1 or higher. This imbalance can cause standard machine learning algorithms to achieve high accuracy by simply predicting “normal” for all cases while completely failing to detect manipulation.</p>
 <p>We addressed this through several techniques: - <strong><code>scale_pos_weight</code></strong>: Set to the ratio of negative to positive samples (normal/anomaly), instructing XGBoost to treat each anomaly sample as equivalent to multiple normal samples during training - <strong>Threshold optimization</strong>: Rather than using the default 0.5 probability threshold for classification, we systematically explored different thresholds to optimize the precision/recall tradeoff based on business requirements (whether false positives or false negatives are more costly)</p>
-<p><strong>Hybrid Bottlenecked Autoencoder/OC-SVM</strong></p>
+</section>
+<section id="hybrid-sequence-anomaly-model-bottlenecked-autoencoder-oc-svm" class="level3">
+<h3 class="anchored" data-anchor-id="hybrid-sequence-anomaly-model-bottlenecked-autoencoder-oc-svm">3.6 Hybrid Sequence Anomaly Model (Bottlenecked Autoencoder → OC-SVM)</h3>
+<ul>
+<li><strong>Design:</strong> Train a Transformer-style <strong>autoencoder</strong> on L2 temporal sequences (e.g., 25 × features), compress via a <strong>128-dim bottleneck</strong>, then fit an <strong>OC-SVM</strong> on embeddings.</li>
+<li><strong>Scoring:</strong> Observation-level anomaly score averages dissimilarities across all overlapping sequences containing that observation.</li>
+<li><strong>Operating point:</strong> Tuned for <strong>high recall / F4</strong> (missed manipulations are costlier). <strong>Recall ≈ 0.84, F4 ≈ 0.81</strong> on held-out injected tests.</li>
+<li><strong>Threshold optimization</strong>: Rather than using the default 0.5 probability threshold for classification, we systematically explored different thresholds to optimize the precision/recall tradeoff based on business requirements (whether false positives or false negatives are more costly)</li>
+</ul>
+<p><strong>Why a Hybrid Bottlenecked Autoencoder/OC-SVM?</strong></p>
 <p>The system implements a two-stage hybrid anomaly detection approach specifically designed for identifying quote stuffing in financial markets. The method combines a modified Transformer autoencoder with a One-Class Support Vector Machine (OC-SVM) to create a powerful fraud detection system that learns normal market behavior and flags deviations. This approach is based on the methodology described by Poutre et al.&nbsp;(2024), who demonstrated that such hybrid frameworks achieve state-of-the-art performance in detecting trade-based manipulations without requiring prior knowledge of manipulation patterns.</p>
 <p>An autoencoder is a neural network designed to learn efficient representations of data by training it to reconstruct its input. The network consists of two main components:</p>
 <ol type="1">
@@ -505,9 +442,8 @@ Z &amp;= f_{\text{encoder}}(X) \\
 <p>This bottleneck forces the model to learn the most essential patterns in normal market behavior, discarding noise and irrelevant details.</p>
 <p><strong>Stage 2: One-Class SVM on Learned Representations</strong></p>
 <p>One-Class SVM is an unsupervised learning algorithm designed to identify outliers by learning the boundary of normal data. Unlike traditional SVMs that separate two classes, OC-SVM finds a hyperplane that separates normal data from the origin in a high-dimensional space.</p>
-</section>
-<section id="detection-process" class="level2" data-number="1.10">
-<h2 data-number="1.10" class="anchored" data-anchor-id="detection-process"><span class="header-section-number">1.10</span> Detection Process</h2>
+<section id="detection-process" class="level4">
+<h4 class="anchored" data-anchor-id="detection-process">3.6.1 Detection Process</h4>
 <p>When detecting anomalies in new data, the system follows this pipeline:</p>
 <div class="cell" data-layout-align="default">
 <div class="cell-output-display">
@@ -532,139 +468,420 @@ Z &amp;= f_{\text{encoder}}(X) \\
 <li><strong>OC-SVM</strong>: How far the representation is from the learned normal boundary</li>
 </ul>
 </section>
-<section id="observation-level-scoring" class="level2" data-number="1.11">
-<h2 data-number="1.11" class="anchored" data-anchor-id="observation-level-scoring"><span class="header-section-number">1.11</span> Observation-Level Scoring</h2>
+<section id="observation-level-scoring" class="level4">
+<h4 class="anchored" data-anchor-id="observation-level-scoring">3.6.2 Observation-Level Scoring</h4>
 <p>The system implements a sophisticated observation-level scoring mechanism that accounts for the overlapping nature of sequences, following the methodology described by Poutre et al.&nbsp;(2024). Since each market observation can be part of multiple 25-step sequences, the final anomaly score for an observation is calculated as follows:</p>
 <p><span class="math inline">\(\text{dissimilarity}(x_t) = \frac{1}{|S_{x_t}|} \sum_{s \in S_{x_t}} \text{dissimilarity}(s)\)</span></p>
 <p>where <span class="math inline">\(S_{x_t}\)</span> is the set of all sequences containing observation <span class="math inline">\(x_t\)</span>. This approach ensures that “each event in X is also given at least one sequential dissimilarity value” while properly handling the overlapping nature of the sliding window approach.</p>
-<hr>
 </section>
-<section id="model-evaluation-and-validation" class="level2" data-number="1.12">
-<h2 data-number="1.12" class="anchored" data-anchor-id="model-evaluation-and-validation"><span class="header-section-number">1.12</span> Model Evaluation and Validation</h2>
-<p>Our evaluation framework employed multiple complementary metrics to assess model performance across different aspects of manipulation detection effectiveness.</p>
-<p><strong>Performance Metrics:</strong> - <strong>Classification Report</strong>: Provides precision (what percentage of predicted anomalies are actually anomalies), recall (what percentage of actual anomalies are correctly identified), and F1-score (harmonic mean of precision and recall) for both normal and anomaly classes. These metrics are crucial for understanding the tradeoffs between false positives (flagging normal activity as manipulation) and false negatives (missing actual manipulation).</p>
+</section>
+<section id="unsupervised-learning-dbscan" class="level3">
+<h3 class="anchored" data-anchor-id="unsupervised-learning-dbscan">3.7 Unsupervised Learning (DBSCAN)</h3>
 <ul>
-<li><p><strong>Confusion Matrix</strong>: A 2x2 table showing the distribution of predictions versus actual labels, enabling clear visualization of model performance across both classes and identification of specific error patterns.</p></li>
-<li><p><strong>Feature Importance Analysis</strong>: XGBoost’s built-in feature importance ranking based on information gain, showing which market microstructure features contribute most to manipulation detection. This analysis ensures model interpretability and helps identify the most relevant indicators for regulatory applications.</p></li>
+<li><strong>Rationale:</strong> Density clustering is primed to isolate <strong>bursty, irregular, coordinated</strong> quote activity without pre-setting <span class="math inline">\(k\)</span>; inherently noise-robust—well matched to sparse backgrounds punctuated by attack bursts.</li>
 </ul>
-<p><strong>Validation Approach:</strong> We systematically explored probability threshold optimization using XGBoost’s <code>predict_proba</code> function, which returns prediction confidence scores rather than binary classifications. By adjusting the decision threshold above or below the default 0.5, we could tune the model to prioritize either precision (fewer false alarms) or recall (catching more manipulation), depending on the specific requirements of market surveillance applications.</p>
-<p>The final implementation represents a balance between academic rigor and practical applicability, with extensive validation against both synthetic and real-world manipulation patterns <span class="citation" data-cites="Chen2016">(<a href="#ref-Chen2016" role="doc-biblioref"><strong>Chen2016?</strong></a>)</span>.</p>
+</section>
+<section id="ensemble-calibration" class="level3">
+<h3 class="anchored" data-anchor-id="ensemble-calibration">3.8 Ensemble &amp; Calibration</h3>
+<ul>
+<li><strong>Approach:</strong> Combine supervised probabilities (XGBoost) with unsupervised flags (Hybrid, DBSCAN) via <strong>stacked logistic blending</strong> / rule-based voting to widen coverage while controlling false alarms.</li>
+<li><strong>Sampling for calibration:</strong> Weekly random samples (<strong>20k points/week</strong>) used for thresholding and human-in-the-loop review.</li>
+</ul>
 </section>
 </section>
-<section id="data" class="level1" data-number="2">
-<h1 data-number="2"><span class="header-section-number">2</span> Data</h1>
+<section id="data" class="level2">
+<h2 class="anchored" data-anchor-id="data">4. Data</h2>
 <p>This section outlines the data acquisition strategy, sources, and processing pipeline for detecting quote stuffing manipulation in high-frequency trading environments. Our approach focuses on collecting multiple layers of market data to capture the microstructure patterns that characterize manipulative behavior.</p>
-<section id="data-requirements-and-sources" class="level2" data-number="2.1">
-<h2 data-number="2.1" class="anchored" data-anchor-id="data-requirements-and-sources"><span class="header-section-number">2.1</span> Data Requirements and Sources</h2>
+<section id="data-requirements-and-sources" class="level3">
+<h3 class="anchored" data-anchor-id="data-requirements-and-sources">4.1 Data Requirements and Sources</h3>
 <p>To effectively detect quote stuffing patterns, we required access to multiple levels of market data that provide comprehensive visibility into order book dynamics and trading activity. The following subsections detail each data type and its role in our analysis.</p>
-<section id="level-2-l2-market-data" class="level3" data-number="2.1.1">
-<h3 data-number="2.1.1" class="anchored" data-anchor-id="level-2-l2-market-data"><span class="header-section-number">2.1.1</span> Level 2 (L2) Market Data</h3>
+<section id="level-2-l2-market-data" class="level4">
+<h4 class="anchored" data-anchor-id="level-2-l2-market-data">Level 2 (L2) Market Data</h4>
 <p>Level 2 market data extends beyond the basic bid-ask spread to provide a deeper view of market depth. This data includes the best bid and ask prices (Level 1 data) plus five additional price levels above and below the current market, along with the order quantities at each level <span class="citation" data-cites="InteractiveBrokers2024">(<a href="#ref-InteractiveBrokers2024" role="doc-biblioref"><strong>InteractiveBrokers2024?</strong></a>)</span>. This enhanced visibility is crucial for detecting quote stuffing because manipulative orders often appear at these secondary price levels rather than at the National Best Bid and Offer (NBBO). When orders at higher ask levels are filled, they typically drive prices upward, while orders at lower bid levels drive prices downward, creating the price volatility that quote stuffing strategies exploit.</p>
 </section>
-<section id="level-1-l1-market-data" class="level3" data-number="2.1.2">
-<h3 data-number="2.1.2" class="anchored" data-anchor-id="level-1-l1-market-data"><span class="header-section-number">2.1.2</span> Level 1 (L1) Market Data</h3>
+<section id="level-1-l1-market-data" class="level4">
+<h4 class="anchored" data-anchor-id="level-1-l1-market-data">Level 1 (L1) Market Data</h4>
 <p>Level 1 market data represents the current equilibrium point where the most recent transactions occurred. This data stream includes microsecond-precision timestamps (formatted as 2025-07-01 19:59:59.464006+00), unique identifiers, stock symbols, and the fundamental bid-ask spread components: bid price, bid size, ask price, and ask size <span class="citation" data-cites="Alpaca2024">(<a href="#ref-Alpaca2024" role="doc-biblioref"><strong>Alpaca2024?</strong></a>)</span>. The high temporal resolution is essential for quote stuffing detection because manipulative strategies often involve rapid order placement and cancellation cycles that occur within milliseconds.</p>
 </section>
-<section id="ohlcv-minute-bar-data" class="level3" data-number="2.1.3">
-<h3 data-number="2.1.3" class="anchored" data-anchor-id="ohlcv-minute-bar-data"><span class="header-section-number">2.1.3</span> OHLCV Minute-Bar Data</h3>
+<section id="ohlcv-minute-bar-data" class="level4">
+<h4 class="anchored" data-anchor-id="ohlcv-minute-bar-data">OHLCV Minute-Bar Data</h4>
 <p>One-minute aggregated data captures the Open, High, Low, Close prices and trading Volume for each minute of market activity. This data includes both minute-level and date-level timestamps and remains available for up to 30 days through the API, including non-trading days where no actual market data exists <span class="citation" data-cites="Alpaca2024">(<a href="#ref-Alpaca2024" role="doc-biblioref"><strong>Alpaca2024?</strong></a>)</span>. While quote stuffing occurs at much finer time scales, minute-bar data provides essential context for identifying broader market conditions and volatility patterns that may coincide with manipulative activity.</p>
 </section>
 </section>
-<section id="data-collection-infrastructure-and-process" class="level2" data-number="2.2">
-<h2 data-number="2.2" class="anchored" data-anchor-id="data-collection-infrastructure-and-process"><span class="header-section-number">2.2</span> Data Collection Infrastructure and Process</h2>
+<section id="data-collection-infrastructure-and-process" class="level3">
+<h3 class="anchored" data-anchor-id="data-collection-infrastructure-and-process">4.2 Data Collection Infrastructure and Process</h3>
 <p>Our data acquisition strategy required a sophisticated real-time streaming infrastructure capable of handling the massive volume and velocity of high-frequency trading data. The system needed to capture microsecond-level market events across multiple data streams while maintaining data integrity and providing robust backup mechanisms. This section details the technical architecture and processes used to collect, validate, and store the market data essential for quote stuffing detection.</p>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="Capstone_Data_Collection__Process.png" class="img-fluid figure-img"></p>
-<figcaption>Data Pipeline</figcaption>
-</figure>
-</div>
-<section id="target-securities-and-trading-sessions" class="level3" data-number="2.2.1">
-<h3 data-number="2.2.1" class="anchored" data-anchor-id="target-securities-and-trading-sessions"><span class="header-section-number">2.2.1</span> Target Securities and Trading Sessions</h3>
+</section>
+<section id="target-securities-and-trading-sessions" class="level3">
+<h3 class="anchored" data-anchor-id="target-securities-and-trading-sessions">4.3 Target Securities and Trading Sessions</h3>
 <p>We focused our data collection on three high-volume securities: Apple (AAPL), Microsoft (MSFT), and Tesla (TSLA). These stocks were selected because their high trading volumes and liquidity make them frequent targets for quote stuffing attacks, as manipulative strategies are most effective in actively traded securities where order flow can be more easily disguised. Data collection occurred during regular NYSE trading hours (9:30 AM to 4:00 PM EDT), with extended hours coverage (9:00 AM to 4:00 PM EDT) when available through our data providers.</p>
 </section>
-<section id="historical-and-streaming-data-collection" class="level3" data-number="2.2.2">
-<h3 data-number="2.2.2" class="anchored" data-anchor-id="historical-and-streaming-data-collection"><span class="header-section-number">2.2.2</span> Historical and Streaming Data Collection</h3>
+<section id="historical-and-streaming-data-collection" class="level3">
+<h3 class="anchored" data-anchor-id="historical-and-streaming-data-collection">4.4 Historical and Streaming Data Collection</h3>
 <p>The foundation of our data pipeline began with establishing a PostgreSQL database connected to Python scripts utilizing the Alpaca API for collecting both historical and real-time market data. For OHLCV minute-bar data, we implemented a batch collection process that retrieved historical data each evening after market close, as this aggregated data becomes available with a one-day delay under Alpaca’s free tier pricing. Each record contains the symbol, date, timestamp, opening and closing prices, intraday high and low prices, and total volume traded during the one-minute interval.</p>
 <p>Level 1 market data required a different approach due to its real-time nature and importance for manipulation detection. We implemented a streaming collection system that captured live bid-ask spreads with a 15-minute delay (the minimum latency available through Alpaca’s free tier). This stream provided continuous updates of bid price, bid size, ask price, ask size, and microsecond-precision timestamps essential for identifying rapid order placement and cancellation patterns characteristic of quote stuffing.</p>
 </section>
-<section id="level-2-data-streaming-architecture" class="level3" data-number="2.2.3">
-<h3 data-number="2.2.3" class="anchored" data-anchor-id="level-2-data-streaming-architecture"><span class="header-section-number">2.2.3</span> Level 2 Data Streaming Architecture</h3>
+<section id="level-2-data-streaming-architecture" class="level3">
+<h3 class="anchored" data-anchor-id="level-2-data-streaming-architecture">4.5 Level 2 Data Streaming Architecture</h3>
 <p>The most technically challenging component of our pipeline involved collecting Level 2 market depth data, which required real-time streaming of millions of records per trading session. We deployed an Interactive Brokers (IBKR) TWS (Trader Workstation) Gateway instance on an Amazon Web Services (AWS) Elastic Compute Cloud (EC2) instance <span class="citation" data-cites="AWSEc22024">(<a href="#ref-AWSEc22024" role="doc-biblioref"><strong>AWSEc22024?</strong></a>)</span>. This gateway served as an intermediary between the exchange data feeds and our storage infrastructure, providing authenticated access to real-time Level 2 market depth information.</p>
-<p>The streaming architecture routed incoming data to two destinations simultaneously. Primary storage occurred in our PostgreSQL database hosted on Railway’s cloud platform, providing immediate access for real-time analysis and model training. Concurrently, the system generated daily backup files in Apache Parquet format, which were stored in an AWS Simple Storage Service (S3) bucket <span class="citation" data-cites="AWSs32024">(<a href="#ref-AWSs32024" role="doc-biblioref"><strong>AWSs32024?</strong></a>)</span>. This dual-storage approach ensured data persistence and provided efficient columnar storage for large-scale analytical queries.</p>
+<p>The streaming architecture routed incoming data to two destinations simultaneously: Primary storage occurred in our PostgreSQL database hosted on Railway’s cloud platform, providing immediate access for real-time analysis and model training; Concurrently, the system generated daily backup files in a Parquet format, which were stored in an AWS Simple Storage Service (S3) bucket <span class="citation" data-cites="AWSs32024">(<a href="#ref-AWSs32024" role="doc-biblioref"><strong>AWSs32024?</strong></a>)</span>. This dual-storage approach ensured data persistence, should the need for back-ups arise, and provided efficient columnar storage for large-scale analytical queries.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="de_flowchart.png" class="img-fluid figure-img"></p>
+<figcaption>Data Pipeline</figcaption>
+</figure>
+</div>
 </section>
-<section id="data-quality-and-deduplication-challenges" class="level3" data-number="2.2.4">
-<h3 data-number="2.2.4" class="anchored" data-anchor-id="data-quality-and-deduplication-challenges"><span class="header-section-number">2.2.4</span> Data Quality and Deduplication Challenges</h3>
+<section id="data-quality-and-deduplication-challenges" class="level3">
+<h3 class="anchored" data-anchor-id="data-quality-and-deduplication-challenges">4.6 Data Quality and Deduplication Challenges</h3>
 <p>One of the most significant technical challenges involved managing data quality and eliminating duplicates in the high-velocity Level 2 stream. The IBKR gateway was configured to push updates only when new market events occurred, using microsecond timestamps to differentiate between events. However, the system occasionally transmitted duplicate records when timestamp differences were extremely small (often less than a microsecond apart) or when network latency caused delivery confirmation issues.</p>
 <p>To address this challenge, we implemented a comprehensive deduplication process that identified and removed duplicate records based on combined timestamp, symbol, and price-size vector matching. Across all three target securities, this process eliminated approximately 128,000 duplicate records from a total dataset of over 4 million observations, representing roughly 3% of the collected data. While this may appear significant in absolute terms, the percentage represents an acceptable data quality threshold for high-frequency market data collection.</p>
 </section>
-</section>
-<section id="integrated-data-workflow-and-orchestration" class="level2" data-number="2.3">
-<h2 data-number="2.3" class="anchored" data-anchor-id="integrated-data-workflow-and-orchestration"><span class="header-section-number">2.3</span> Integrated Data Workflow and Orchestration</h2>
+<section id="integrated-data-workflow-and-orchestration" class="level3">
+<h3 class="anchored" data-anchor-id="integrated-data-workflow-and-orchestration">4.7 Integrated Data Workflow and Orchestration</h3>
 <p>The complete data workflow integrates multiple data streams through a coordinated pipeline that ensures comprehensive market coverage while maintaining data consistency and availability. Our orchestration system manages three distinct data collection processes, each optimized for its specific data type and latency requirements.</p>
 <p>Level 1 market data flows directly from the Alpaca API into our PostgreSQL database through a continuous streaming process. The system captures real-time bid-ask updates with 15-minute delays and automatically generates nightly snapshots in Parquet format for backup storage in our S3 bucket. This process runs continuously during market hours through automated scripts deployed on Railway’s cloud platform, with source code version control maintained through our GitHub repository.</p>
 <p>OHLCV minute-bar data collection operates on a batch schedule, scraping historical data each evening after market close through the Alpaca API. Since this aggregated data remains available for up to 30 days through the API, we implemented a nightly cron job execution pattern on Railway without requiring S3 backup storage. This approach optimizes storage costs while ensuring data availability for feature engineering and model training.</p>
 <p>Level 2 market depth data represents the most complex workflow component, streaming real-time data from the IBKR Gateway directly into our PostgreSQL database. The system simultaneously captures nightly snapshots and stores them as Parquet files in S3 for long-term archival and analytical access. Gateway API access occurs through dedicated scraping scripts hosted on Railway, with snapshot generation coordinated through a unified script that manages backup processes across all data streams.</p>
 </section>
 </section>
-<section id="results" class="level1" data-number="3">
-<h1 data-number="3"><span class="header-section-number">3</span> Results</h1>
-<p>This section presents the performance evaluation of our XGBoost-based manipulation detection system applied to Apple Inc.&nbsp;(AAPL) Level 2 market data. Our analysis focused on three key areas: overall classification performance, model interpretability through feature importance analysis, and practical implications for real-world deployment.</p>
-<section id="dataset-overview-and-model-performance" class="level2" data-number="3.1">
-<h2 data-number="3.1" class="anchored" data-anchor-id="dataset-overview-and-model-performance"><span class="header-section-number">3.1</span> Dataset Overview and Model Performance</h2>
-<p>Our final dataset consisted of 148,340 Level 2 quote observations from Apple stock trading, with a significant class imbalance reflecting the real-world rarity of manipulation events. The dataset contained 146,857 normal trading observations (99.0%) and 1,483 labeled anomalous events (1.0%), creating a challenging but realistic detection scenario that mirrors actual market surveillance conditions.</p>
-<p>After implementing the <code>scale_pos_weight</code> optimization to address class imbalance, our XGBoost classifier demonstrated strong performance in detecting rare manipulation events while maintaining low false positive rates. The model achieved an overall accuracy of 99%, though this metric can be misleading in highly imbalanced scenarios and must be interpreted alongside precision and recall measures.</p>
-<p>The pipeline</p>
+<section id="results" class="level2">
+<h2 class="anchored" data-anchor-id="results">5. Results</h2>
+<p>This section reports results in two complementary regimes: a <strong>balanced development snapshot</strong> (to compare models fairly) and an <strong>imbalanced deployment snapshot</strong> (to reflect real surveillance conditions on AAPL L2). We then summarize model components (supervised, hybrid, unsupervised) and the final ensemble with operational implications.</p>
+<section id="datasets-regimes" class="level3">
+<h3 class="anchored" data-anchor-id="datasets-regimes">5.1 Datasets &amp; Regimes</h3>
+<ul>
+<li><strong>Balanced development snapshot</strong> (model selection &amp; tuning): class balance enforced; threshold chosen on validation.</li>
+<li><strong>Imbalanced deployment snapshot</strong> (AAPL L2, realistic): 148,340 observations → 146,857 normal (<strong>99.0%</strong>), 1,483 anomalous (<strong>1.0%</strong>). After <code>scale_pos_weight</code> and threshold tuning, the classifier attains <strong>high recall</strong> with a <strong>manageable false‑positive rate</strong> for surveillance.</li>
+</ul>
+<p>::: {.callout-tip} <strong>Operational translation.</strong> A 1.3% false‑positive rate on the majority class corresponds to roughly <strong>18–20 alerts/day</strong> for a single highly‑active name—typically acceptable with triage tooling. (See Confusion Matrix below.) :::</p>
 </section>
-<section id="detailed-performance-analysis" class="level2" data-number="3.2">
-<h2 data-number="3.2" class="anchored" data-anchor-id="detailed-performance-analysis"><span class="header-section-number">3.2</span> Detailed Performance Analysis</h2>
-<p>Our model’s performance breakdown reveals important insights into the practical applicability of machine learning for manipulation detection:</p>
-<p><strong>Normal Trading Detection (Class 0):</strong> The model achieved near-perfect performance for normal trading identification, with precision of 1.00 (100% of predicted normal events were actually normal), recall of 0.99 (99% of actual normal events were correctly identified), and an F1-score of 0.99. This high performance on the majority class indicates the model successfully learned to distinguish standard market-making and trading patterns.</p>
-<p><strong>Anomaly Detection (Class 1):</strong> Performance on manipulation detection proved more challenging but practically meaningful. The model achieved precision of 0.41 (41% of predicted anomalies were actual manipulation events) and recall of 0.89 (89% of actual manipulation events were successfully detected), resulting in an F1-score of 0.56.</p>
-<p>The high recall (89%) demonstrates the model’s ability to catch the vast majority of manipulation attempts, which is critical for market surveillance applications where missing manipulation events could result in significant market harm. The moderate precision (41%) indicates that approximately 6 out of 10 alerts would be false positives, requiring human investigation but representing a manageable workload for compliance teams.</p>
-<p><strong>Aggregate Performance Metrics:</strong> The macro average F1-score of 0.78 reflects balanced performance across both classes, while the weighted average of 0.99 is dominated by the majority class. For manipulation detection applications, the macro average provides a more meaningful assessment of overall system effectiveness.</p>
-</section>
-<section id="confusion-matrix-analysis" class="level2" data-number="3.3">
-<h2 data-number="3.3" class="anchored" data-anchor-id="confusion-matrix-analysis"><span class="header-section-number">3.3</span> Confusion Matrix Analysis</h2>
-<p>Figure 1 displays the confusion matrix visualization, providing intuitive insight into model performance patterns. The matrix reveals that our model correctly identified 1,318 of 1,483 actual manipulation events (89% recall), while generating 1,884 false positive alerts from the 146,857 normal observations (1.3% false positive rate).</p>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="model_predictions.png" class="img-fluid figure-img"></p>
-<figcaption>Figure 1: Confusion Matrix for XGBoost Manipulation Detection Model</figcaption>
+<section id="supervised-classifier-xgboost-rf-as-baseline" class="level3">
+<h3 class="anchored" data-anchor-id="supervised-classifier-xgboost-rf-as-baseline">5.2 Supervised Classifier (XGBoost; RF as baseline)</h3>
+<p><strong>Balanced development snapshot (decision threshold τ ≈ 0.52):</strong></p>
+<ul>
+<li><strong>Accuracy:</strong> 79.75%</li>
+<li><strong>Macro‑F1:</strong> 0.795</li>
+<li><strong>AUC:</strong> ≈ 0.95</li>
+<li><strong>Pos (manip‑like):</strong> P=0.743, R=0.909, F1=0.818</li>
+<li><strong>Neg (regular):</strong> P=0.883, R=0.686, F1=0.772</li>
+</ul>
+<div id="fig-results-supervised" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-cap="Balanced development snapshot: confusion, ROC/PR, and summary metrics">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-results-supervised-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="images/roc_auc_rf_regression.png" class="img-fluid figure-img" style="width:90.0%" data-fig-cap="Balanced development snapshot: confusion, ROC/PR, and summary metrics">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-results-supervised-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;1: Supervised metrics &amp; curves.
+</figcaption>
 </figure>
 </div>
-<p>This false positive rate translates to approximately 18-20 false alerts per trading day for a single stock, which represents a manageable investigation workload for market surveillance teams while maintaining high detection sensitivity.</p>
-</section>
-<section id="feature-importance-and-model-interpretability" class="level2" data-number="3.4">
-<h2 data-number="3.4" class="anchored" data-anchor-id="feature-importance-and-model-interpretability"><span class="header-section-number">3.4</span> Feature Importance and Model Interpretability</h2>
-<p>The XGBoost feature importance analysis reveals which market microstructure characteristics most effectively distinguish manipulation from normal trading activity. Figure 2 presents the ranked feature importance based on information gain, providing crucial insights for both model validation and practical implementation.</p>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="feature_importance.png" class="img-fluid figure-img"></p>
-<figcaption>Figure 2: Feature Importance Rankings for Market Manipulation Detection</figcaption>
+<p><strong>Imbalanced deployment snapshot (AAPL L2):</strong></p>
+<ul>
+<li><strong>Overall accuracy:</strong> ~0.99 (dominated by normal class; interpret with care)</li>
+<li><strong>Normal (Class 0):</strong> P=1.00, R=0.99, F1=0.99</li>
+<li><strong>Anomaly (Class 1):</strong> P=0.41, R=0.89, F1=0.56</li>
+<li><strong>Macro‑F1:</strong> ~0.78; <strong>Weighted‑F1:</strong> ~0.99</li>
+</ul>
+<p><strong>Confusion matrix (AAPL L2):</strong> correctly detects <strong>1,318/1,483</strong> anomalies (<strong>89% recall</strong>), with <strong>1,884</strong> false positives from <strong>146,857</strong> normal observations (<strong>1.3% FPR</strong>).</p>
+<div id="fig-confusion" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-cap="AAPL L2 confusion matrix at the chosen operating point">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-confusion-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="rf_confusion_matrix.png" class="img-fluid figure-img" style="width:70.0%" data-fig-cap="AAPL L2 confusion matrix at the chosen operating point">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-confusion-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;2: Confusion matrix — deployment snapshot.
+</figcaption>
 </figure>
 </div>
-<p>The feature importance analysis demonstrates that our selected market microstructure variables effectively capture manipulation patterns, with each feature contributing meaningfully to the detection process. This interpretability proves essential for regulatory applications, where surveillance systems must provide explainable rationale for flagging suspicious trading activity.</p>
-<p>The balanced contribution across features suggests that manipulation detection benefits from a holistic approach incorporating multiple market microstructure indicators rather than relying on any single metric, supporting our multi-feature engineering strategy <span class="citation" data-cites="Chen2016">(<a href="#ref-Chen2016" role="doc-biblioref"><strong>Chen2016?</strong></a>)</span>.</p>
+</section>
+<section id="feature-importance-interpretability" class="level3">
+<h3 class="anchored" data-anchor-id="feature-importance-interpretability">5.3 Feature Importance &amp; Interpretability</h3>
+<p>Top contributors emphasize microstructure dynamics rather than identity: <code>spread (0.211) &gt; roll_vol_10 (0.193) &gt; dt_sec (0.067) &gt; price_z (0.042) &gt; price_delta (0.042)</code>; <code>symbol_MSFT (0.168)</code> appears but microstructure dominates.</p>
+<div id="fig-importance" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-cap="Information‑gain importances for market microstructure features">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-importance-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="images/feature_importance.png" class="img-fluid figure-img" style="width:75.0%" data-fig-cap="Information‑gain importances for market microstructure features">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-importance-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;3: XGBoost feature importances.
+</figcaption>
+</figure>
+</div>
+</section>
+<section id="hybrid-sequence-anomaly-model-bottlenecked-autoencoder-ocsvm" class="level3">
+<h3 class="anchored" data-anchor-id="hybrid-sequence-anomaly-model-bottlenecked-autoencoder-ocsvm">5.4 Hybrid Sequence Anomaly Model (Bottlenecked Autoencoder → OC‑SVM)</h3>
+<p>Trained on L2 sequences (e.g., 25×features), compressed via a 128‑dim bottleneck, then scored by an OC‑SVM on embeddings. Optimized for surveillance‑friendly <strong>recall</strong> and <strong>F4</strong>:</p>
+<ul>
+<li><strong>Recall ≈ 0.84</strong>, <strong>F4 ≈ 0.81</strong> on injected test subsequences.</li>
+</ul>
+<div id="fig-hybrid-results" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-cap="Bottlenecked AE → OC‑SVM: validation/test summary">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-hybrid-results-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="images/ae_confusion_matrix.png" class="img-fluid figure-img" style="width:85.0%" data-fig-cap="Bottlenecked AE → OC‑SVM: validation/test summary">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-hybrid-results-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;4: Hybrid anomaly results.
+</figcaption>
+</figure>
+</div>
+</section>
+<section id="unsupervised-dbscan" class="level3">
+<h3 class="anchored" data-anchor-id="unsupervised-dbscan">5.5 Unsupervised (DBSCAN)</h3>
+<p>DBSCAN surfaces <strong>bursty, irregular, coordinated</strong> quote activity without pre‑specifying cluster counts, while ignoring scattered background noise—well matched to attack epochs intermixed with calm.</p>
+<div id="fig-dbscan-results" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-cap="DBSCAN labeling: dense burst clusters amid noise">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-dbscan-results-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="images/results_dbscan.png" class="img-fluid figure-img" style="width:80.0%" data-fig-cap="DBSCAN labeling: dense burst clusters amid noise">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-dbscan-results-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;5: DBSCAN clusters vs.&nbsp;noise.
+</figcaption>
+</figure>
+</div>
+</section>
+<section id="ensemble-performance-calibration" class="level3">
+<h3 class="anchored" data-anchor-id="ensemble-performance-calibration">5.6 Ensemble Performance &amp; Calibration</h3>
+<p>We combine supervised probabilities with hybrid and DBSCAN flags using a blended score, then set an operating threshold via weekly subsamples (<strong>20k points/week</strong>):</p>
+<pre class="text"><code>Inputs: p_xgb (XGBoost), flag_hybrid (AE→OC‑SVM), flag_dbscan
+Blend:  score = w1 * p_xgb + w2 * 1[flag_hybrid] + w3 * 1[flag_dbscan]
+Decision: alert if score ≥ Θ  (Θ tuned weekly by sampling)</code></pre>
+<div id="fig-ensemble-results" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-cap="Ensemble calibration and lift over single‑model baselines">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-ensemble-results-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="images/results_ensemble.png" class="img-fluid figure-img" style="width:90.0%" data-fig-cap="Ensemble calibration and lift over single‑model baselines">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-ensemble-results-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;6: Ensemble overview &amp; lift.
+</figcaption>
+</figure>
+</div>
+</section>
+<section id="summary-of-key-findings" class="level3">
+<h3 class="anchored" data-anchor-id="summary-of-key-findings">5.7 Summary of Key Findings</h3>
+<ul>
+<li><strong>High‑recall detection</strong> is achievable in realistic, imbalanced settings with careful thresholding and class weighting.</li>
+<li><strong>Interpretable microstructure features</strong> dominate importance, supporting regulatory explainability.</li>
+<li><strong>Sequence‑aware hybrid modeling</strong> improves sensitivity to temporal attack structure.</li>
+<li><strong>Ensembling</strong> stabilizes performance across liquidity regimes and reduces model‑specific blind spots.</li>
+<li><strong>Calendar effects</strong> (e.g., <strong>July 4</strong> shortened week) materially impact counts/rates and are handled explicitly in evaluation and sampling.</li>
+</ul>
+<p>::: {.callout-note} <strong>At‑a‑glance metrics table.</strong></p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 21%">
+<col style="width: 7%">
+<col style="width: 10%">
+<col style="width: 7%">
+<col style="width: 6%">
+<col style="width: 6%">
+<col style="width: 7%">
+<col style="width: 6%">
+<col style="width: 6%">
+<col style="width: 7%">
+<col style="width: 11%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Regime</th>
+<th style="text-align: right;">Acc</th>
+<th style="text-align: right;">Macro‑F1</th>
+<th style="text-align: right;">AUC</th>
+<th style="text-align: right;">Pos P</th>
+<th style="text-align: right;">Pos R</th>
+<th style="text-align: right;">Pos F1</th>
+<th style="text-align: right;">Neg P</th>
+<th style="text-align: right;">Neg R</th>
+<th style="text-align: right;">Neg F1</th>
+<th style="text-align: center;">Threshold</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Balanced (dev)</td>
+<td style="text-align: right;">0.7975</td>
+<td style="text-align: right;">0.795</td>
+<td style="text-align: right;">~0.95</td>
+<td style="text-align: right;">0.743</td>
+<td style="text-align: right;">0.909</td>
+<td style="text-align: right;">0.818</td>
+<td style="text-align: right;">0.883</td>
+<td style="text-align: right;">0.686</td>
+<td style="text-align: right;">0.772</td>
+<td style="text-align: center;">τ≈0.52</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Imbalanced (AAPL)</td>
+<td style="text-align: right;">~0.99</td>
+<td style="text-align: right;">~0.78</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: right;">0.41</td>
+<td style="text-align: right;">0.89</td>
+<td style="text-align: right;">0.56</td>
+<td style="text-align: right;">1.00</td>
+<td style="text-align: right;">0.99</td>
+<td style="text-align: right;">0.99</td>
+<td style="text-align: center;">tuned</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">:::</td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: center;"></td>
+</tr>
+</tbody>
+</table>
+<blockquote class="blockquote">
+<p><strong>Note on calendar effects:</strong> Independence Day (July 4) closure impacts counts and rates in that week; our evaluation and sampling explicitly account for it.</p>
+</blockquote>
 </section>
 </section>
-<section id="conclusions" class="level1" data-number="4">
-<h1 data-number="4"><span class="header-section-number">4</span> Conclusions</h1>
-<section id="still-in-the-process-of-improving-models" class="level3" data-number="4.0.1">
-<h3 data-number="4.0.1" class="anchored" data-anchor-id="still-in-the-process-of-improving-models"><span class="header-section-number">4.0.1</span> Still in the process of improving models!!</h3>
-<p>Cite something like this: <span class="citation" data-cites="Smith2020">(<a href="#ref-Smith2020" role="doc-biblioref"><strong>Smith2020?</strong></a>)</span>.</p>
+<section id="conclusion" class="level2">
+<h2 class="anchored" data-anchor-id="conclusion">6. Conclusion</h2>
+<p>This work demonstrates that <strong>microstructure-aware features from Level 2 (L2) order books</strong>, coupled with a <strong>blended learning stack</strong> (XGBoost, bottlenecked autoencoder → OC‑SVM, and DBSCAN), can detect quote stuffing–like behavior with <strong>high recall</strong> in realistic, imbalanced settings while preserving interpretability needed for surveillance. Ensemble calibration with weekly samples further stabilizes performance across liquidity regimes, and in the case of our model, yielded a 1.28% unsupervised identification of quote-stuffing related activities.</p>
+<section id="summary-of-findings" class="level3">
+<h3 class="anchored" data-anchor-id="summary-of-findings">6.1 Summary of Findings</h3>
+<ul>
+<li><strong>Detection efficacy:</strong> In balanced development, the supervised model attains <strong>Macro‑F1 ≈ 0.80</strong> and <strong>AUC ≈ 0.95</strong>; in imbalanced AAPL deployment, it reaches <strong>R ≈ 0.89</strong> on anomalies at a tolerable false‑positive rate (≈1.3% on the majority class) with careful thresholding.</li>
+<li><strong>Signal provenance:</strong> <strong>Spread, short‑horizon volatility, and message intensity</strong> (e.g., <code>roll_vol_10</code>, <code>dt_sec</code>, <code>price_z</code>, <code>price_delta</code>) dominate importances; structure over <strong>L2 depth and imbalance</strong> adds sensitivity to transient phantom liquidity.</li>
+<li><strong>Sequence modeling:</strong> A <strong>bottlenecked AE → OC‑SVM</strong> complements the classifier by emphasizing temporal structure of bursty insert/cancel cycles (Recall ≈ 0.84; F4 ≈ 0.81 on injected tests).</li>
+<li><strong>Ensembling:</strong> Combining supervised probabilities with hybrid and DBSCAN flags improves coverage and reduces model‑specific blind spots when tuned to operational objectives.</li>
+<li><strong>Unsupervised Ensemble Results:</strong> When it came to model evaluation, we found that our most effective methods for unsupervised learning were in the Random Forest/DBSCAN ensemble. As seen below, the DBSCAN model identified roughly 25% of the data as suspicious, whereas the RF model identified only 5%. Yet, interestingly, at the intersection of the identified points between these two models, we see an average overlap of roughly 1.28% of suspicious data across the 20,000 points in our weekly samples. A number that we felt, considering that algorithmic trading makes up nearly 70% of all trading activity, was a relatively appropriate evaluation.</li>
+</ul>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/ensemble_results.png" class="img-fluid figure-img"></p>
+<figcaption>Ensemble Results!</figcaption>
+</figure>
+</div>
+</section>
+<section id="limitations-risks" class="level3">
+<h3 class="anchored" data-anchor-id="limitations-risks">6.2 Limitations &amp; Risks</h3>
+<ul>
+<li><strong>Label quality &amp; shift:</strong> Weak supervision (injected vs.&nbsp;empirical) can drift from true manipulation ground truth; regime shifts (macro events, venue microstructure changes) may degrade calibration.</li>
+<li><strong>Venue and vendor heterogeneity:</strong> Timestamp semantics, depth reporting, and throttling policies vary; cross‑venue reconciliation is required for robust deployment.</li>
+<li><strong>Adversarial adaptation:</strong> Attackers can modify cadence, price‑level distribution, or cancel patterns to evade fixed thresholds.</li>
+<li><strong>Latency budgets:</strong> Real‑time scoring must coexist with market data bursts; <strong>backpressure</strong> and <strong>graceful degradation</strong> plans are necessary during micro‑spikes.</li>
+<li><strong>Human factors:</strong> Moderate precision implies analyst triage load; clear <strong>case management</strong> and <strong>feedback loops</strong> are essential to maintain trust.</li>
+</ul>
+</section>
+<section id="operationalization-monitoring" class="level3">
+<h3 class="anchored" data-anchor-id="operationalization-monitoring">6.3 Operationalization &amp; Monitoring</h3>
+<ul>
+<li><strong>Threshold governance:</strong> Maintain <strong>per‑symbol/per‑regime thresholds</strong>; review weekly with 20k‑point samples and drift diagnostics.</li>
+<li><strong>Model &amp; data drift:</strong> Track prediction score distributions, feature population stability (PSI), message‑rate histograms, and alert volumes vs.&nbsp;baseline.</li>
+<li><strong>Observability:</strong> Emit metrics (throughput, latency, FP/TP counts), logs (top features, SHAP values), and exemplars for audit.</li>
+<li><strong>Incident playbooks:</strong> Define actions when alert volume exceeds control bands (e.g., relax threshold, enable burst caps, escalate for review).</li>
+</ul>
+<div class="cell" data-layout-align="default">
+<div class="cell-output-display">
+<div>
+<p></p><figure class="figure"><p></p>
+<div>
+<pre class="mermaid mermaid-js">flowchart LR
+  Ingest[Market Data → Feature Store] --&gt; Score[Models: XGB | AE→OC‑SVM | DBSCAN]
+  Score --&gt; Blend[Ensemble &amp; Thresholds]
+  Blend --&gt; Alerts[Alerts Queue]
+  Alerts --&gt; Triage[Analyst Triage]
+  Triage --&gt; Feedback[Label/Threshold Updates]
+  Feedback --&gt; Score
+</pre>
+</div>
+<p></p></figure><p></p>
+</div>
+</div>
+</div>
+<section id="suggested-monitoring-panel-minimal" class="level4">
+<h4 class="anchored" data-anchor-id="suggested-monitoring-panel-minimal">Suggested monitoring panel (minimal)</h4>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 28%">
+<col style="width: 41%">
+<col style="width: 30%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Panel</th>
+<th>Purpose</th>
+<th>Example signal</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Alert volume vs.&nbsp;baseline</td>
+<td>Detect threshold drift / regime change</td>
+<td>Alerts per 5‑min bucket</td>
+</tr>
+<tr class="even">
+<td>Score distribution</td>
+<td>Catch model/feature shift</td>
+<td>P(p&gt;=Θ) histogram by symbol</td>
+</tr>
+<tr class="odd">
+<td>Message‑rate heatmap</td>
+<td>Identify burst epochs</td>
+<td>Quotes/sec by minute</td>
+</tr>
+<tr class="even">
+<td>Precision/Recall (rolling)</td>
+<td>Track effectiveness</td>
+<td>Weekly PR at operating point</td>
+</tr>
+</tbody>
+</table>
 </section>
 </section>
-<section id="references" class="level1" data-number="5">
-<h1 data-number="5"><span class="header-section-number">5</span> References</h1>
+<section id="future-work" class="level3">
+<h3 class="anchored" data-anchor-id="future-work">6.4 Future Work</h3>
+<p><strong>Data &amp; labeling</strong></p>
+<ul>
+<li>Cross‑venue L2 harmonization; <strong>EDGAR‑aligned windows</strong> as semi‑supervised anchors; active learning for difficult windows.</li>
+<li>Synthetic attack generator to adversarially train on <strong>variable burst cadences, level‑mixes, and cancel horizons</strong>.</li>
+</ul>
+<p><strong>Modeling</strong></p>
+<ul>
+<li><strong>Online learning</strong> with drift detectors; <strong>conformal prediction</strong> for calibrated alert risk; <strong>sequence contrastive learning</strong> for richer embeddings.</li>
+<li>SHAP‑based local explanations and <strong>counterfactual analysis</strong> to support analyst workflows.</li>
+</ul>
+<p><strong>Engineering</strong></p>
+<ul>
+<li>Real‑time feature store, streaming bus (Kafka), and low‑latency serving with A/B threshold testing.</li>
+<li><strong>Auto‑calibration</strong> jobs that propose threshold changes based on ROC curves.</li>
+</ul>
+<p><strong>Governance</strong></p>
+<ul>
+<li>Audit trails linking <strong>alert → features → model version → decision</strong>; periodic fairness/error‑cost reviews across symbols/liquidity regimes.</li>
+</ul>
+</section>
+<section id="closing-remarks" class="level3">
+<h3 class="anchored" data-anchor-id="closing-remarks">6.5 Closing Remarks</h3>
+<p>By centering on L2 microstructure, encoding temporal burst patterns, and blending complementary learners, we achieve a <strong>defensible, explainable, and actionable</strong> market‑surveillance detector. The framework is deliberately modular—supporting rapid retraining, venue extension, and human‑in‑the‑loop refinement—positioning it for robust, real‑world deployment and continuous improvement. 【16†DS Capstone】</p>
+</section>
+<section id="dashboard" class="level3">
+<h3 class="anchored" data-anchor-id="dashboard">6.6 Dashboard:</h3>
+<p>To visualize the effectiveness of Ensemble Methods in market manipulation detection, visit our model tuning application:</p>
+<p><a href="images/ml_dashboard.png">QR Code Here!</a></p>
+<p>Or visit the link here: https://msds-capstone-production.up.railway.app/</p>
+<p>This application can be synced to your own data, or you can use the synthetic data included in the app to get a feel for what we were looking at and how effective our models truly were!</p>
+</section>
+</section>
+</section>
+<section id="references" class="level1">
+<h1>References</h1>
 <div id="refs" role="list">
 
 </div>
-
-
 </section>
 
-</main> <!-- /main -->
+</main>
+<!-- /main column -->
 <script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
     // Ensure there is a toggle, if there isn't float one in the top right
@@ -750,7 +967,7 @@ Z &amp;= f_{\text{encoder}}(X) \\
     }
       var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
       var mailtoRegex = new RegExp(/^mailto:/);
-        var filterRegex = new RegExp("https:\/\/wu-msds-capstones\.github\.io\/money_talks\/");
+        var filterRegex = new RegExp('/' + window.location.host + '/');
       var isInternal = (href) => {
           return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
       }

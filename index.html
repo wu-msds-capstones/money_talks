@@ -1,8 +1,1302 @@
-<html xmlns="http://www.w3.org/1999/xhtml">    
-  <head>      
-    <title>Redirect to capstone.html</title>      
-    <meta http-equiv="refresh" content="0;URL='capstone.html'" />    
-  </head>    
-  <body> 
-  </body>  
-</html>     
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.7.33">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Identifying Quote Stuffing in Real-time Orderbooks</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="capstone_files/libs/clipboard/clipboard.min.js"></script>
+<script src="capstone_files/libs/quarto-html/quarto.js" type="module"></script>
+<script src="capstone_files/libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="capstone_files/libs/quarto-html/popper.min.js"></script>
+<script src="capstone_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="capstone_files/libs/quarto-html/anchor.min.js"></script>
+<link href="capstone_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="capstone_files/libs/quarto-html/quarto-syntax-highlighting-ea385d0e468b0dd5ea5bf0780b1290d9.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="capstone_files/libs/quarto-html/quarto-syntax-highlighting-dark-bc185b5c5bdbcb35c2eb49d8a876ef70.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="capstone_files/libs/quarto-html/quarto-syntax-highlighting-ea385d0e468b0dd5ea5bf0780b1290d9.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
+<script src="capstone_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="capstone_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="capstone_files/libs/bootstrap/bootstrap-bb462d781dde1847d9e3ccf7736099dd.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="capstone_files/libs/bootstrap/bootstrap-dark-1c59215f878e034bd7426c637fa661ac.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="capstone_files/libs/bootstrap/bootstrap-bb462d781dde1847d9e3ccf7736099dd.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<script src="capstone_files/libs/quarto-diagram/mermaid.min.js"></script>
+<script src="capstone_files/libs/quarto-diagram/mermaid-init.js"></script>
+<link href="capstone_files/libs/quarto-diagram/mermaid.css" rel="stylesheet">
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="fullcontent quarto-light"><script id="quarto-html-before-body" type="application/javascript">
+    const toggleBodyColorMode = (bsSheetEl) => {
+      const mode = bsSheetEl.getAttribute("data-mode");
+      const bodyEl = window.document.querySelector("body");
+      if (mode === "dark") {
+        bodyEl.classList.add("quarto-dark");
+        bodyEl.classList.remove("quarto-light");
+      } else {
+        bodyEl.classList.add("quarto-light");
+        bodyEl.classList.remove("quarto-dark");
+      }
+    }
+    const toggleBodyColorPrimary = () => {
+      const bsSheetEl = window.document.querySelector("link#quarto-bootstrap:not([rel=disabled-stylesheet])");
+      if (bsSheetEl) {
+        toggleBodyColorMode(bsSheetEl);
+      }
+    }
+    const setColorSchemeToggle = (alternate) => {
+      const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+      for (let i=0; i < toggles.length; i++) {
+        const toggle = toggles[i];
+        if (toggle) {
+          if (alternate) {
+            toggle.classList.add("alternate");
+          } else {
+            toggle.classList.remove("alternate");
+          }
+        }
+      }
+    };
+    const toggleColorMode = (alternate) => {
+      // Switch the stylesheets
+      const primaryStylesheets = window.document.querySelectorAll('link.quarto-color-scheme:not(.quarto-color-alternate)');
+      const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+      manageTransitions('#quarto-margin-sidebar .nav-link', false);
+      if (alternate) {
+        // note: dark is layered on light, we don't disable primary!
+        enableStylesheet(alternateStylesheets);
+        for (const sheetNode of alternateStylesheets) {
+          if (sheetNode.id === "quarto-bootstrap") {
+            toggleBodyColorMode(sheetNode);
+          }
+        }
+      } else {
+        disableStylesheet(alternateStylesheets);
+        enableStylesheet(primaryStylesheets)
+        toggleBodyColorPrimary();
+      }
+      manageTransitions('#quarto-margin-sidebar .nav-link', true);
+      // Switch the toggles
+      setColorSchemeToggle(alternate)
+      // Hack to workaround the fact that safari doesn't
+      // properly recolor the scrollbar when toggling (#1455)
+      if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+        manageTransitions("body", false);
+        window.scrollTo(0, 1);
+        setTimeout(() => {
+          window.scrollTo(0, 0);
+          manageTransitions("body", true);
+        }, 40);
+      }
+    }
+    const disableStylesheet = (stylesheets) => {
+      for (let i=0; i < stylesheets.length; i++) {
+        const stylesheet = stylesheets[i];
+        stylesheet.rel = 'disabled-stylesheet';
+      }
+    }
+    const enableStylesheet = (stylesheets) => {
+      for (let i=0; i < stylesheets.length; i++) {
+        const stylesheet = stylesheets[i];
+        if(stylesheet.rel !== 'stylesheet') { // for Chrome, which will still FOUC without this check
+          stylesheet.rel = 'stylesheet';
+        }
+      }
+    }
+    const manageTransitions = (selector, allowTransitions) => {
+      const els = window.document.querySelectorAll(selector);
+      for (let i=0; i < els.length; i++) {
+        const el = els[i];
+        if (allowTransitions) {
+          el.classList.remove('notransition');
+        } else {
+          el.classList.add('notransition');
+        }
+      }
+    }
+    const isFileUrl = () => {
+      return window.location.protocol === 'file:';
+    }
+    const hasAlternateSentinel = () => {
+      let styleSentinel = getColorSchemeSentinel();
+      if (styleSentinel !== null) {
+        return styleSentinel === "alternate";
+      } else {
+        return false;
+      }
+    }
+    const setStyleSentinel = (alternate) => {
+      const value = alternate ? "alternate" : "default";
+      if (!isFileUrl()) {
+        window.localStorage.setItem("quarto-color-scheme", value);
+      } else {
+        localAlternateSentinel = value;
+      }
+    }
+    const getColorSchemeSentinel = () => {
+      if (!isFileUrl()) {
+        const storageValue = window.localStorage.getItem("quarto-color-scheme");
+        return storageValue != null ? storageValue : localAlternateSentinel;
+      } else {
+        return localAlternateSentinel;
+      }
+    }
+    const toggleGiscusIfUsed = (isAlternate, darkModeDefault) => {
+      const baseTheme = document.querySelector('#giscus-base-theme')?.value ?? 'light';
+      const alternateTheme = document.querySelector('#giscus-alt-theme')?.value ?? 'dark';
+      let newTheme = '';
+      if(authorPrefersDark) {
+        newTheme = isAlternate ? baseTheme : alternateTheme;
+      } else {
+        newTheme = isAlternate ? alternateTheme : baseTheme;
+      }
+      const changeGiscusTheme = () => {
+        // From: https://github.com/giscus/giscus/issues/336
+        const sendMessage = (message) => {
+          const iframe = document.querySelector('iframe.giscus-frame');
+          if (!iframe) return;
+          iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+        }
+        sendMessage({
+          setConfig: {
+            theme: newTheme
+          }
+        });
+      }
+      const isGiscussLoaded = window.document.querySelector('iframe.giscus-frame') !== null;
+      if (isGiscussLoaded) {
+        changeGiscusTheme();
+      }
+    };
+    const authorPrefersDark = false;
+    const darkModeDefault = authorPrefersDark;
+      document.querySelector('link#quarto-text-highlighting-styles.quarto-color-scheme-extra').rel = 'disabled-stylesheet';
+      document.querySelector('link#quarto-bootstrap.quarto-color-scheme-extra').rel = 'disabled-stylesheet';
+    let localAlternateSentinel = darkModeDefault ? 'alternate' : 'default';
+    // Dark / light mode switch
+    window.quartoToggleColorScheme = () => {
+      // Read the current dark / light value
+      let toAlternate = !hasAlternateSentinel();
+      toggleColorMode(toAlternate);
+      setStyleSentinel(toAlternate);
+      toggleGiscusIfUsed(toAlternate, darkModeDefault);
+      window.dispatchEvent(new Event('resize'));
+    };
+    // Switch to dark mode if need be
+    if (hasAlternateSentinel()) {
+      toggleColorMode(true);
+    } else {
+      toggleColorMode(false);
+    }
+  </script>
+
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">Identifying Quote Stuffing in Real-time Orderbooks</h1>
+            <p class="subtitle lead">Observance of AAPL, MSFT, &amp; TSLA Data From NYSE</p>
+                      </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      <div>
+      <div class="quarto-title-meta-heading">Authors</div>
+      <div class="quarto-title-meta-contents">
+               <p>Cameron Hayman </p>
+               <p>Ghson Alotibi </p>
+               <p>Paxton Jones </p>
+            </div>
+    </div>
+      
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+
+<main class="content quarto-banner-title-block" id="quarto-document-content">
+
+
+
+
+
+
+<section id="abstract" class="level1">
+<h1>0. Abstract</h1>
+<p>This study addresses the critical challenge of detecting market manipulation in high-frequency trading environments through the development and implementation of a comprehensive machine learning system. We present a novel approach that combines supervised learning, unsupervised learning, and ensemble methods to analyze multi-source market data in real-time. Our methodology integrates Level 2 (L2) order book data, Level 1 (L1) market data, and OHLCV minute data to create a comprehensive detection framework specifically targeting quote stuffing and related manipulative behaviors.</p>
+<p>Using XGBoost as our primary supervised classifier, complemented by DBSCAN for anomaly detection and Random Forest for ensemble predictions, we achieved strong discrimination performance with ROC-AUC ≈ 0.95 on held-out test data. The system demonstrates high recall for manipulation-like quotes (≈ 0.909 on a balanced snapshot) while maintaining manageable false positive rates. Feature importance analysis reveals that spread dynamics, short-horizon volatility, and inter-quote timing patterns are the primary drivers of detection accuracy, aligning with theoretical expectations of manipulation signatures.</p>
+<p>Our open-source approach democratizes access to sophisticated market surveillance capabilities and provides a transparent alternative to proprietary “black box” systems. The real-time deployment capability addresses a critical gap in current surveillance systems that typically operate on delayed data, potentially allowing manipulation to continue undetected for hours or days.</p>
+</section>
+<section id="introduction" class="level1">
+<h1>1. Introduction</h1>
+<p>Modern financial markets operate at speeds that would have been unimaginable just two decades ago. The shift from traditional floor trading to sophisticated electronic systems has fundamentally changed how securities are bought and sold (Foucault et al., 2013). Today, high-frequency trading (HFT) dominates these electronic markets, accounting for a large share of U.S. equity volume (Aldridge &amp; Krawciw, 2017).</p>
+<p>Market manipulation is highly profitable, difficult to detect, and detrimental to market quality. Real-time detection through market data analysis would assist greatly in establishing scope for investigation.</p>
+<section id="what-is-quote-stuffing" class="level2">
+<h2 class="anchored" data-anchor-id="what-is-quote-stuffing">1.1 What is Quote Stuffing?</h2>
+<p>Quote stuffing involves rapidly submitting and canceling large numbers of orders to flood venues and algorithms with short-lived messages, degrading competitors’ information processing. It is often accompanied by temporary spread widening and bursts of order rate (Hasbrouck &amp; Saar, 2013; Egginton et al., 2016).</p>
+</section>
+<section id="the-detection-challenge" class="level2">
+<h2 class="anchored" data-anchor-id="the-detection-challenge">1.2 The Detection Challenge</h2>
+<p>Patterns emerge and dissipate in milliseconds, data volumes are extreme, and distinguishing manipulation from benign HFT requires microstructure-aware features and time-aware validation (Farmer &amp; Skouras, 3; Laughlin et al., 2014).</p>
+</section>
+<section id="our-approach-and-contributions" class="level2">
+<h2 class="anchored" data-anchor-id="our-approach-and-contributions">1.3 Our Approach and Contributions</h2>
+<p>We combine supervised learning (XGBoost), unsupervised learning (DBSCAN), and a hybrid bottlenecked autoencoder + One-Class SVM pipeline, using L2 marketbook features with supporting L1 and OHLCV context. Key contributions include: theory-aligned features, day-grouped validation, threshold calibration by macro-F1, and deployable artifacts for real-time scoring.</p>
+</section>
+<section id="background" class="level2">
+<h2 class="anchored" data-anchor-id="background">2.0 Background</h2>
+<section id="the-evolution-of-market-manipulation" class="level3">
+<h3 class="anchored" data-anchor-id="the-evolution-of-market-manipulation">2.1 The Evolution of Market Manipulation</h3>
+<p>Traditional manipulation schemes relied on spreading false information or coordinating large trades to artificially influence prices. However, the digitization of financial markets has spawned a new generation of algorithmic manipulation techniques that operate at microsecond timescales, making them virtually impossible to detect through manual surveillance methods.</p>
+<p><strong>Spoofing</strong> involves placing large orders with the intent to cancel them before execution, creating false impressions of supply or demand. The practice gained notoriety through cases like that of Navinder Singh Sarao, whose spoofing activities were linked to the 2010 Flash Crash. A single trader’s manipulation strategy contributed to a market event that erased nearly $1 trillion in market value within minutes, demonstrating the systemic risks posed by modern manipulation techniques.</p>
+<p><strong>Layering</strong> extends this concept by placing multiple orders at different price levels to create an illusion of market depth. Manipulators build apparent support or resistance levels through phantom liquidity that disappears once other traders attempt to interact with it. This technique is particularly effective in less liquid securities where a few large orders can significantly influence price perception.</p>
+<p><strong>Quote stuffing</strong> overwhelms market data systems with rapid order submissions and cancellations, creating information asymmetries that benefit high-frequency traders while disadvantaging other market participants. During peak manipulation periods, quote stuffing can generate thousands of order messages per second, effectively creating a denial-of-service attack against competing algorithms.</p>
+<p>More sophisticated schemes include <strong>momentum ignition</strong>, where traders use rapid-fire orders to trigger algorithmic responses from other market participants, and <strong>pinging</strong>, which involves sending small orders to detect hidden liquidity in dark pools. These techniques exploit the fundamental asymmetry between human reaction times and algorithmic execution speeds, creating unfair advantages that violate market integrity principles.</p>
+</section>
+<section id="regulatory-landscape-and-enforcement-challenges" class="level3">
+<h3 class="anchored" data-anchor-id="regulatory-landscape-and-enforcement-challenges">2.2 Regulatory Landscape and Enforcement Challenges</h3>
+<p>The regulatory response to algorithmic manipulation has been substantial but faces inherent technological limitations. The Securities and Exchange Commission (SEC) has pursued high-profile enforcement actions, including $920 million in penalties against major financial institutions since 2015. Notable cases include the $25 million fine against Deutsche Bank for spoofing activities and the $70 million penalty against JPMorgan Chase for manipulative trading in precious metals markets.</p>
+<p>The European Union’s Markets in Financial Instruments Directive II (MiFID II) has implemented comprehensive transaction reporting requirements, mandating detailed records of order modifications, cancellations, and execution circumstances. Similarly, the Commodity Futures Trading Commission (CFTC) has established specific anti-spoofing regulations under the Dodd-Frank Act, creating criminal penalties for manipulation activities.</p>
+<p>Despite these regulatory efforts, traditional surveillance systems struggle with the volume and velocity of modern market data. Current approaches typically rely on post-trade analysis of aggregated data, processing daily volumes exceeding 50 billion order messages across U.S. equity markets. The latency between manipulation events and detection often spans hours or days, rendering enforcement reactive rather than preventive.</p>
+<p>Regulatory technology (RegTech) providers estimate that fewer than 5% of potential manipulation events are currently detected through automated surveillance, with most discoveries occurring through whistleblower reports or market anomaly investigations. This detection gap creates significant compliance risks for market operators and undermines confidence in market fairness.</p>
+</section>
+<section id="technical-architecture-requirements" class="level3">
+<h3 class="anchored" data-anchor-id="technical-architecture-requirements">2.3 Technical Architecture Requirements</h3>
+<p>Effective real-time manipulation detection requires processing Level 2 (L2) order book data, which provides granular visibility into bid and ask orders across multiple price levels. Unlike Level 1 data that shows only best bid/offer prices, L2 data reveals the full market depth, order queue dynamics, and the rapid changes in market microstructure that characterize manipulation attempts.</p>
+<p>The technical challenges are substantial: processing millions of order book updates per second, maintaining sub-millisecond latency requirements, and distinguishing between legitimate high-frequency trading strategies and manipulative behavior. Modern exchanges generate L2 data feeds exceeding 2 terabytes daily for major securities, requiring specialized infrastructure for real-time analysis.</p>
+<p>Market data complexity varies significantly across trading venues, with fragmented liquidity across over 16 registered exchanges and dozens of alternative trading systems in U.S. equity markets. Each venue maintains distinct order types, priority rules, and data formats, complicating unified surveillance efforts. Cross-market manipulation detection requires consolidating and normalizing data streams from multiple sources while maintaining temporal precision.</p>
+</section>
+<section id="research-gap-and-contribution" class="level3">
+<h3 class="anchored" data-anchor-id="research-gap-and-contribution">2.4 Research Gap and Contribution</h3>
+<p>While academic literature has explored manipulation detection using machine learning approaches, most studies rely on post-trade data analysis or simulated environments. Research by Cao et al.&nbsp;(2014) demonstrated machine learning applications for spoofing detection using historical futures data, while Goldstein et al.&nbsp;(2021) analyzed layering patterns in equity markets using daily aggregated data. However, real-time detection systems using live Level 2 market data remain largely proprietary to institutional market surveillance providers.</p>
+<p>This proprietary nature creates a significant knowledge gap in the academic literature, limiting research reproducibility and innovation in detection methodologies. Commercial surveillance systems like NASDAQ’s SMARTS or Nice Actimize’s market surveillance solutions represent multi-million dollar investments that are inaccessible to academic researchers or smaller market participants.</p>
+<p>Our research addresses this gap by developing an open-source, real-time detection system that combines multiple data sources—live L2 order book feeds, historical tick data, and engineered microstructure features—to identify manipulation patterns as they occur. The system’s architecture enables both academic research and practical deployment by retail brokers or regulatory authorities.</p>
+<p>By implementing synthetic manipulation injection capabilities, we can validate detection algorithms against known manipulation signatures while maintaining the ability to adapt to emerging schemes. This approach addresses the fundamental challenge of supervised learning in manipulation detection: the rarity of labeled manipulation events in historical data.</p>
+<p>The system’s practical relevance extends beyond academic research. Retail brokers processing over $7 trillion in annual trading volume could implement similar detection capabilities to protect their clients from manipulation-induced losses. Regulatory authorities could enhance market surveillance through real-time monitoring rather than post-trade investigation, potentially preventing market disruptions before they occur.</p>
+</section>
+</section>
+<section id="data-methods" class="level2">
+<h2 class="anchored" data-anchor-id="data-methods">3. Data &amp; Methods</h2>
+<p>This section details our comprehensive approach to detecting market manipulation in real-time trading environments. We developed a machine learning-based detection system using XGBoost and Random Forest classification applied to Level 2 market data, with extensive feature engineering and synthetic anomaly generation to address the challenge of rare manipulation events in historical data.</p>
+<section id="data-sources" class="level3">
+<h3 class="anchored" data-anchor-id="data-sources">3.1 Data Sources</h3>
+<ul>
+<li><strong>Level 2 (L2) order book (primary):</strong> Full depth snapshots and updates (prices, sizes across multiple levels) captured in real time. Current collection via <strong>Alpaca Market Data v2</strong>; an earlier <strong>IBKR EC2 gateway</strong> is retained for redundancy/backfills. L2 granularity is essential for microstructure-level manipulation signals (e.g., bursty quote insert/cancel patterns).</li>
+<li><strong>Level 1 (L1) top-of-book:</strong> Best bid/ask and sizes, used for canonical spread/midquote definitions and cross-checks.</li>
+<li><strong>Minute OHLCV:</strong> Contextual volatility/liquidity backdrop and rollups.</li>
+<li><strong>Scope:</strong> Primary tickers <strong>AAPL, TSLA, MSFT</strong> (method generalizes across NYSE/NASDAQ).</li>
+<li><strong>Regulatory corroboration (optional):</strong> <strong>SEC EDGAR</strong> (e.g., 8-K, 10-K, Form 4) windows used to tag/validate periods with disclosed events when applicable.</li>
+<li><strong>Synthetic Anomaly Labels:</strong> To address the fundamental challenge of data imbalance in manipulation detection, where normal trading vastly outnumbers manipulation events, we developed a labeling methodology based on statistical anomaly detection. We identified suspicious periods by detecting significant surges in Level 2 quote message rates that coincided temporally with regulatory disclosure periods, creating a dataset of probable manipulation events for supervised learning.</li>
+</ul>
+</section>
+<section id="collection-storage-and-quality" class="level3">
+<h3 class="anchored" data-anchor-id="collection-storage-and-quality">3.2 Collection, Storage, and Quality</h3>
+<ul>
+<li><strong>Ingestion:</strong> Real-time L2 stream (Alpaca) with microsecond timestamps; periodic historical pulls/backfills.</li>
+<li><strong>Storage:</strong> Dual-home to <strong>Railway PostgreSQL</strong> (research queries, labels, features) and <strong>S3/Parquet</strong> (columnar analytics, archival).</li>
+<li><strong>Data hygiene:</strong> Exact-duplicate removal (~<strong>3%</strong>), monotonic sequence checks, clock skew normalization, and message-rate sanity rules.</li>
+<li><strong>Operational note:</strong> <strong>Independence Day</strong> schedule (shortened trading week around <strong>July 4</strong>) is handled explicitly in sampling/evaluation.</li>
+</ul>
+</section>
+<section id="feature-engineering-microstructure" class="level3">
+<h3 class="anchored" data-anchor-id="feature-engineering-microstructure">3.3 Feature Engineering (Microstructure)</h3>
+<p>Our feature engineering process transformed raw Level 2 market data into analytically meaningful variables designed to capture manipulation patterns. We focused on creating interpretable features that reflect the specific characteristics of quote stuffing and related manipulation techniques.</p>
+<p><strong>L2 metrics</strong></p>
+<ul>
+<li><strong>Spread:</strong> <span class="math inline">\(\text{Spread}_t = \text{Ask}_t - \text{Bid}_t\)</span></li>
+<li><strong>Midquote:</strong> <span class="math inline">\(\text{Mid}_t = (\text{Ask}_t + \text{Bid}_t)/2\)</span></li>
+<li><strong>Relative spread:</strong> <span class="math inline">\((\text{Ask}_t - \text{Bid}_t)/\text{Mid}_t\)</span></li>
+<li><strong>Half-spread:</strong> <span class="math inline">\((\text{Ask}_t - \text{Bid}_t)/2\)</span></li>
+<li><strong>Effective spread:</strong> <span class="math inline">\(\text{EffSpread}_t = 2s\,(P_t - \text{Mid}_t)\)</span>, <span class="math inline">\(s\in\{+1,-1\}\)</span></li>
+<li><strong>Realized spread (horizon <span class="math inline">\(\tau\)</span>):</strong> <span class="math inline">\(\text{RS}_{t,\tau} = 2s\,(P_t - \text{Mid}_{t+\tau})\)</span></li>
+</ul>
+<p><strong>Extensions</strong></p>
+<ul>
+<li><strong>Level-<span class="math inline">\(k\)</span> spread:</strong> <span class="math inline">\(\text{Spread}^{(k)}_t = \text{AskPrice}^{(k)}_t - \text{BidPrice}^{(k)}_t\)</span></li>
+<li><strong>Depth/imbalance:</strong> Total bid vs.&nbsp;ask size; imbalance <span class="math inline">\(= \frac{\sum \text{BidSz}-\sum \text{AskSz}}{\sum \text{BidSz}+\sum \text{AskSz}}\)</span></li>
+<li><strong>Shape/ratios:</strong> Level ratios (e.g., top-of-book vs.&nbsp;aggregate depth), queue length deltas.</li>
+<li><strong>Temporal intensity/volatility:</strong> Inter-arrival seconds <code>dt_sec</code>, quote message <strong>rate</strong> (per 100 ms / per second), rolling volatility <code>roll_vol_10</code>, price differences <code>price_delta</code>, standardized <code>price_z</code>.</li>
+</ul>
+<p>These features target hallmarks of quote stuffing: transient depth inflation, rapid insert/cancel cycles, spread distortions, and imbalance drift.</p>
+</section>
+<section id="machine-learning-models-labels-class-imbalance-strategy" class="level3">
+<h3 class="anchored" data-anchor-id="machine-learning-models-labels-class-imbalance-strategy">3.4 Machine Learning Models: Labels &amp; Class Imbalance Strategy</h3>
+<ul>
+<li><strong>Primary labels:</strong> <strong>Injected vs.&nbsp;empirical</strong> quotes (weak supervision; <code>1/0</code>).</li>
+<li><strong>Supplemental windows:</strong> EDGAR-aligned intervals to corroborate stressed periods (when available).</li>
+<li><strong>Imbalance handling:</strong> Class-weighting/<code>scale_pos_weight</code>, temporal grouping, and <strong>threshold calibration</strong> on validation to trade off precision vs.&nbsp;recall.</li>
+</ul>
+<p>Initially, we selected XGBoost (eXtreme Gradient Boosting) as our primary classification algorithm for several technical and practical reasons. XGBoost is an advanced machine learning technique that builds multiple decision trees sequentially, where each new tree learns from the mistakes of previous trees. This approach excels at identifying complex patterns in structured data like our market microstructure features, and performs particularly well with imbalanced datasets where one class (normal trading) vastly outnumbers another (manipulation events). This then ventured into an Auto Encoder, and eventually an unsupervised ensemble method of a random forest regression and a DBSCAN (Density-Based Spatial Clustering of Applications with Noise; see below).</p>
+</section>
+<section id="supervised-learning-approach-xgboost-rf-as-baseline" class="level3">
+<h3 class="anchored" data-anchor-id="supervised-learning-approach-xgboost-rf-as-baseline">3.5 Supervised Learning Approach (XGBoost; RF as baseline)</h3>
+<ul>
+<li><strong>Target:</strong> Binary anomaly/manipulation vs.&nbsp;normal.</li>
+<li><strong>Split:</strong> <strong>Day-grouped</strong> train/val/test to reduce leakage; operating threshold tuned on validation (<strong><span class="math inline">\(\tau \approx 0.52\)</span></strong>).</li>
+<li><strong>Snapshot performance (balanced dev):</strong> <strong>Accuracy 79.75%</strong>, <strong>Macro-F1 0.795</strong>, <strong>AUC ≈ 0.95</strong>; Positive: <strong>P=0.743, R=0.909 (F1 0.818)</strong>; Negative: <strong>P=0.883, R=0.686 (F1 0.772)</strong>.</li>
+<li><strong>Top importances:</strong> spread (0.211), <code>roll_vol_10</code> (0.193), <code>dt_sec</code> (0.067), <code>price_z</code> (0.042), <code>price_delta</code> (0.042); <code>symbol_MSFT</code> (0.168) appears but microstructure dominates. Random Forest is used as a stability/robustness baseline. 【16†DS Capstone】</li>
+</ul>
+<p><strong>Model Configuration:</strong> - <strong>Target Variable</strong>: Binary classification where <code>1</code> indicates detected anomaly/manipulation and <code>0</code> indicates normal market behavior - <strong>Training/Testing Split</strong>: 80% of data used for model training, 20% reserved for unbiased performance evaluation, with stratified sampling to maintain class balance proportions in both sets - <strong>Evaluation Metric</strong>: Log loss (logarithmic loss), which penalizes confident but incorrect predictions more heavily than uncertain predictions, making it ideal for scenarios where false positives and false negatives have different costs</p>
+<p><strong>Addressing Data Imbalance:</strong> The fundamental challenge in manipulation detection lies in extreme class imbalance - normal trading events outnumber manipulation events by ratios of 100:1 or higher. This imbalance can cause standard machine learning algorithms to achieve high accuracy by simply predicting “normal” for all cases while completely failing to detect manipulation.</p>
+<p>We addressed this through several techniques: - <strong><code>scale_pos_weight</code></strong>: Set to the ratio of negative to positive samples (normal/anomaly), instructing XGBoost to treat each anomaly sample as equivalent to multiple normal samples during training - <strong>Threshold optimization</strong>: Rather than using the default 0.5 probability threshold for classification, we systematically explored different thresholds to optimize the precision/recall tradeoff based on business requirements (whether false positives or false negatives are more costly)</p>
+</section>
+<section id="hybrid-sequence-anomaly-model-bottlenecked-autoencoder-oc-svm" class="level3">
+<h3 class="anchored" data-anchor-id="hybrid-sequence-anomaly-model-bottlenecked-autoencoder-oc-svm">3.6 Hybrid Sequence Anomaly Model (Bottlenecked Autoencoder → OC-SVM)</h3>
+<ul>
+<li><strong>Design:</strong> Train a Transformer-style <strong>autoencoder</strong> on L2 temporal sequences (e.g., 25 × features), compress via a <strong>128-dim bottleneck</strong>, then fit an <strong>OC-SVM</strong> on embeddings.</li>
+<li><strong>Scoring:</strong> Observation-level anomaly score averages dissimilarities across all overlapping sequences containing that observation.</li>
+<li><strong>Operating point:</strong> Tuned for <strong>high recall / F4</strong> (missed manipulations are costlier). <strong>Recall ≈ 0.84, F4 ≈ 0.81</strong> on held-out injected tests.</li>
+<li><strong>Threshold optimization</strong>: Rather than using the default 0.5 probability threshold for classification, we systematically explored different thresholds to optimize the precision/recall tradeoff based on business requirements (whether false positives or false negatives are more costly)</li>
+</ul>
+<p><strong>Why a Hybrid Bottlenecked Autoencoder/OC-SVM?</strong></p>
+<p>The system implements a two-stage hybrid anomaly detection approach specifically designed for identifying quote stuffing in financial markets. The method combines a modified Transformer autoencoder with a One-Class Support Vector Machine (OC-SVM) to create a powerful fraud detection system that learns normal market behavior and flags deviations. This approach is based on the methodology described by Poutre et al.&nbsp;(2024), who demonstrated that such hybrid frameworks achieve state-of-the-art performance in detecting trade-based manipulations without requiring prior knowledge of manipulation patterns.</p>
+<p>An autoencoder is a neural network designed to learn efficient representations of data by training it to reconstruct its input. The network consists of two main components:</p>
+<ol type="1">
+<li><strong>Encoder</strong>: Maps input data <span class="math inline">\(X\)</span> to a lower-dimensional representation <span class="math inline">\(Z\)</span></li>
+<li><strong>Decoder</strong>: Reconstructs the original input from the representation Mathematically, this can be expressed as: <span class="math display">\[
+\begin{align}
+Z &amp;= f_{\text{encoder}}(X) \\
+\hat{X} &amp;= f_{\text{decoder}}(Z) \\
+\mathcal{L} &amp;= ||X - \hat{X}||^2 \quad \text{(reconstruction error)}
+\end{align}
+\]</span></li>
+</ol>
+<p><strong>The Bottleneck Modification</strong></p>
+<p>The “bottlenecked” aspect refers to a critical architectural choice that forces the model to learn compressed, meaningful representations. As described by Poutre et al.&nbsp;(2024), this modification was inspired by sentence embedding techniques but adapted specifically for financial time series anomaly detection. It functions as follows:</p>
+<ol type="1">
+<li><strong>Standard Transformer Processing</strong>: Input sequences (25 time windows × 23 features) pass through 6 Transformer encoder layers with multi-head attention</li>
+<li><strong>Bottleneck Compression</strong>: The Transformer output is flattened and projected through a linear layer to just 128 dimensions<br>
+</li>
+<li><strong>Reconstruction</strong>: The 128-dimensional representation is projected back to the original dimensionality</li>
+</ol>
+<p>This bottleneck forces the model to learn the most essential patterns in normal market behavior, discarding noise and irrelevant details.</p>
+<p><strong>Stage 2: One-Class SVM on Learned Representations</strong></p>
+<p>One-Class SVM is an unsupervised learning algorithm designed to identify outliers by learning the boundary of normal data. Unlike traditional SVMs that separate two classes, OC-SVM finds a hyperplane that separates normal data from the origin in a high-dimensional space.</p>
+<section id="detection-process" class="level4">
+<h4 class="anchored" data-anchor-id="detection-process">3.6.1 Detection Process</h4>
+<p>When detecting anomalies in new data, the system follows this pipeline:</p>
+<div class="cell" data-layout-align="default">
+<div class="cell-output-display">
+<div>
+<p></p><figure class="figure"><p></p>
+<div>
+<pre class="mermaid mermaid-js">flowchart TD
+    A[Raw Market Data] --&gt; B[Feature Extraction]
+    B --&gt; C[Sequence Creation]
+    C --&gt; D[Transformer Encoder]
+    D --&gt; E[OC-SVM Decision Function]
+    E --&gt; F[Classification]
+</pre>
+</div>
+<p></p></figure><p></p>
+</div>
+</div>
+</div>
+<p>The final dissimilarity score combines information from both components:</p>
+<ul>
+<li><strong>Autoencoder</strong>: How well the data can be reconstructed (implicit in representations)</li>
+<li><strong>OC-SVM</strong>: How far the representation is from the learned normal boundary</li>
+</ul>
+</section>
+<section id="observation-level-scoring" class="level4">
+<h4 class="anchored" data-anchor-id="observation-level-scoring">3.6.2 Observation-Level Scoring</h4>
+<p>The system implements a sophisticated observation-level scoring mechanism that accounts for the overlapping nature of sequences, following the methodology described by Poutre et al.&nbsp;(2024). Since each market observation can be part of multiple 25-step sequences, the final anomaly score for an observation is calculated as follows:</p>
+<p><span class="math inline">\(\text{dissimilarity}(x_t) = \frac{1}{|S_{x_t}|} \sum_{s \in S_{x_t}} \text{dissimilarity}(s)\)</span></p>
+<p>where <span class="math inline">\(S_{x_t}\)</span> is the set of all sequences containing observation <span class="math inline">\(x_t\)</span>. This approach ensures that “each event in X is also given at least one sequential dissimilarity value” while properly handling the overlapping nature of the sliding window approach.</p>
+</section>
+</section>
+<section id="unsupervised-learning-dbscan" class="level3">
+<h3 class="anchored" data-anchor-id="unsupervised-learning-dbscan">3.7 Unsupervised Learning (DBSCAN)</h3>
+<ul>
+<li><strong>Rationale:</strong> Density clustering is primed to isolate <strong>bursty, irregular, coordinated</strong> quote activity without pre-setting <span class="math inline">\(k\)</span>; inherently noise-robust—well matched to sparse backgrounds punctuated by attack bursts.</li>
+</ul>
+</section>
+<section id="ensemble-calibration" class="level3">
+<h3 class="anchored" data-anchor-id="ensemble-calibration">3.8 Ensemble &amp; Calibration</h3>
+<ul>
+<li><strong>Approach:</strong> Combine supervised probabilities (XGBoost) with unsupervised flags (Hybrid, DBSCAN) via <strong>stacked logistic blending</strong> / rule-based voting to widen coverage while controlling false alarms.</li>
+<li><strong>Sampling for calibration:</strong> Weekly random samples (<strong>20k points/week</strong>) used for thresholding and human-in-the-loop review.</li>
+</ul>
+</section>
+</section>
+<section id="data" class="level2">
+<h2 class="anchored" data-anchor-id="data">4. Data</h2>
+<p>This section outlines the data acquisition strategy, sources, and processing pipeline for detecting quote stuffing manipulation in high-frequency trading environments. Our approach focuses on collecting multiple layers of market data to capture the microstructure patterns that characterize manipulative behavior.</p>
+<section id="data-requirements-and-sources" class="level3">
+<h3 class="anchored" data-anchor-id="data-requirements-and-sources">4.1 Data Requirements and Sources</h3>
+<p>To effectively detect quote stuffing patterns, we required access to multiple levels of market data that provide comprehensive visibility into order book dynamics and trading activity. The following subsections detail each data type and its role in our analysis.</p>
+<section id="level-2-l2-market-data" class="level4">
+<h4 class="anchored" data-anchor-id="level-2-l2-market-data">Level 2 (L2) Market Data</h4>
+<p>Level 2 market data extends beyond the basic bid-ask spread to provide a deeper view of market depth. This data includes the best bid and ask prices (Level 1 data) plus five additional price levels above and below the current market, along with the order quantities at each level <span class="citation" data-cites="InteractiveBrokers2024">(<a href="#ref-InteractiveBrokers2024" role="doc-biblioref"><strong>InteractiveBrokers2024?</strong></a>)</span>. This enhanced visibility is crucial for detecting quote stuffing because manipulative orders often appear at these secondary price levels rather than at the National Best Bid and Offer (NBBO). When orders at higher ask levels are filled, they typically drive prices upward, while orders at lower bid levels drive prices downward, creating the price volatility that quote stuffing strategies exploit.</p>
+</section>
+<section id="level-1-l1-market-data" class="level4">
+<h4 class="anchored" data-anchor-id="level-1-l1-market-data">Level 1 (L1) Market Data</h4>
+<p>Level 1 market data represents the current equilibrium point where the most recent transactions occurred. This data stream includes microsecond-precision timestamps (formatted as 2025-07-01 19:59:59.464006+00), unique identifiers, stock symbols, and the fundamental bid-ask spread components: bid price, bid size, ask price, and ask size <span class="citation" data-cites="Alpaca2024">(<a href="#ref-Alpaca2024" role="doc-biblioref"><strong>Alpaca2024?</strong></a>)</span>. The high temporal resolution is essential for quote stuffing detection because manipulative strategies often involve rapid order placement and cancellation cycles that occur within milliseconds.</p>
+</section>
+<section id="ohlcv-minute-bar-data" class="level4">
+<h4 class="anchored" data-anchor-id="ohlcv-minute-bar-data">OHLCV Minute-Bar Data</h4>
+<p>One-minute aggregated data captures the Open, High, Low, Close prices and trading Volume for each minute of market activity. This data includes both minute-level and date-level timestamps and remains available for up to 30 days through the API, including non-trading days where no actual market data exists <span class="citation" data-cites="Alpaca2024">(<a href="#ref-Alpaca2024" role="doc-biblioref"><strong>Alpaca2024?</strong></a>)</span>. While quote stuffing occurs at much finer time scales, minute-bar data provides essential context for identifying broader market conditions and volatility patterns that may coincide with manipulative activity.</p>
+</section>
+</section>
+<section id="data-collection-infrastructure-and-process" class="level3">
+<h3 class="anchored" data-anchor-id="data-collection-infrastructure-and-process">4.2 Data Collection Infrastructure and Process</h3>
+<p>Our data acquisition strategy required a sophisticated real-time streaming infrastructure capable of handling the massive volume and velocity of high-frequency trading data. The system needed to capture microsecond-level market events across multiple data streams while maintaining data integrity and providing robust backup mechanisms. This section details the technical architecture and processes used to collect, validate, and store the market data essential for quote stuffing detection.</p>
+</section>
+<section id="target-securities-and-trading-sessions" class="level3">
+<h3 class="anchored" data-anchor-id="target-securities-and-trading-sessions">4.3 Target Securities and Trading Sessions</h3>
+<p>We focused our data collection on three high-volume securities: Apple (AAPL), Microsoft (MSFT), and Tesla (TSLA). These stocks were selected because their high trading volumes and liquidity make them frequent targets for quote stuffing attacks, as manipulative strategies are most effective in actively traded securities where order flow can be more easily disguised. Data collection occurred during regular NYSE trading hours (9:30 AM to 4:00 PM EDT), with extended hours coverage (9:00 AM to 4:00 PM EDT) when available through our data providers.</p>
+</section>
+<section id="historical-and-streaming-data-collection" class="level3">
+<h3 class="anchored" data-anchor-id="historical-and-streaming-data-collection">4.4 Historical and Streaming Data Collection</h3>
+<p>The foundation of our data pipeline began with establishing a PostgreSQL database connected to Python scripts utilizing the Alpaca API for collecting both historical and real-time market data. For OHLCV minute-bar data, we implemented a batch collection process that retrieved historical data each evening after market close, as this aggregated data becomes available with a one-day delay under Alpaca’s free tier pricing. Each record contains the symbol, date, timestamp, opening and closing prices, intraday high and low prices, and total volume traded during the one-minute interval.</p>
+<p>Level 1 market data required a different approach due to its real-time nature and importance for manipulation detection. We implemented a streaming collection system that captured live bid-ask spreads with a 15-minute delay (the minimum latency available through Alpaca’s free tier). This stream provided continuous updates of bid price, bid size, ask price, ask size, and microsecond-precision timestamps essential for identifying rapid order placement and cancellation patterns characteristic of quote stuffing.</p>
+</section>
+<section id="level-2-data-streaming-architecture" class="level3">
+<h3 class="anchored" data-anchor-id="level-2-data-streaming-architecture">4.5 Level 2 Data Streaming Architecture</h3>
+<p>The most technically challenging component of our pipeline involved collecting Level 2 market depth data, which required real-time streaming of millions of records per trading session. We deployed an Interactive Brokers (IBKR) TWS (Trader Workstation) Gateway instance on an Amazon Web Services (AWS) Elastic Compute Cloud (EC2) instance <span class="citation" data-cites="AWSEc22024">(<a href="#ref-AWSEc22024" role="doc-biblioref"><strong>AWSEc22024?</strong></a>)</span>. This gateway served as an intermediary between the exchange data feeds and our storage infrastructure, providing authenticated access to real-time Level 2 market depth information.</p>
+<p>The streaming architecture routed incoming data to two destinations simultaneously: Primary storage occurred in our PostgreSQL database hosted on Railway’s cloud platform, providing immediate access for real-time analysis and model training; Concurrently, the system generated daily backup files in a Parquet format, which were stored in an AWS Simple Storage Service (S3) bucket <span class="citation" data-cites="AWSs32024">(<a href="#ref-AWSs32024" role="doc-biblioref"><strong>AWSs32024?</strong></a>)</span>. This dual-storage approach ensured data persistence, should the need for back-ups arise, and provided efficient columnar storage for large-scale analytical queries.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="de_flowchart.png" class="img-fluid figure-img"></p>
+<figcaption>Data Pipeline</figcaption>
+</figure>
+</div>
+</section>
+<section id="data-quality-and-deduplication-challenges" class="level3">
+<h3 class="anchored" data-anchor-id="data-quality-and-deduplication-challenges">4.6 Data Quality and Deduplication Challenges</h3>
+<p>One of the most significant technical challenges involved managing data quality and eliminating duplicates in the high-velocity Level 2 stream. The IBKR gateway was configured to push updates only when new market events occurred, using microsecond timestamps to differentiate between events. However, the system occasionally transmitted duplicate records when timestamp differences were extremely small (often less than a microsecond apart) or when network latency caused delivery confirmation issues.</p>
+<p>To address this challenge, we implemented a comprehensive deduplication process that identified and removed duplicate records based on combined timestamp, symbol, and price-size vector matching. Across all three target securities, this process eliminated approximately 128,000 duplicate records from a total dataset of over 4 million observations, representing roughly 3% of the collected data. While this may appear significant in absolute terms, the percentage represents an acceptable data quality threshold for high-frequency market data collection.</p>
+</section>
+<section id="integrated-data-workflow-and-orchestration" class="level3">
+<h3 class="anchored" data-anchor-id="integrated-data-workflow-and-orchestration">4.7 Integrated Data Workflow and Orchestration</h3>
+<p>The complete data workflow integrates multiple data streams through a coordinated pipeline that ensures comprehensive market coverage while maintaining data consistency and availability. Our orchestration system manages three distinct data collection processes, each optimized for its specific data type and latency requirements.</p>
+<p>Level 1 market data flows directly from the Alpaca API into our PostgreSQL database through a continuous streaming process. The system captures real-time bid-ask updates with 15-minute delays and automatically generates nightly snapshots in Parquet format for backup storage in our S3 bucket. This process runs continuously during market hours through automated scripts deployed on Railway’s cloud platform, with source code version control maintained through our GitHub repository.</p>
+<p>OHLCV minute-bar data collection operates on a batch schedule, scraping historical data each evening after market close through the Alpaca API. Since this aggregated data remains available for up to 30 days through the API, we implemented a nightly cron job execution pattern on Railway without requiring S3 backup storage. This approach optimizes storage costs while ensuring data availability for feature engineering and model training.</p>
+<p>Level 2 market depth data represents the most complex workflow component, streaming real-time data from the IBKR Gateway directly into our PostgreSQL database. The system simultaneously captures nightly snapshots and stores them as Parquet files in S3 for long-term archival and analytical access. Gateway API access occurs through dedicated scraping scripts hosted on Railway, with snapshot generation coordinated through a unified script that manages backup processes across all data streams.</p>
+</section>
+</section>
+<section id="results" class="level2">
+<h2 class="anchored" data-anchor-id="results">5. Results</h2>
+<p>This section reports results in two complementary regimes: a <strong>balanced development snapshot</strong> (to compare models fairly) and an <strong>imbalanced deployment snapshot</strong> (to reflect real surveillance conditions on AAPL L2). We then summarize model components (supervised, hybrid, unsupervised) and the final ensemble with operational implications.</p>
+<section id="datasets-regimes" class="level3">
+<h3 class="anchored" data-anchor-id="datasets-regimes">5.1 Datasets &amp; Regimes</h3>
+<ul>
+<li><strong>Balanced development snapshot</strong> (model selection &amp; tuning): class balance enforced; threshold chosen on validation.</li>
+<li><strong>Imbalanced deployment snapshot</strong> (AAPL L2, realistic): 148,340 observations → 146,857 normal (<strong>99.0%</strong>), 1,483 anomalous (<strong>1.0%</strong>). After <code>scale_pos_weight</code> and threshold tuning, the classifier attains <strong>high recall</strong> with a <strong>manageable false‑positive rate</strong> for surveillance.</li>
+</ul>
+<p>::: {.callout-tip} <strong>Operational translation.</strong> A 1.3% false‑positive rate on the majority class corresponds to roughly <strong>18–20 alerts/day</strong> for a single highly‑active name—typically acceptable with triage tooling. (See Confusion Matrix below.) :::</p>
+</section>
+<section id="supervised-classifier-xgboost-rf-as-baseline" class="level3">
+<h3 class="anchored" data-anchor-id="supervised-classifier-xgboost-rf-as-baseline">5.2 Supervised Classifier (XGBoost; RF as baseline)</h3>
+<p><strong>Balanced development snapshot (decision threshold τ ≈ 0.52):</strong></p>
+<ul>
+<li><strong>Accuracy:</strong> 79.75%</li>
+<li><strong>Macro‑F1:</strong> 0.795</li>
+<li><strong>AUC:</strong> ≈ 0.95</li>
+<li><strong>Pos (manip‑like):</strong> P=0.743, R=0.909, F1=0.818</li>
+<li><strong>Neg (regular):</strong> P=0.883, R=0.686, F1=0.772</li>
+</ul>
+<div id="fig-results-supervised" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-cap="Balanced development snapshot: confusion, ROC/PR, and summary metrics">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-results-supervised-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="images/roc_auc_rf_regression.png" class="img-fluid figure-img" style="width:90.0%" data-fig-cap="Balanced development snapshot: confusion, ROC/PR, and summary metrics">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-results-supervised-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;1: Supervised metrics &amp; curves.
+</figcaption>
+</figure>
+</div>
+<p><strong>Imbalanced deployment snapshot (AAPL L2):</strong></p>
+<ul>
+<li><strong>Overall accuracy:</strong> ~0.99 (dominated by normal class; interpret with care)</li>
+<li><strong>Normal (Class 0):</strong> P=1.00, R=0.99, F1=0.99</li>
+<li><strong>Anomaly (Class 1):</strong> P=0.41, R=0.89, F1=0.56</li>
+<li><strong>Macro‑F1:</strong> ~0.78; <strong>Weighted‑F1:</strong> ~0.99</li>
+</ul>
+<p><strong>Confusion matrix (AAPL L2):</strong> correctly detects <strong>1,318/1,483</strong> anomalies (<strong>89% recall</strong>), with <strong>1,884</strong> false positives from <strong>146,857</strong> normal observations (<strong>1.3% FPR</strong>).</p>
+<div id="fig-confusion" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-cap="AAPL L2 confusion matrix at the chosen operating point">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-confusion-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="rf_confusion_matrix.png" class="img-fluid figure-img" style="width:70.0%" data-fig-cap="AAPL L2 confusion matrix at the chosen operating point">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-confusion-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;2: Confusion matrix — deployment snapshot.
+</figcaption>
+</figure>
+</div>
+</section>
+<section id="feature-importance-interpretability" class="level3">
+<h3 class="anchored" data-anchor-id="feature-importance-interpretability">5.3 Feature Importance &amp; Interpretability</h3>
+<p>Top contributors emphasize microstructure dynamics rather than identity: <code>spread (0.211) &gt; roll_vol_10 (0.193) &gt; dt_sec (0.067) &gt; price_z (0.042) &gt; price_delta (0.042)</code>; <code>symbol_MSFT (0.168)</code> appears but microstructure dominates.</p>
+<div id="fig-importance" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-cap="Information‑gain importances for market microstructure features">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-importance-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="images/feature_importance.png" class="img-fluid figure-img" style="width:75.0%" data-fig-cap="Information‑gain importances for market microstructure features">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-importance-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;3: XGBoost feature importances.
+</figcaption>
+</figure>
+</div>
+</section>
+<section id="hybrid-sequence-anomaly-model-bottlenecked-autoencoder-ocsvm" class="level3">
+<h3 class="anchored" data-anchor-id="hybrid-sequence-anomaly-model-bottlenecked-autoencoder-ocsvm">5.4 Hybrid Sequence Anomaly Model (Bottlenecked Autoencoder → OC‑SVM)</h3>
+<p>Trained on L2 sequences (e.g., 25×features), compressed via a 128‑dim bottleneck, then scored by an OC‑SVM on embeddings. Optimized for surveillance‑friendly <strong>recall</strong> and <strong>F4</strong>:</p>
+<ul>
+<li><strong>Recall ≈ 0.84</strong>, <strong>F4 ≈ 0.81</strong> on injected test subsequences.</li>
+</ul>
+<div id="fig-hybrid-results" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-cap="Bottlenecked AE → OC‑SVM: validation/test summary">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-hybrid-results-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="images/ae_confusion_matrix.png" class="img-fluid figure-img" style="width:85.0%" data-fig-cap="Bottlenecked AE → OC‑SVM: validation/test summary">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-hybrid-results-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;4: Hybrid anomaly results.
+</figcaption>
+</figure>
+</div>
+</section>
+<section id="unsupervised-dbscan" class="level3">
+<h3 class="anchored" data-anchor-id="unsupervised-dbscan">5.5 Unsupervised (DBSCAN)</h3>
+<p>DBSCAN surfaces <strong>bursty, irregular, coordinated</strong> quote activity without pre‑specifying cluster counts, while ignoring scattered background noise—well matched to attack epochs intermixed with calm.</p>
+<div id="fig-dbscan-results" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-cap="DBSCAN labeling: dense burst clusters amid noise">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-dbscan-results-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="images/results_dbscan.png" class="img-fluid figure-img" style="width:80.0%" data-fig-cap="DBSCAN labeling: dense burst clusters amid noise">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-dbscan-results-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;5: DBSCAN clusters vs.&nbsp;noise.
+</figcaption>
+</figure>
+</div>
+</section>
+<section id="ensemble-performance-calibration" class="level3">
+<h3 class="anchored" data-anchor-id="ensemble-performance-calibration">5.6 Ensemble Performance &amp; Calibration</h3>
+<p>We combine supervised probabilities with hybrid and DBSCAN flags using a blended score, then set an operating threshold via weekly subsamples (<strong>20k points/week</strong>):</p>
+<pre class="text"><code>Inputs: p_xgb (XGBoost), flag_hybrid (AE→OC‑SVM), flag_dbscan
+Blend:  score = w1 * p_xgb + w2 * 1[flag_hybrid] + w3 * 1[flag_dbscan]
+Decision: alert if score ≥ Θ  (Θ tuned weekly by sampling)</code></pre>
+<div id="fig-ensemble-results" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-cap="Ensemble calibration and lift over single‑model baselines">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-ensemble-results-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="images/results_ensemble.png" class="img-fluid figure-img" style="width:90.0%" data-fig-cap="Ensemble calibration and lift over single‑model baselines">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-ensemble-results-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;6: Ensemble overview &amp; lift.
+</figcaption>
+</figure>
+</div>
+</section>
+<section id="summary-of-key-findings" class="level3">
+<h3 class="anchored" data-anchor-id="summary-of-key-findings">5.7 Summary of Key Findings</h3>
+<ul>
+<li><strong>High‑recall detection</strong> is achievable in realistic, imbalanced settings with careful thresholding and class weighting.</li>
+<li><strong>Interpretable microstructure features</strong> dominate importance, supporting regulatory explainability.</li>
+<li><strong>Sequence‑aware hybrid modeling</strong> improves sensitivity to temporal attack structure.</li>
+<li><strong>Ensembling</strong> stabilizes performance across liquidity regimes and reduces model‑specific blind spots.</li>
+<li><strong>Calendar effects</strong> (e.g., <strong>July 4</strong> shortened week) materially impact counts/rates and are handled explicitly in evaluation and sampling.</li>
+</ul>
+<p>::: {.callout-note} <strong>At‑a‑glance metrics table.</strong></p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 21%">
+<col style="width: 7%">
+<col style="width: 10%">
+<col style="width: 7%">
+<col style="width: 6%">
+<col style="width: 6%">
+<col style="width: 7%">
+<col style="width: 6%">
+<col style="width: 6%">
+<col style="width: 7%">
+<col style="width: 11%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Regime</th>
+<th style="text-align: right;">Acc</th>
+<th style="text-align: right;">Macro‑F1</th>
+<th style="text-align: right;">AUC</th>
+<th style="text-align: right;">Pos P</th>
+<th style="text-align: right;">Pos R</th>
+<th style="text-align: right;">Pos F1</th>
+<th style="text-align: right;">Neg P</th>
+<th style="text-align: right;">Neg R</th>
+<th style="text-align: right;">Neg F1</th>
+<th style="text-align: center;">Threshold</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Balanced (dev)</td>
+<td style="text-align: right;">0.7975</td>
+<td style="text-align: right;">0.795</td>
+<td style="text-align: right;">~0.95</td>
+<td style="text-align: right;">0.743</td>
+<td style="text-align: right;">0.909</td>
+<td style="text-align: right;">0.818</td>
+<td style="text-align: right;">0.883</td>
+<td style="text-align: right;">0.686</td>
+<td style="text-align: right;">0.772</td>
+<td style="text-align: center;">τ≈0.52</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Imbalanced (AAPL)</td>
+<td style="text-align: right;">~0.99</td>
+<td style="text-align: right;">~0.78</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: right;">0.41</td>
+<td style="text-align: right;">0.89</td>
+<td style="text-align: right;">0.56</td>
+<td style="text-align: right;">1.00</td>
+<td style="text-align: right;">0.99</td>
+<td style="text-align: right;">0.99</td>
+<td style="text-align: center;">tuned</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">:::</td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: center;"></td>
+</tr>
+</tbody>
+</table>
+<blockquote class="blockquote">
+<p><strong>Note on calendar effects:</strong> Independence Day (July 4) closure impacts counts and rates in that week; our evaluation and sampling explicitly account for it.</p>
+</blockquote>
+</section>
+</section>
+<section id="conclusion" class="level2">
+<h2 class="anchored" data-anchor-id="conclusion">6. Conclusion</h2>
+<p>This work demonstrates that <strong>microstructure-aware features from Level 2 (L2) order books</strong>, coupled with a <strong>blended learning stack</strong> (XGBoost, bottlenecked autoencoder → OC‑SVM, and DBSCAN), can detect quote stuffing–like behavior with <strong>high recall</strong> in realistic, imbalanced settings while preserving interpretability needed for surveillance. Ensemble calibration with weekly samples further stabilizes performance across liquidity regimes, and in the case of our model, yielded a 1.28% unsupervised identification of quote-stuffing related activities.</p>
+<section id="summary-of-findings" class="level3">
+<h3 class="anchored" data-anchor-id="summary-of-findings">6.1 Summary of Findings</h3>
+<ul>
+<li><strong>Detection efficacy:</strong> In balanced development, the supervised model attains <strong>Macro‑F1 ≈ 0.80</strong> and <strong>AUC ≈ 0.95</strong>; in imbalanced AAPL deployment, it reaches <strong>R ≈ 0.89</strong> on anomalies at a tolerable false‑positive rate (≈1.3% on the majority class) with careful thresholding.</li>
+<li><strong>Signal provenance:</strong> <strong>Spread, short‑horizon volatility, and message intensity</strong> (e.g., <code>roll_vol_10</code>, <code>dt_sec</code>, <code>price_z</code>, <code>price_delta</code>) dominate importances; structure over <strong>L2 depth and imbalance</strong> adds sensitivity to transient phantom liquidity.</li>
+<li><strong>Sequence modeling:</strong> A <strong>bottlenecked AE → OC‑SVM</strong> complements the classifier by emphasizing temporal structure of bursty insert/cancel cycles (Recall ≈ 0.84; F4 ≈ 0.81 on injected tests).</li>
+<li><strong>Ensembling:</strong> Combining supervised probabilities with hybrid and DBSCAN flags improves coverage and reduces model‑specific blind spots when tuned to operational objectives.</li>
+<li><strong>Unsupervised Ensemble Results:</strong> When it came to model evaluation, we found that our most effective methods for unsupervised learning were in the Random Forest/DBSCAN ensemble. As seen below, the DBSCAN model identified roughly 25% of the data as suspicious, whereas the RF model identified only 5%. Yet, interestingly, at the intersection of the identified points between these two models, we see an average overlap of roughly 1.28% of suspicious data across the 20,000 points in our weekly samples. A number that we felt, considering that algorithmic trading makes up nearly 70% of all trading activity, was a relatively appropriate evaluation.</li>
+</ul>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/ensemble_results.png" class="img-fluid figure-img"></p>
+<figcaption>Ensemble Results!</figcaption>
+</figure>
+</div>
+</section>
+<section id="limitations-risks" class="level3">
+<h3 class="anchored" data-anchor-id="limitations-risks">6.2 Limitations &amp; Risks</h3>
+<ul>
+<li><strong>Label quality &amp; shift:</strong> Weak supervision (injected vs.&nbsp;empirical) can drift from true manipulation ground truth; regime shifts (macro events, venue microstructure changes) may degrade calibration.</li>
+<li><strong>Venue and vendor heterogeneity:</strong> Timestamp semantics, depth reporting, and throttling policies vary; cross‑venue reconciliation is required for robust deployment.</li>
+<li><strong>Adversarial adaptation:</strong> Attackers can modify cadence, price‑level distribution, or cancel patterns to evade fixed thresholds.</li>
+<li><strong>Latency budgets:</strong> Real‑time scoring must coexist with market data bursts; <strong>backpressure</strong> and <strong>graceful degradation</strong> plans are necessary during micro‑spikes.</li>
+<li><strong>Human factors:</strong> Moderate precision implies analyst triage load; clear <strong>case management</strong> and <strong>feedback loops</strong> are essential to maintain trust.</li>
+</ul>
+</section>
+<section id="operationalization-monitoring" class="level3">
+<h3 class="anchored" data-anchor-id="operationalization-monitoring">6.3 Operationalization &amp; Monitoring</h3>
+<ul>
+<li><strong>Threshold governance:</strong> Maintain <strong>per‑symbol/per‑regime thresholds</strong>; review weekly with 20k‑point samples and drift diagnostics.</li>
+<li><strong>Model &amp; data drift:</strong> Track prediction score distributions, feature population stability (PSI), message‑rate histograms, and alert volumes vs.&nbsp;baseline.</li>
+<li><strong>Observability:</strong> Emit metrics (throughput, latency, FP/TP counts), logs (top features, SHAP values), and exemplars for audit.</li>
+<li><strong>Incident playbooks:</strong> Define actions when alert volume exceeds control bands (e.g., relax threshold, enable burst caps, escalate for review).</li>
+</ul>
+<div class="cell" data-layout-align="default">
+<div class="cell-output-display">
+<div>
+<p></p><figure class="figure"><p></p>
+<div>
+<pre class="mermaid mermaid-js">flowchart LR
+  Ingest[Market Data → Feature Store] --&gt; Score[Models: XGB | AE→OC‑SVM | DBSCAN]
+  Score --&gt; Blend[Ensemble &amp; Thresholds]
+  Blend --&gt; Alerts[Alerts Queue]
+  Alerts --&gt; Triage[Analyst Triage]
+  Triage --&gt; Feedback[Label/Threshold Updates]
+  Feedback --&gt; Score
+</pre>
+</div>
+<p></p></figure><p></p>
+</div>
+</div>
+</div>
+<section id="suggested-monitoring-panel-minimal" class="level4">
+<h4 class="anchored" data-anchor-id="suggested-monitoring-panel-minimal">Suggested monitoring panel (minimal)</h4>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 28%">
+<col style="width: 41%">
+<col style="width: 30%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Panel</th>
+<th>Purpose</th>
+<th>Example signal</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Alert volume vs.&nbsp;baseline</td>
+<td>Detect threshold drift / regime change</td>
+<td>Alerts per 5‑min bucket</td>
+</tr>
+<tr class="even">
+<td>Score distribution</td>
+<td>Catch model/feature shift</td>
+<td>P(p&gt;=Θ) histogram by symbol</td>
+</tr>
+<tr class="odd">
+<td>Message‑rate heatmap</td>
+<td>Identify burst epochs</td>
+<td>Quotes/sec by minute</td>
+</tr>
+<tr class="even">
+<td>Precision/Recall (rolling)</td>
+<td>Track effectiveness</td>
+<td>Weekly PR at operating point</td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="future-work" class="level3">
+<h3 class="anchored" data-anchor-id="future-work">6.4 Future Work</h3>
+<p><strong>Data &amp; labeling</strong></p>
+<ul>
+<li>Cross‑venue L2 harmonization; <strong>EDGAR‑aligned windows</strong> as semi‑supervised anchors; active learning for difficult windows.</li>
+<li>Synthetic attack generator to adversarially train on <strong>variable burst cadences, level‑mixes, and cancel horizons</strong>.</li>
+</ul>
+<p><strong>Modeling</strong></p>
+<ul>
+<li><strong>Online learning</strong> with drift detectors; <strong>conformal prediction</strong> for calibrated alert risk; <strong>sequence contrastive learning</strong> for richer embeddings.</li>
+<li>SHAP‑based local explanations and <strong>counterfactual analysis</strong> to support analyst workflows.</li>
+</ul>
+<p><strong>Engineering</strong></p>
+<ul>
+<li>Real‑time feature store, streaming bus (Kafka), and low‑latency serving with A/B threshold testing.</li>
+<li><strong>Auto‑calibration</strong> jobs that propose threshold changes based on ROC curves.</li>
+</ul>
+<p><strong>Governance</strong></p>
+<ul>
+<li>Audit trails linking <strong>alert → features → model version → decision</strong>; periodic fairness/error‑cost reviews across symbols/liquidity regimes.</li>
+</ul>
+</section>
+<section id="closing-remarks" class="level3">
+<h3 class="anchored" data-anchor-id="closing-remarks">6.5 Closing Remarks</h3>
+<p>By centering on L2 microstructure, encoding temporal burst patterns, and blending complementary learners, we achieve a <strong>defensible, explainable, and actionable</strong> market‑surveillance detector. The framework is deliberately modular—supporting rapid retraining, venue extension, and human‑in‑the‑loop refinement—positioning it for robust, real‑world deployment and continuous improvement. 【16†DS Capstone】</p>
+</section>
+<section id="dashboard" class="level3">
+<h3 class="anchored" data-anchor-id="dashboard">6.6 Dashboard:</h3>
+<p>To visualize the effectiveness of Ensemble Methods in market manipulation detection, visit our model tuning application:</p>
+<p><a href="images/ml_dashboard.png">QR Code Here!</a></p>
+<p>Or visit the link here: https://msds-capstone-production.up.railway.app/</p>
+<p>This application can be synced to your own data, or you can use the synthetic data included in the app to get a feel for what we were looking at and how effective our models truly were!</p>
+</section>
+</section>
+</section>
+<section id="references" class="level1">
+<h1>References</h1>
+<div id="refs" role="list">
+
+</div>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    // Ensure there is a toggle, if there isn't float one in the top right
+    if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+      const a = window.document.createElement('a');
+      a.classList.add('top-right');
+      a.classList.add('quarto-color-scheme-toggle');
+      a.href = "";
+      a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+      const i = window.document.createElement("i");
+      i.classList.add('bi');
+      a.appendChild(i);
+      window.document.body.appendChild(a);
+    }
+    setColorSchemeToggle(hasAlternateSentinel())
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
+          }
+        }
+        return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
